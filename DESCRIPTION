@@ -1,5 +1,5 @@
 Package: Blue Carbon
-Title: Estimation of organic carbon stocks and fluxes from soil cores data
+Title: Estimation of Organic Carbon Stocks and Fluxes From Cores Data
 Version: 0.0.0.9000
 Authors@R: 
   c(
@@ -13,7 +13,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 URL: https://github.com/EcologyR/BlueCarbon
-BugReports: https://github.com/EcologyR/templateRpackage/issues
+BugReports: https://github.com/EcologyR/BlueCarbon/issues
 Depends: 
     R (>= 2.10)
 LazyData: true
