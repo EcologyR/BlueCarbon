@@ -70,7 +70,7 @@ files, so they display on GitHub and CRAN.
 If using this package, please cite it:
 
 ``` r
-citation("templateRpackage")
+citation("BlueCarbon")
 
 To cite templateRpackage in publications use:
 
