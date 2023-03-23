@@ -21,7 +21,7 @@ library(here)
 library(broom)
 here()
 
-A <- read.csv(here("Codigo", "example.csv"), sep = ";")
+A <- read.csv(here("Codigo", "withPOC.csv"), sep = ";")
 # Summary initial data
 
 # Organic matter to organic carbon -------------------------------------------------------------------
@@ -125,23 +125,112 @@ kk <- transform_om_oc(df = A)
 ### Soil C stocks estimation 1m ###
 ###################################
 
+#####################
+###estimate stocks for the whole core + 1m with extrapolation of OC accumulated mass if needed
+#####
+
 #Estimation of the sample center
 
-A <-A %>% mutate (Center = DMin.D+((DMax.D-DMin.D)/2))
+estimate_stock <- function(df = NULL, Depth = 100) {
+
+df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
+
+X<-split(df, df$Core.ID)
+
+BCS <- data.frame(Core.ID=character(),
+                  S.WC=numeric(),
+                  D.Max=numeric(),
+                  S.1m=numeric())
+
+for(i in 1:length(X)) {
+  BCS[i,1]<-names(X[i])
+  Data<-as.data.frame(X[i])
+  colnames(Data)<-colnames(A)
+
+  Data = filter(Data, !is.na(POC))
+
+  if(nrow(Data)<3) next
+
+  else{
+
+    Data$h<-NA
+
+    #estimation of the thickness of the sample (h)
+    for (j in 2:(nrow(Data)-1)) {
+
+      Data[j,which(colnames(Data)=="h")]<-
+        ((Data[j,which(colnames(Data)=="Center")]-Data[(j-1),which(colnames(Data)=="Center")])/2)+
+        ((Data[(j+1),which(colnames(Data)=="Center")]-Data[j,which(colnames(Data)=="Center")])/2)
+
+    }
+
+    Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
+    Data[nrow(Data),which(colnames(Data)=="h")]<-
+      Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
+
+    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
+    Data <-Data %>% mutate (OCgcm2 = DBD*(POC/100)*h)
+
+    #estimation of the OC stoack in the whole core
+    BCS[i,2]<-sum(Data[,which(colnames(Data)=="OCgcm2")])
+    BCS[i,3]<-max(Data[,which(colnames(Data)=="Max.D")])
+
+    #if core exactly the standarization depth, we keep the stock of the whole core
+    if(max(Data$Max.D)==Depth) {BCS[i,4]<-sum(Data[,which(colnames(Data)=="OCgcm2")])}
+
+
+    else{
+
+      # if the core longer than the standarization depth we estimate the stock until 1m depth
+      if (max(Data$Max.D)>=Depth)
+
+      {
+        Data<-Data[c(1:(length(which(Data$Max.D <=Depth))+1)),]
+
+        BCS[i,4]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
+                      (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Max.D)-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))
+                       *(Depth-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))))}
+
+      #if core shorter than than the standarization depth we model the OC acumulated mass with depth and predict the stock at 1m
+      else {
+
+        Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
+        model<-lm(OCM ~ Max.D, data=Data)
+        BCS[i,4]<-coef(model)[1] + Depth*coef(model)[2]}}
+
+    print(BCS)
+
+  }}}
+
+
+stocks<-estimate_stock(A,100)
+
+write.csv(BCS,file.path(Folder,"Stock_core.csv"),sep=";", dec=",")
+
+
+
+
+
+
+# test extrapolation errors #####
+
+
 
 
 ## Testing if extrapolations from accumulated OC mass report similar values than the estimation
 #of 1m stocks using those cores longer than 1 meter
 
+test_extrapolation <- function(df = NULL, Depth = 100) {
 
-X<-split(A, A$Core.ID)
+  df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
+  X<-split(df, df$Core.ID)
 
 ExtS<- data.frame(Core.ID=character(),
                   S.1m=numeric(),
-                  EXT.90cm=numeric(),
-                  EXT.75cm=numeric(),
-                  EXT.50cm=numeric(),
-                  EXT.25cm=numeric(),
+                  EXT.90=numeric(),
+                  EXT.75=numeric(),
+                  EXT.50=numeric(),
+                  EXT.25=numeric(),
                   Ecosystem=character(),
                   Genus=character())
 
@@ -151,8 +240,8 @@ for(i in 1:length(X)) {
   ExtS[i,1]<-names(X[i])
   Data<-as.data.frame(X[i])
   colnames(Data)<-colnames(A)
-  ExtS[i,7]<-Data[1,which( colnames(A)=="Ecosystem" )]
-  ExtS[i,8]<-Data[1,which( colnames(A)=="Genus" )]
+  ExtS[i,7]<-Data[1,which( colnames(df)=="Ecosystem" )]
+  ExtS[i,8]<-Data[1,which( colnames(df)=="Genus" )]
 
   Data = filter(Data, !is.na(POC))
 
@@ -173,42 +262,47 @@ for(i in 1:length(X)) {
         #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
         Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
         Data[nrow(Data),which(colnames(Data)=="h")]<-
-          Data[nrow(Data),which(colnames(Data)=="DMax.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
+          Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
         Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
 
 
-        #For those cores longer than 1m we estimate stock at 1m from real data and from linear models
-        # using data from the first 90, 75, 50 and 25 cm of the core
-        if (max(Data$DMax.D)>=100)
+        #For those cores longer than the extrapolation depth we estimate stock the observed stock at that depth and from linear models
+        # using data from the 90, 75, 50 and 25 % of the extrapolation depth
+        if (max(Data$Max.D)>=Depth)
 
         {
-          Data<-Data[c(1:(length(which(Data$DMax.D <=100))+1)),]
+          Data<-Data[c(1:(length(which(Data$Max.D <=Depth))+1)),]
 
           ExtS[i,2]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
-                        (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$DMax.D)-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))
-                         *(100-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))))
+                        (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Max.D)-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))
+                         *(Depth-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))))
 
           Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
 
-          Data<- subset(Data,Data$DMax.D<=90)
+          ninety<-Depth*0.9 #90% of the extrapolation length
+          seventy<-Depth*0.75 #90% of the extrapolation length
+          fifhty<-Depth*0.50 #90% of the extrapolation length
+          twentififty<-Depth*0.25 #90% of the extrapolation length
+
+          Data<- subset(Data,Data$Max.D<=ninety)
 
           if (nrow(Data)>3){
-            model90<-lm(OCM ~ DMax.D, data=Data)
+            model90<-lm(OCM ~ Max.D, data=Data)
             ExtS[i,3]<-coef(model90)[1] + 100*coef(model90)[2]}
 
-          Data<- subset(Data,Data$DMax.D<=75)
+          Data<- subset(Data,Data$Max.D<=seventy)
           if (nrow(Data)>3){
-            model75<-lm(OCM ~ DMax.D, data=Data)
+            model75<-lm(OCM ~ Max.D, data=Data)
             ExtS[i,4]<-coef(model75)[1] + 100*coef(model75)[2]}
 
-          Data<- subset(Data,Data$DMax.D<=50)
+          Data<- subset(Data,Data$Max.D<=fifhty)
           if (nrow(Data)>3){
-            model50<-lm(OCM ~ DMax.D, data=Data)
+            model50<-lm(OCM ~ Max.D, data=Data)
             ExtS[i,5]<-coef(model50)[1] + 100*coef(model50)[2]}
 
-          Data<- subset(Data,Data$DMax.D<=25)
+          Data<- subset(Data,Data$Max.D<=twentififty)
           if (nrow(Data)>3){
-            model25<-lm(OCM ~ DMax.D, data=Data)
+            model25<-lm(OCM ~ Max.D, data=Data)
             ExtS[i,6]<-coef(model25)[1] + 100*coef(model25)[2]}
 
         }}}
@@ -302,78 +396,6 @@ ggplot(m.ExtS,aes(variable, value))+
         axis.ticks.x=element_blank())
 
 
-#####################
-###estimate stocks for the whole core + 1m with extrapolation of OC accumulated mass if needed
-#####
-
-X<-split(A, A$Core.ID)
-
-BCS <- data.frame(Core.ID=character(),
-                    S.WC=numeric(),
-                    D.Max=numeric(),
-                    S.1m=numeric())
-
-
-
-for(i in 1:length(X)) {
-  BCS[i,1]<-names(X[i])
-  Data<-as.data.frame(X[i])
-  colnames(Data)<-colnames(A)
-
-  Data = filter(Data, !is.na(POC))
-
-  if(nrow(Data)<3) next
-
-  else{
-
-    Data$h<-NA
-
-    #estimation of the thickness of the sample (h)
-    for (j in 2:(nrow(Data)-1)) {
-
-      Data[j,which(colnames(Data)=="h")]<-
-        ((Data[j,which(colnames(Data)=="Center")]-Data[(j-1),which(colnames(Data)=="Center")])/2)+
-        ((Data[(j+1),which(colnames(Data)=="Center")]-Data[j,which(colnames(Data)=="Center")])/2)
-
-    }
-
-    Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
-    Data[nrow(Data),which(colnames(Data)=="h")]<-
-      Data[nrow(Data),which(colnames(Data)=="DMax.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
-
-    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-    Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
-
-    #estimation of the OC stoack in the whole core
-    BCS[i,2]<-sum(Data[,which(colnames(Data)=="OCgcm2")])
-    BCS[i,3]<-max(Data[,which(colnames(Data)=="DMax.D")])
-
-    #if core exactly 1m, we keep the stock of the whole core
-    if(max(Data$DMax.D)==100) {BCS[i,4]<-sum(Data[,which(colnames(Data)=="OCgcm2")])}
-
-
-      else{
-
-        # if the core longer than 1m we estimate the stock until 1m depth
-        if (max(Data$DMax.D)>=100)
-
-        {
-        Data<-Data[c(1:(length(which(Data$DMax.D <=100))+1)),]
-
-        BCS[i,4]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
-                      (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$DMax.D)-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))
-                       *(100-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))))}
-
-        #if core shorter than 1m we model the OC acumulated mass with depth and predict the stock at 1m
-        else {
-
-          Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
-          model<-lm(OCM ~ DMax.D, data=Data)
-          BCS[i,4]<-coef(model)[1] + 100*coef(model)[2]}}
-
-      }}
-
-write.csv(BCS,file.path(Folder,"Stock_core.csv"),sep=";", dec=",")
 
 
 ########################################
