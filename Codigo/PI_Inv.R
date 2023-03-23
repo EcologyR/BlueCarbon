@@ -1,7 +1,6 @@
 # Iberian Peninsula Blue Carbon inventory #
 
 
-setwd("C:/Users/npjun/Dropbox/Seagrasses/Inventarios P. Iberica/R")
 
 #Libraries#
 
@@ -17,124 +16,112 @@ library(grid)
 library(rbacon)
 library(tidyr)
 
-############## Loading the data set #####################
+library(tidyverse)
+library(here)
+library(broom)
+here()
 
-File<-"Raw.csv"
-
-A<-read.csv(File, header=T, sep=";", dec=".")
-A<-as.data.frame(A)
-
-#create folder to save tables and grafs
-
-Folder="BC_PI_Results"
-dir.create(Folder)
-
+A <- read_delim(here("Codigo", "example.csv"), delim = ";")
 # Summary initial data
 
-length(unique(A$Core.ID))# number of cores
+# Organic matter to organic carbon -------------------------------------------------------------------
+
+transform_om_oc <- function(df = NULL) {
+  #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
+  #skip those models with R2<0.5 or P value>0.05
+
+  #create df list of dataframes with data from each ecosystem, specie, and station (site)
+  table(df$Ecosystem)
+  X<-split(df, df$Ecosystem)
+  X2<-split(df, df$Genus)
+  X3<-split(df, df$`Site ID`)
+  X<-c(X,X2,X3)
+  length(X)
+
+  #create empty table to log model data
+  OCEst <- data.frame(ID=character(),
+                      R2=numeric(),
+                      P=numeric(),
+                      f=numeric(),
+                      int=numeric(),
+                      slope=numeric()
+  )
+
+  for(i in 1:length(X)) {
+    OCEst[i,1]<-names(X[i])
+    Data<-as.data.frame(X[i])
+    colnames(Data)<-colnames(df)
 
 
-### correct depth and dry bulk density by core compression (linear correction)###
-
-A<- A %>% mutate (DMin.D = Min.D/(1-(Compresion/100)))
-A<- A %>% mutate (DMax.D = Max.D/(1-(Compresion/100)))
-A<- A %>% mutate (DDBD = DBD*(1-(Compresion/100)))
+    #we only model those ecosystem, genus, and station with more than 5 samples were OC and LOI were mwasured
+    if((nrow(Data %>% filter_at(vars(OM,OC),all_vars(!is.na(.)))))<5) next
 
 
-########################################
-### Organic matter to organic carbon ###
-########################################
+    else{
 
+      model<-lm(OC ~ OM, data=Data)
 
-#### Estimate a linear model to predict OC from OM for each ecosystem, specie and station ###
-#skip those models with R2<0.5 or P value>0.05
+      if(summary(model)$r.squared<0.5 | glance(model)$p.value>0.05 ) next
 
-#create a list of dataframes with data from each ecosystem, specie, and station (site)
-X<-split(A, A$Ecosystem)
-X2<-split(A, A$Genus)
-X3<-split(A, A$Site.ID)
-X<-c(X,X2,X3)
+      else{
 
-#create empty table to log model data
-OCEst <- data.frame(ID=character(),
-                    R2=numeric(), 
-                    P=numeric(),
-                    f=numeric(),
-                    int=numeric(),
-                    slope=numeric()
-                    )
+        OCEst[i,2]<-summary(model)$r.squared
+        OCEst[i,3]<-glance(model)$p.value
+        OCEst[i,4]<-summary(model)$fstatistic[1]
+        OCEst[i,5]<-model$coefficients[1]
+        OCEst[i,6]<-model$coefficients[2]
 
-for(i in 1:length(X)) {
-  OCEst[i,1]<-names(X[i])
-  Data<-as.data.frame(X[i])
-  colnames(Data)<-colnames(A)
-  
-  
-  #we only model those ecosystem, genus, and station with more than 5 samples were OC and LOI were mwasured
-  if((nrow(Data %>% filter_at(vars(OM,OC),all_vars(!is.na(.)))))<5) next
-  
-  
-  else{
-  
-  model<-lm(OC ~ OM, data=Data)
-  
-  if(summary(model)$r.squared<0.5 | glance(model)$p.value>0.05 ) next
-  
-  else{
-  
-  OCEst[i,2]<-summary(model)$r.squared
-  OCEst[i,3]<-glance(model)$p.value
-  OCEst[i,4]<-summary(model)$fstatistic[1]
-  OCEst[i,5]<-model$coefficients[1]
-  OCEst[i,6]<-model$coefficients[2]
-  
-  }}
+      }}
+  }
+
+  rownames(OCEst)<-OCEst$ID
+
+  # write.csv(OCEst,file.path(Folder,"OM-OC_lm.csv"),sep=";", dec=",")
+
+  ## Use the models estimated to predict OC from OM content for those samples with no OC data
+  #If there is OC data for that sample, keep original OC data,
+  #else use function estimated for that Site.ID
+  #else function for specie
+  #else function for ecosystem
+
+  df$POC<- NA
+
+  for(i in 1:nrow(df)) {
+
+    if (is.na(df[i,which( colnames(df)=="OC" )])==FALSE)
+    {df[i,which( colnames(df)=="POC" )]<-df[i,which( colnames(df)=="OC" )]}
+
+    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site ID" )])),which(colnames(OCEst)=="int")])==FALSE)
+
+    {df[i,which( colnames(df)=="POC" )]<-
+      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site ID" )])),which(colnames(OCEst)=="int" )]+
+      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site ID" )])),which(colnames(OCEst)=="slope" )])*
+      df[i,which( colnames(df)=="OM" )] }
+
+      else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="int")])==FALSE)
+
+      {df[i,which( colnames(df)=="POC" )]<-
+        OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="int" )]+
+        (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="slope" )])*
+        df[i,which( colnames(df)=="OM" )]}
+
+        else {df[i,which( colnames(df)=="POC" )]<-
+          OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
+          (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
+          df[i,which( colnames(df)=="OM" )]}}}
+
+  }
+
+  ## when OM very low, the estimation can give negative values of OC. We change negative values for 0.
+
+  df$POC[df$POC < 0] <- 0
+
 }
 
-rownames(OCEst)<-OCEst$ID
+transform_om_oc(df = A)
 
-write.csv(OCEst,file.path(Folder,"OM-OC_lm.csv"),sep=";", dec=",")
 
-## Use the models estimated to predict OC from OM content for those samples with no OC data
-#If there is OC data for that sample, keep original OC data, 
-  #else use function estimated for that Site.ID 
-    #else function for specie
-      #else function for ecosystem
-
-A$POC<- NA
-
-for(i in 1:nrow(A)) {
-
-if (is.na(A[i,which( colnames(A)=="OC" )])==FALSE) 
-  {A[i,which( colnames(A)=="POC" )]<-A[i,which( colnames(A)=="OC" )]}
-   
-    else { if (is.na(OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Site.ID" )])),which(colnames(OCEst)=="int")])==FALSE)
-      
-            {A[i,which( colnames(A)=="POC" )]<-
-              OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Site.ID" )])),which(colnames(OCEst)=="int" )]+
-              (OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Site.ID" )])),which(colnames(OCEst)=="slope" )])*
-              A[i,which( colnames(A)=="OM" )] }
-            
-            else{ if (is.na(OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Genus" )])),which(colnames(OCEst)=="int")])==FALSE)
-              
-                   {A[i,which( colnames(A)=="POC" )]<-
-                     OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Genus" )])),which(colnames(OCEst)=="int" )]+
-                     (OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Genus" )])),which(colnames(OCEst)=="slope" )])*
-                     A[i,which( colnames(A)=="OM" )]}
-              
-              else {A[i,which( colnames(A)=="POC" )]<-
-                OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
-                (OCEst[which(rownames(OCEst)==(A[i,which( colnames(A)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
-                A[i,which( colnames(A)=="OM" )]}}}
-              
-            }
-
-## when OM very low, the estimation can give negative values of OC. We change negative values for 0.
-
-A$POC[A$POC < 0] <- 0
-
-            
-###################################            
+###################################
 ### Soil C stocks estimation 1m ###
 ###################################
 
@@ -157,7 +144,7 @@ ExtS<- data.frame(Core.ID=character(),
                   EXT.25cm=numeric(),
                   Ecosystem=character(),
                   Genus=character())
-                  
+
 
 
 for(i in 1:length(X)) {
@@ -166,64 +153,64 @@ for(i in 1:length(X)) {
   colnames(Data)<-colnames(A)
   ExtS[i,7]<-Data[1,which( colnames(A)=="Ecosystem" )]
   ExtS[i,8]<-Data[1,which( colnames(A)=="Genus" )]
-  
+
   Data = filter(Data, !is.na(POC))
-  
+
   if(nrow(Data) <3) next
-  
- 
+
+
   else { Data$h<-NA
-  
+
         #estimation of the thickness of the sample (h)
         for (j in 2:(nrow(Data)-1)) {
-          
-          Data[j,which(colnames(Data)=="h")]<- 
+
+          Data[j,which(colnames(Data)=="h")]<-
             ((Data[j,which(colnames(Data)=="Center")]-Data[(j-1),which(colnames(Data)=="Center")])/2)+
             ((Data[(j+1),which(colnames(Data)=="Center")]-Data[j,which(colnames(Data)=="Center")])/2)
-          
+
         }
-        
+
         #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
         Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
         Data[nrow(Data),which(colnames(Data)=="h")]<-
           Data[nrow(Data),which(colnames(Data)=="DMax.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
         Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
-        
-        
+
+
         #For those cores longer than 1m we estimate stock at 1m from real data and from linear models
         # using data from the first 90, 75, 50 and 25 cm of the core
         if (max(Data$DMax.D)>=100)
-          
+
         {
           Data<-Data[c(1:(length(which(Data$DMax.D <=100))+1)),]
-          
+
           ExtS[i,2]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
                         (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$DMax.D)-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))
                          *(100-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))))
-        
+
           Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
-          
+
           Data<- subset(Data,Data$DMax.D<=90)
-          
+
           if (nrow(Data)>3){
             model90<-lm(OCM ~ DMax.D, data=Data)
             ExtS[i,3]<-coef(model90)[1] + 100*coef(model90)[2]}
-            
+
           Data<- subset(Data,Data$DMax.D<=75)
-          if (nrow(Data)>3){  
+          if (nrow(Data)>3){
             model75<-lm(OCM ~ DMax.D, data=Data)
             ExtS[i,4]<-coef(model75)[1] + 100*coef(model75)[2]}
-            
+
           Data<- subset(Data,Data$DMax.D<=50)
           if (nrow(Data)>3){
             model50<-lm(OCM ~ DMax.D, data=Data)
             ExtS[i,5]<-coef(model50)[1] + 100*coef(model50)[2]}
-            
+
           Data<- subset(Data,Data$DMax.D<=25)
           if (nrow(Data)>3){
             model25<-lm(OCM ~ DMax.D, data=Data)
             ExtS[i,6]<-coef(model25)[1] + 100*coef(model25)[2]}
-          
+
         }}}
 
 #############
@@ -234,7 +221,7 @@ for(i in 1:length(X)) {
 
 CorMat<-cor(na.omit(ExtS[,c(2:6)]), method = "pearson")
 
-corrplot(CorMat, type = "upper", order = "hclust", 
+corrplot(CorMat, type = "upper", order = "hclust",
          tl.col = "black", tl.srt = 45)
 
 write.csv(CorMat,file.path(Folder,"Corr.Extrapolation.csv"),sep=";", dec=",")
@@ -332,58 +319,58 @@ for(i in 1:length(X)) {
   BCS[i,1]<-names(X[i])
   Data<-as.data.frame(X[i])
   colnames(Data)<-colnames(A)
-  
+
   Data = filter(Data, !is.na(POC))
-  
+
   if(nrow(Data)<3) next
-  
+
   else{
-  
+
     Data$h<-NA
-    
+
     #estimation of the thickness of the sample (h)
     for (j in 2:(nrow(Data)-1)) {
-      
-      Data[j,which(colnames(Data)=="h")]<- 
+
+      Data[j,which(colnames(Data)=="h")]<-
         ((Data[j,which(colnames(Data)=="Center")]-Data[(j-1),which(colnames(Data)=="Center")])/2)+
         ((Data[(j+1),which(colnames(Data)=="Center")]-Data[j,which(colnames(Data)=="Center")])/2)
-      
+
     }
-    
+
     Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
     Data[nrow(Data),which(colnames(Data)=="h")]<-
       Data[nrow(Data),which(colnames(Data)=="DMax.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
-    
+
     #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
     Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
-    
-    #estimation of the OC stoack in the whole core 
+
+    #estimation of the OC stoack in the whole core
     BCS[i,2]<-sum(Data[,which(colnames(Data)=="OCgcm2")])
     BCS[i,3]<-max(Data[,which(colnames(Data)=="DMax.D")])
-    
+
     #if core exactly 1m, we keep the stock of the whole core
     if(max(Data$DMax.D)==100) {BCS[i,4]<-sum(Data[,which(colnames(Data)=="OCgcm2")])}
-      
-      
+
+
       else{
-      
+
         # if the core longer than 1m we estimate the stock until 1m depth
         if (max(Data$DMax.D)>=100)
-        
+
         {
         Data<-Data[c(1:(length(which(Data$DMax.D <=100))+1)),]
-          
+
         BCS[i,4]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
                       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$DMax.D)-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))
                        *(100-Data[(nrow(Data)-1),which(colnames(Data)=="DMax.D")]))))}
-        
+
         #if core shorter than 1m we model the OC acumulated mass with depth and predict the stock at 1m
         else {
-          
+
           Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
           model<-lm(OCM ~ DMax.D, data=Data)
           BCS[i,4]<-coef(model)[1] + 100*coef(model)[2]}}
-      
+
       }}
 
 write.csv(BCS,file.path(Folder,"Stock_core.csv"),sep=";", dec=",")
@@ -417,72 +404,72 @@ for(i in 1:length(X)) {
   colnames(Data)<-colnames(AD)
   BCF[i,8]<-Data$Ecosystem[1]
   BCF[i,9]<-Data$Genus[1]
- 
+
   #Annotate the methods used to obtain the raw dates (14C, 210Pb or 210Pb & 14C)
   Data2 <- subset(Data, Data$D.Method=='14C'|Data$D.Method=='210Pb'|Data$D.Method=='HR')
   if (length(unique(Data2$D.Method))>1) { BCF[i,7]<-"210Pb & 14C"}
     else {BCF[i,7]<-Data2$D.Method[1]}
 
-  
+
   Data = filter(Data, !is.na(POC))
-  
+
   if(nrow(Data)<3) next
-  
+
   else{
-  
+
     Data$h<-NA
-    
+
     #estimation of the thickness of the sample (h)
     for (j in 2:(nrow(Data)-1)) {
-      
-      Data[j,which(colnames(Data)=="h")]<- 
+
+      Data[j,which(colnames(Data)=="h")]<-
         ((Data[j,which(colnames(Data)=="Center")]-Data[(j-1),which(colnames(Data)=="Center")])/2)+
         ((Data[(j+1),which(colnames(Data)=="Center")]-Data[j,which(colnames(Data)=="Center")])/2)
     }
-    
-    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)  
+
+    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
     Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
     Data[nrow(Data),which(colnames(Data)=="h")]<-
     Data[nrow(Data),which(colnames(Data)=="DMax.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
-      
+
     Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
-      
+
     #estimation of the average carbon flux for the whole core (OC stock/Max Age)
     BCF[i,2]<-(sum(Data[,which(colnames(Data)=="OCgcm2")]))/max(Data$Age)
     BCF[i,3]<-max(Data$Age)
-      
+
     #estimation of the average carbon flux for the last 100 years (OC stock last 100 yrs/100)
     Data<-Data[c(1:(length(which(Data$Age <=100))+1)),]
-      
+
     BCF[i,4]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
       *(100-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/100)
-    
+
     #estimation of the average carbon flux for the last 75 years (OC stock last 75 yrs/75)
-    
+
     if(nrow(Data)<3) next
-    
+
     else{
-    
+
         Data<-Data[c(1:(length(which(Data$Age <=75))+1)),]
-        
+
         BCF[i,5]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
                        (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
                         *(100-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/75)
-        
+
         #estimation of the average carbon flux for the last 50 years (OC stock last 50 yrs/50)
         if(nrow(Data)<3) next
-        
+
         else{
-        
+
         Data<-Data[c(1:(length(which(Data$Age <=50))+1)),]
-        
+
         BCF[i,6]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
                        (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
                         *(100-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/50)
-    
-    
-      
+
+
+
     }}}}
 
 write.csv(BCF,file.path(Folder,"Flux_core.csv"),sep=";", dec=",")
@@ -519,12 +506,12 @@ XM = vector()
 
 
 for(i in 1:length(X)) {
-  
+
   Data<-as.data.frame(X[i])
   colnames(Data)<-colnames(AD)
-  
+
   Data<- Data[!(Data$D.Method==""), ]
-  
+
   if (length(unique(Data$D.Method))>1) {XM<-c(XM,i)}
   else {next}}
 
@@ -541,19 +528,19 @@ Data_XM<-sapply(XM, function(z) X[z])
 
 
 for(i in 1:length(Data_XM)) {
-  
-  
+
+
   Data<-as.data.frame(Data_XM[i])
   colnames(Data)<-colnames(AD)
-  
+
   Date.Method.comp[i,1]<-Data$Core.ID[1]
   Date.Method.comp[i,5]<-Data$Ecosystem[1]
   Date.Method.comp[i,6]<-Data$Genus[1]
-  
-  
+
+
   Bacon_D <- as.data.frame(matrix(NA, nrow = nrow(Data), ncol = 7))
   colnames(Bacon_D)<-c("labID", "age", "error","depth","cc","dR","dSTD")
-  
+
   Bacon_D$labID<-paste(Data$Core.ID,Data$Max.D)
   Bacon_D$age<-Data$Raw.Age.BP
   Bacon_D$error<-Data$Date.Error
@@ -561,156 +548,156 @@ for(i in 1:length(Data_XM)) {
   Bacon_D$cc<-Data$Bacon.cc
   Bacon_D$dR<-Data$Bacon.dr
   Bacon_D$dSTD<-Data$Bacon.dSTD
-  
+
   Bacon_D<-na.omit(Bacon_D)
   Bacon_Pb<-Bacon_D[c(1:length(which(Data$D.Method == "210Pb"))),] #to select columns with Pb values
   Bacon_14C<-Bacon_D[-c(1:length(which(Data$D.Method == "210Pb"))),] #to select columns with NO Pb values (in our data 14C values)
-  
+
   ###create folders and save bacon files ####
-  
+
   dir.create("Bacon_runs")
   path <- "Bacon_runs"
-  
+
   newfolder<-Data$Core.ID[1]
   newpath<- file.path(path, newfolder)
   dir.create(newpath)
-  write.csv(Bacon_D,file.path(newpath,paste0(newfolder,".csv")),row.names=FALSE, quote=F) # use paste0() no paste() to create file names o bacon will have trouble with the espace between the file name and de .csv 
-  
+  write.csv(Bacon_D,file.path(newpath,paste0(newfolder,".csv")),row.names=FALSE, quote=F) # use paste0() no paste() to create file names o bacon will have trouble with the espace between the file name and de .csv
+
   newfolder<-paste(Data$Core.ID[1],"Pb")
   newpath<- file.path(path, newfolder)
   dir.create(newpath)
   write.csv(Bacon_Pb,file.path(newpath,paste0(newfolder,".csv")),row.names=FALSE, quote=F)
-  
+
   newfolder<-paste(Data$Core.ID[1],"C")
   newpath<- file.path(path, newfolder)
   dir.create(newpath)
   write.csv(Bacon_14C,file.path(newpath,paste0(newfolder,".csv")),row.names=FALSE, quote=F)
-  
+
   ###run bacon ####
-  
+
   #bacon with both
   bfile<-Data$Core.ID[1]
   Bacon(bfile,
         d.min=0,d.max=max(Data$DMax.D),
         MinYr=-66)
-  
+
   #load chronological model file
   results<-list.files(path = file.path(path, Data$Core.ID[1]), full.names = TRUE)
   Ages.file<-results[grep("*_ages*", results)]
   crono1<-read.table(Ages.file, header = T, sep = "", dec = ".")
-  
+
   #bacon with Pb
   bfile<-paste(Data$Core.ID[1],"Pb")
   Bacon(bfile,
         d.min=0,d.max=max(Data$DMax.D),
         MinYr=0-66)
-  
+
   #load chronological model file
   results<-list.files(path = file.path(path, paste(Data$Core.ID[1],"Pb")), full.names = TRUE)
   Ages.file<-results[grep("*_ages*", results)]
   crono2<-read.table(Ages.file, header = T, sep = "", dec = ".")
-  
+
   #bacon with 14C
   bfile<-paste(Data$Core.ID[1],"C")
   Bacon(bfile,
         d.min=0,d.max=max(Data$DMax.D),
         MinYr=-66)
-  
-  
+
+
   #load chronological model file
   results<-list.files(path = file.path(path, paste(Data$Core.ID[1],"C")), full.names = TRUE)
   Ages.file<-results[grep("*_ages*", results)]
   crono3<-read.table(Ages.file, header = T, sep = "", dec = ".")
-  
+
   ###create data frame with depth, DBD, POC and bacon models ####
-  
+
   temp <-data.frame(matrix(NA, nrow = nrow(Data), ncol = 8))
   colnames(temp)<-c("Center","Age", "Age.Pb", "Age.C","DDBD","DMin.D","DMax.D","POC")
-  
-  
+
+
   temp$Center<-Data$Center#as depth we chose the center of the sample
   temp$DDBD<-Data$DDBD
   temp$DMin.D<-Data$DMin.D
   temp$DMax.D<-Data$DMax.D
   temp$POC<-Data$POC
-  
+
   #we fill the conological model columns with the mean age at the depth of the center of the sample
   #for each of the estimated cronological models
   for (j in 1:(length(temp$Center))) {
-    
+
     temp[j,"Age"]<-crono1[which.min(abs( crono1[,"depth"]- temp[j,"Center"])),"mean"]
   }
-  
+
   for (j in 1:(length(temp$Center))) {
-    
+
     temp[j,"Age.Pb"]<-crono2[which.min(abs(crono2[,"depth"]- temp[j,"Center"])),"mean"]
   }
-  
+
   for (j in 1:(length(temp$Center))) {
-    
+
     temp[j,"Age.C"]<-crono3[which.min(abs(crono3[,"depth"]- temp[j,"Center"])),"mean"]
   }
-  
-  
+
+
   # fluxes estimation with each chronological model ####
-  
-  
+
+
   temp<-na.omit(temp)
-  
+
   temp$h<-NA
-  
+
   #estimation of the thickness of the sample (h)
   for (j in 2:(nrow(temp)-1)) {
-    
-    temp[j,which(colnames(temp)=="h")]<- 
+
+    temp[j,which(colnames(temp)=="h")]<-
       ((temp[j,which(colnames(temp)=="Center")]-temp[(j-1),which(colnames(temp)=="Center")])/2)+
       ((temp[(j+1),which(colnames(temp)=="Center")]-temp[j,which(colnames(temp)=="Center")])/2)
   }
-  
+
   temp[1,which(colnames(temp)=="h")]<-temp[1,which(colnames(temp)=="Center")]
   temp[nrow(temp),which(colnames(temp)=="h")]<-
     temp[nrow(temp),which(colnames(temp)=="DMax.D")]-temp[nrow(temp),which(colnames(temp)=="Center")]
-  
+
   #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-  
+
   temp <-temp %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
-  
-  
+
+
   #estimation of the average carbon flux for the last 100 years (OC stock last 100 yrs/100)
-  
+
   BP100<-(1950-(Data[1,"Samp.year"]))+100#last 100 years per core in BP
-  
-  
-  
+
+
+
   temp2<-temp[c(1:(length(which(temp$Age <=BP100))+1)),]
-  
+
   if (nrow(temp2)>1) {
-    
-    
+
+
     Date.Method.comp[i,2]<-((((sum(temp2[c(1:(nrow(temp2)-1)),which(colnames(temp2)=="OCgcm2")]))+
                                 (temp2[nrow(temp2),which(colnames(temp2)=="OCgcm2")]/((max(temp2$Age)-temp2[(nrow(temp2)-1),which(colnames(temp2)=="Age")]))
                                  *(BP100-temp2[(nrow(temp2)-1),which(colnames(temp2)=="Age")]))))/100)
-  }  
+  }
             else {next}
-  
-  
+
+
   temp2<-temp[c(1:(length(which(temp$Age.Pb <=BP100))+1)),]
-  
+
   if (nrow(temp2)>1) {
-    
+
     Date.Method.comp[i,3]<-((((sum(temp2[c(1:(nrow(temp2)-1)),which(colnames(temp2)=="OCgcm2")]))+
                                 (temp2[nrow(temp2),which(colnames(temp2)=="OCgcm2")]/((max(temp2$Age.Pb)-temp2[(nrow(temp2)-1),which(colnames(temp2)=="Age.Pb")]))
                                  *(BP100-temp2[(nrow(temp2)-1),which(colnames(temp2)=="Age.Pb")]))))/100)
-  }  
+  }
   else {next}
-  
+
   temp2<-temp[c(1:(length(which(temp$Age.C <=BP100))+1)),]
-  
+
   if (nrow(temp2)>1) {
     Date.Method.comp[i,4]<-((((sum(temp2[c(1:(nrow(temp2)-1)),which(colnames(temp2)=="OCgcm2")]))+
                                 (temp2[nrow(temp2),which(colnames(temp2)=="OCgcm2")]/((max(temp2$Age.C)-temp2[(nrow(temp2)-1),which(colnames(temp2)=="Age.C")]))
                                  *(BP100-temp2[(nrow(temp2)-1),which(colnames(temp2)=="Age.C")]))))/100)
-  }  
+  }
   else {next} }
 
 # compare fluxes estimated with each model
@@ -728,7 +715,7 @@ ggplot(Date.Method.comp, aes(F.100, F.100.Pb))+xlab("210Pb+14C")+ ylab("210Pb cy
 
 mDate.Method.comp<-melt(Date.Method.comp[,c(1:4)], id=c("Core.ID"))
 
-ggplot(mDate.Method.comp, aes(x=as.factor(variable), y=as.numeric(value))) + 
+ggplot(mDate.Method.comp, aes(x=as.factor(variable), y=as.numeric(value))) +
   geom_boxplot()+
   geom_jitter()+
   theme(axis.title.x=element_blank(),
@@ -744,7 +731,7 @@ pairwise.wilcox.test(as.numeric(mDate.Method.comp$value), mDate.Method.comp$vari
 
 Fluxdiff<-melt(BCF[,c(1,4:6)], id=c("Core.ID"))
 
-ggplot(Fluxdiff, aes(x=as.factor(variable), y=as.numeric(value))) + 
+ggplot(Fluxdiff, aes(x=as.factor(variable), y=as.numeric(value))) +
   geom_boxplot()+
   geom_jitter()+
   theme(axis.title.x=element_blank(),
@@ -789,17 +776,17 @@ species<-rownames(TOC.Planta)
 for(i in 1:nrow(C)) {
   #si hay datos pa biomassa abouve de esa especie usa esa especie
   if(C[i,which( colnames(C)=="Specie" )] %in% species==TRUE)
-  
-    {if ((is.na(TOC.Planta[which(rownames(TOC.Planta)==C[i,which( colnames(C)=="Specie" )]),which( colnames(TOC.Planta)=="Aboveground" )]))==FALSE) 
-  
+
+    {if ((is.na(TOC.Planta[which(rownames(TOC.Planta)==C[i,which( colnames(C)=="Specie" )]),which( colnames(TOC.Planta)=="Aboveground" )]))==FALSE)
+
       {C[i,which( colnames(C)=="Ab.TOC" )]<-C[i,which( colnames(C)=="Above" )]*
                                               ((TOC.Planta[which(rownames(TOC.Planta)==C[i,which( colnames(C)=="Specie" )]),which( colnames(TOC.Planta)=="Aboveground" )]/100))}
-  
+
       else { if (is.na(TOC.Planta[which(rownames(TOC.Planta)==C[i,which( colnames(C)=="Specie" )]),which( colnames(TOC.Planta)=="Leaves" )])==FALSE)
-    
+
             {C[i,which( colnames(C)=="Ab.TOC" )]<-C[i,which( colnames(C)=="Above" )]*
             ((TOC.Planta[which(rownames(TOC.Planta)==C[i,which( colnames(C)=="Specie" )]),which( colnames(TOC.Planta)=="Leaves" )]/100))}
-        
+
             else {next}}}
   #If there is no TOC for that specie use the average of the ecosystem
   else { C[i,which( colnames(C)=="Ab.TOC" )]<-C[i,which( colnames(C)=="Above" )]*
@@ -823,10 +810,10 @@ colnames(B_by_Site)<-c("Site.ID", "Mean_Biomass", "SD_Biomass")
 BCS$Site.ID<-NA
 
 for (i in 1:nrow(BCS)) {
-  
+
   Site<- unique(A[c(which(A$Core.ID==BCS[i,which(colnames(BCS)=="Core.ID")])),which(colnames(A)=="Site.ID")])
   BCS[i,which(colnames(BCS)=="Site.ID")]<- Site
-    
+
 }
 
 S_by_Site <-merge(aggregate( S.1m ~ Site.ID, BCS, mean), aggregate( S.1m ~ Site.ID, BCS, sd), by = "Site.ID")
@@ -838,10 +825,10 @@ colnames(S_by_Site)<-c("Site.ID", "Mean_S.1m", "SD_S.1m")
 BCF$Site.ID<-NA
 
 for (i in 1:nrow(BCF)) {
-  
+
   Site<- unique(A[c(which(A$Core.ID==BCF[i,which(colnames(BCF)=="Core.ID")])),which(colnames(A)=="Site.ID")])
   BCF[i,which(colnames(BCF)=="Site.ID")]<- Site
-  
+
 }
 
 F_by_Site <-merge(aggregate( F.100 ~ Site.ID, BCF, mean), aggregate( F.100 ~ Site.ID, BCF, sd), by = "Site.ID")
@@ -855,14 +842,14 @@ File<-"GInf.csv"
 B<-read.csv(File, header=T, sep=";", dec=".")
 B<-as.data.frame(B)
 
-### Final data.frame with stocks at 1m and fluxes at 100 yr by station 
+### Final data.frame with stocks at 1m and fluxes at 100 yr by station
 #with information about region, coast, genus and Ecosystem
 
 library(dplyr)
 library(purrr)
 
 
-BC_PI <-merge(B, S_by_Site, by = "Site.ID", all = T)  
+BC_PI <-merge(B, S_by_Site, by = "Site.ID", all = T)
 
 BC_PI<-left_join(BC_PI, F_by_Site, by="Site.ID",all = T)
 
@@ -877,7 +864,7 @@ write.csv(BC_PI,file.path(Folder,"BC_Station.csv"),sep=";", dec=",")
 #########################
 ### Data distribution ###
 #########################
-#escala en los mapas!! 
+#escala en los mapas!!
 
 WM <- map_data("world")
 
@@ -948,7 +935,7 @@ FSgp<-ggplot()+ xlab("Longitude")+ ylab("Latitude")+
   geom_polygon(data = IP, aes(x=long, y = lat, group = group), fill = "grey", color = "black")+
   coord_map(xlim = c(-30, 5),ylim = c(27, 45))+
   geom_point(aes(FSg$long,FSg$lat), fill="green",pch=21,size=2.5)
-  
+
 
 FSmp<-ggplot()+ xlab("Longitude")+
   geom_polygon(data = WM, aes(x=long, y = lat, group = group), fill = "white", color = "black")+
@@ -964,20 +951,20 @@ FSmp<-ggplot()+ xlab("Longitude")+
 grid.arrange(arrangeGrob(BSgp, top="Seagrass", left=textGrob("Ab Biomass stock",rot = 90,gp=gpar(fontsize=15))),arrangeGrob(BSmp,top="Salt Marsh"),
              arrangeGrob(SSgp, left=textGrob("OC Soil stock",rot = 90,gp=gpar(fontsize=15))),SSmp,
              arrangeGrob(FSgp, left=textGrob("OC flux",rot = 90, gp=gpar(fontsize=15))),FSmp,
-             ncol=2, nrow=3,top=textGrob("Sampling sites", gp=gpar(fontsize=15)), 
+             ncol=2, nrow=3,top=textGrob("Sampling sites", gp=gpar(fontsize=15)),
              widths = c(1,0.9))
 
 final<-arrangeGrob(arrangeGrob(BSgp, top="Seagrass", left=textGrob("Ab Biomass stock",rot = 90,gp=gpar(fontsize=15))),arrangeGrob(BSmp,top="Salt Marsh"),
                     arrangeGrob(SSgp, left=textGrob("OC Soil stock",rot = 90,gp=gpar(fontsize=15))),SSmp,
                     arrangeGrob(FSgp, left=textGrob("OC flux",rot = 90, gp=gpar(fontsize=15))),FSmp,
-                    ncol=2, nrow=3,top=textGrob("Sampling sites", gp=gpar(fontsize=15)), 
+                    ncol=2, nrow=3,top=textGrob("Sampling sites", gp=gpar(fontsize=15)),
                     widths = c(1,0.9))
 
 
 ggsave(path = Folder,"Sampling sites.jpg",final, units="cm", width = 20, height = 20)
 
 #The patchwork package is another option for laying out multiple plots and it also lines up the plot panels
-#Unfortunately, patchwork doesn't provide an easy way to add spanning axis titles (like the bottom, left, and right arguments of grid.arrange) 
+#Unfortunately, patchwork doesn't provide an easy way to add spanning axis titles (like the bottom, left, and right arguments of grid.arrange)
 #so we have to manually set the widths for those grobs, relative to the plot grobs.
 #https://community.rstudio.com/t/common-axis-title-in-grid-arrange/96353/2
 
@@ -1031,35 +1018,35 @@ X<-c(X,X2,X3)
 
 
 for(i in 1:length(X)) {
-  
-  
+
+
   Data<-as.data.frame(X[i])
   colnames(Data)<-colnames(BC_PI)
-  
+
   Summary[i,1]<-names(X[i])
-  
+
   DataB = filter(Data, !is.na(Mean_Biomass))
-  
+
   Summary[i,3]<-nrow(DataB)
   #Summary[i,4]
   Summary[i,5]<-mean(DataB$Mean_Biomass)
   Summary[i,6]<-median(DataB$Mean_Biomass)
   Summary[i,7]<-std.error(DataB$Mean_Biomass)
-  
+
   DataS = filter(Data, !is.na(Mean_S.1m))
   Summary[i,9]<-nrow(DataS)
   #Summary[i,10]
   Summary[i,11]<-mean(DataS$Mean_S.1m)
   Summary[i,12]<-median(DataS$Mean_S.1m)
   Summary[i,13]<-std.error(DataS$Mean_S.1m)
-  
+
   DataF = filter(Data, !is.na(Mean_F.100))
   Summary[i,15]<-nrow(DataF)
   #Summary[i,16]
   Summary[i,17]<-mean(DataF$Mean_F.100)
   Summary[i,18]<-median(DataF$Mean_F.100)
   Summary[i,19]<-std.error(DataF$Mean_F.100)
-  
+
 }
 
 write.csv(Summary,file.path(Folder,"Summary table.csv"),sep=";", dec=",")
@@ -1067,10 +1054,10 @@ write.csv(Summary,file.path(Folder,"Summary table.csv"),sep=";", dec=",")
 # normal distribution
 
 shapiro.test(BC_PI$Mean_Biomass)
-shapiro.test(BC_PI$Mean_S.1m) ### normality (>0.05 normal, <0.05 no normal) 
+shapiro.test(BC_PI$Mean_S.1m) ### normality (>0.05 normal, <0.05 no normal)
 shapiro.test(BC_PI$Mean_F.100)
 
-ggplot(BC_PI, aes(x=Mean_Biomass)) + 
+ggplot(BC_PI, aes(x=Mean_Biomass)) +
   geom_histogram()
 
 
@@ -1114,27 +1101,27 @@ ggplot(Sg,aes(Genus, Mean_Biomass))+
 
 # normal distribution
 
-shapiro.test(Sg$Mean_S.1m) ### normality (>0.05 normal, <0.05 no normal) 
+shapiro.test(Sg$Mean_S.1m) ### normality (>0.05 normal, <0.05 no normal)
 
-ggplot(Sg, aes(x=Mean_S.1m)) + 
+ggplot(Sg, aes(x=Mean_S.1m)) +
   geom_histogram()
 
 listids <- list()
 for (ids in unique(Sg$Genus)){
   subSg <- subset(x=Sg, subset=Genus==ids)
-  # apply the rest of your analysis there using subdf, for instance 
+  # apply the rest of your analysis there using subdf, for instance
   listids[[ids]] <- shapiro.test(subSg$Mean_Biomass)
-  
+
   print(ggplot(subSg, aes(x=Mean_Biomass)) + ggtitle(ids)+
     geom_histogram())
-  
+
 }
 
 
 
 
 
-#significate differences 
+#significate differences
 
 pairwise.wilcox.test(Sg$Mean_Biomass, Sg$Genus, #### are significantly different (p < 0.05)
                      p.adjust.method = "BH")
@@ -1194,11 +1181,11 @@ Sg1 %>% group_by(Locality) %>% summarise(r =cor(Water.Depth,Mean_F.100,use="comp
 
 SS<-ggplot(Sg,aes(Water.Depth, Mean_S.1m))+
   geom_point(aes(color=Sg$Genus))+
-  geom_errorbar(aes(ymin=Mean_S.1m-SD_S.1m, ymax=Mean_S.1m+SD_S.1m), width=.1) 
+  geom_errorbar(aes(ymin=Mean_S.1m-SD_S.1m, ymax=Mean_S.1m+SD_S.1m), width=.1)
 
 FS<-ggplot(Sg,aes(Water.Depth, Mean_F.100))+
   geom_point(aes(color=Sg$Genus))+
-  geom_errorbar(aes(ymin=Mean_F.100-SD_F.100, ymax=Mean_F.100+SD_F.100), width=.1) 
+  geom_errorbar(aes(ymin=Mean_F.100-SD_F.100, ymax=Mean_F.100+SD_F.100), width=.1)
 
 
 
@@ -1223,9 +1210,9 @@ ggplot(Sm,aes(Tidal.R, Mean_S.1m))+
   geom_jitter(aes(color=factor(Coast)))
 
 
-shapiro.test(Sm$Mean_S.1m) ### normality (>0.05 normal, <0.05 no normal) 
+shapiro.test(Sm$Mean_S.1m) ### normality (>0.05 normal, <0.05 no normal)
 
-ggplot(Sm, aes(x=Mean_S.1m)) + 
+ggplot(Sm, aes(x=Mean_S.1m)) +
   geom_histogram()
 
 
