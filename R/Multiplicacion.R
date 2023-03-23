@@ -46,6 +46,6 @@ multiply_by<- function (x = NULL, y = 10) {
   stopifnot(is.numeric(x), is.numeric(y))
 
   if (length(x) != length(y)) {
-    stop("x and y must have same length")
+    stop("x and y must have same length") }
 
-  x*y}}
+    x*y}
