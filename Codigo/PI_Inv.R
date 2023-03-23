@@ -121,9 +121,9 @@ transform_om_oc <- function(df = NULL) {
 kk <- transform_om_oc(df = A)
 
 
-###################################
-### Soil C stocks estimation 1m ###
-###################################
+
+# Soil C stocks estimation ------------------------------------------------
+
 
 #####################
 ###estimate stocks for the whole core + 1m with extrapolation of OC accumulated mass if needed
@@ -205,17 +205,15 @@ for(i in 1:length(X)) {
 
 stocks<-estimate_stock(A,100)
 
-write.csv(BCS,file.path(Folder,"Stock_core.csv"),sep=";", dec=",")
 
 
 
 
 
 
-# test extrapolation errors #####
 
 
-
+# Test extrapolation errors -----------------------------------------------
 
 ## Testing if extrapolations from accumulated OC mass report similar values than the estimation
 #of 1m stocks using those cores longer than 1 meter
@@ -406,9 +404,7 @@ ggplot(m.ExtS,aes(variable, value))+
 
 
 
-########################################
-### C fluxes estimation AV 100 years ###
-########################################
+# C fluxes estimation -----------------------------------------------------
 
 
 estimate_flux<- function(df=NULL,TimeFrame=100) {
