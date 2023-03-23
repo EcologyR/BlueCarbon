@@ -12,7 +12,16 @@
 #' multiply(c(2,3),c(10,20))
 #'
 #'
-multiply<- function (x = NULL, y = NULL) {x*y}
+multiply<- function (x = NULL, y = NULL) {
+
+  ## Check arguments
+
+  stopifnot(is.numeric(x), is.numeric(y))
+
+  if (length(x) != length(y)) {
+    stop("x and y must have same length")
+
+  x*y}
 
 
 
@@ -30,4 +39,13 @@ multiply<- function (x = NULL, y = NULL) {x*y}
 #' multiply_by(3)
 #' multiply_by(c(2,3),c(10))
 #'
-multiply_by<- function (x = NULL, y = 10) {x*y}
+multiply_by<- function (x = NULL, y = 10) {
+
+  ## Check arguments
+
+  stopifnot(is.numeric(x), is.numeric(y))
+
+  if (length(x) != length(y)) {
+    stop("x and y must have same length")
+
+  x*y}}
