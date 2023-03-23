@@ -322,17 +322,6 @@ corrplot::corrplot(CorMat, type = "upper", order = "hclust",
 #write.csv(CorMat,file.path(Folder,"Corr.Extrapolation.csv"),sep=";", dec=",")
 
 
-ggplot(ExtS, aes(ExtS[,2], ExtS[,3]))+xlab("1m stock")+ ylab("Model 1m stock")+
-  geom_point(aes(ExtS[,2], ExtS[,3],color="90%"), size=2)+
-  geom_point(aes(ExtS[,2], ExtS[,4],color="75%"), size=2)+
-  geom_point(aes(ExtS[,2], ExtS[,5],color="50%"), size=2)+
-  geom_point(aes(ExtS[,2], ExtS[,6],color="25%"), size=2)+
-  theme(text = element_text(size=15))+
-  #geom_text_repel(aes(label=A[,1]), size=4)+
-  xlim(0,5)+ylim(0,5)+
-  geom_abline()
-
-
 ExtS<-ExtS %>% mutate (Error.90 = (abs(S.1m-EXT.90)*100)/S.1m)
 ExtS<-ExtS %>% mutate (Error.75 = (abs(S.1m-EXT.75)*100)/S.1m)
 ExtS<-ExtS %>% mutate (Error.50 = (abs(S.1m-EXT.50)*100)/S.1m)
@@ -345,12 +334,25 @@ summary(ExtS)
 m.ExtS<-ExtS[,c(1,9:12)]
 m.ExtS<-reshape::melt(m.ExtS,id=c("Core.ID"))
 
-ggplot(m.ExtS,aes(variable, value))+
+ggplot2::ggplot(m.ExtS,aes(variable, value))+
   geom_boxplot()+
   geom_jitter()+
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+
+ggplot2::ggplot(ExtS, aes(ExtS[,2], ExtS[,3]))+xlab("1m stock")+ ylab("Model 1m stock")+
+  geom_point(aes(ExtS[,2], ExtS[,3],color="90%"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,4],color="75%"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,5],color="50%"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,6],color="25%"), size=2)+
+  theme(text = element_text(size=15))+
+  #geom_text_repel(aes(label=A[,1]), size=4)+
+  xlim(0,5)+ylim(0,5)+
+  geom_abline()
+
+
+
 }
 
 
@@ -408,8 +410,12 @@ ggplot(m.ExtS,aes(variable, value))+
 ### C fluxes estimation AV 100 years ###
 ########################################
 
+
+estimate_flux<- function(df=NULL,TimeFrame=100) {
+
+
 #select those cores with chronological models
-AD = filter(A, !is.na(Age))
+AD = filter(df, !is.na(Age))
 
 length(unique(AD$Core.ID))# number of cores with age estimations
 
@@ -418,25 +424,13 @@ X<-split(AD, AD$Core.ID)
 BCF <- data.frame(Core.ID=character(),
                   F.WC=numeric(),
                   A.Max=numeric(),
-                  F.100=numeric(),
-                  F.75=numeric(),
-                  F.50=numeric(),
-                  Method=character(),
-                  Ecosystem=character(),
-                  Genus=character())
+                  Flux=numeric())
 
 
 for(i in 1:length(X)) {
   BCF[i,1]<-names(X[i])
   Data<-as.data.frame(X[i])
   colnames(Data)<-colnames(AD)
-  BCF[i,8]<-Data$Ecosystem[1]
-  BCF[i,9]<-Data$Genus[1]
-
-  #Annotate the methods used to obtain the raw dates (14C, 210Pb or 210Pb & 14C)
-  Data2 <- subset(Data, Data$D.Method=='14C'|Data$D.Method=='210Pb'|Data$D.Method=='HR')
-  if (length(unique(Data2$D.Method))>1) { BCF[i,7]<-"210Pb & 14C"}
-    else {BCF[i,7]<-Data2$D.Method[1]}
 
 
   Data = filter(Data, !is.na(POC))
@@ -458,49 +452,32 @@ for(i in 1:length(X)) {
     #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
     Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
     Data[nrow(Data),which(colnames(Data)=="h")]<-
-    Data[nrow(Data),which(colnames(Data)=="DMax.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
+    Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
 
-    Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
+    Data <-Data %>% mutate (OCgcm2 = DBD*(POC/100)*h)
 
     #estimation of the average carbon flux for the whole core (OC stock/Max Age)
     BCF[i,2]<-(sum(Data[,which(colnames(Data)=="OCgcm2")]))/max(Data$Age)
     BCF[i,3]<-max(Data$Age)
 
-    #estimation of the average carbon flux for the last 100 years (OC stock last 100 yrs/100)
-    Data<-Data[c(1:(length(which(Data$Age <=100))+1)),]
+    #estimation of the average carbon flux for the selected TimeFrame (OC stock last 100 yrs/TimeFrame)
+    Data<-Data[c(1:(length(which(Data$Age <=TimeFrame))+1)),]
 
     BCF[i,4]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
-      *(100-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/100)
+      *(TimeFrame-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/TimeFrame)
 
-    #estimation of the average carbon flux for the last 75 years (OC stock last 75 yrs/75)
+    print(BCF)
 
-    if(nrow(Data)<3) next
 
-    else{
+  }}}
 
-        Data<-Data[c(1:(length(which(Data$Age <=75))+1)),]
-
-        BCF[i,5]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
-                       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
-                        *(100-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/75)
-
-        #estimation of the average carbon flux for the last 50 years (OC stock last 50 yrs/50)
-        if(nrow(Data)<3) next
-
-        else{
-
-        Data<-Data[c(1:(length(which(Data$Age <=50))+1)),]
-
-        BCF[i,6]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
-                       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
-                        *(100-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/50)
+estimate_flux(df=A,TimeFrame=100)
 
 
 
-    }}}}
 
-write.csv(BCF,file.path(Folder,"Flux_core.csv"),sep=";", dec=",")
+#write.csv(BCF,file.path(Folder,"Flux_core.csv"),sep=";", dec=",")
 
 # Differences among dating methods ####
 
