@@ -21,7 +21,7 @@ library(here)
 library(broom)
 here()
 
-A <- read_delim(here("Codigo", "example.csv"), delim = ";")
+A <- read.csv(here("Codigo", "example.csv"), sep = ";")
 # Summary initial data
 
 # Organic matter to organic carbon -------------------------------------------------------------------
@@ -34,7 +34,7 @@ transform_om_oc <- function(df = NULL) {
   table(df$Ecosystem)
   X<-split(df, df$Ecosystem)
   X2<-split(df, df$Genus)
-  X3<-split(df, df$`Site ID`)
+  X3<-split(df, df$Site.ID)
   X<-c(X,X2,X3)
   length(X)
 
@@ -91,11 +91,11 @@ transform_om_oc <- function(df = NULL) {
     if (is.na(df[i,which( colnames(df)=="OC" )])==FALSE)
     {df[i,which( colnames(df)=="POC" )]<-df[i,which( colnames(df)=="OC" )]}
 
-    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site ID" )])),which(colnames(OCEst)=="int")])==FALSE)
+    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="int")])==FALSE)
 
     {df[i,which( colnames(df)=="POC" )]<-
-      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site ID" )])),which(colnames(OCEst)=="int" )]+
-      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site ID" )])),which(colnames(OCEst)=="slope" )])*
+      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="int" )]+
+      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="slope" )])*
       df[i,which( colnames(df)=="OM" )] }
 
       else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="int")])==FALSE)
@@ -118,7 +118,7 @@ transform_om_oc <- function(df = NULL) {
 
 }
 
-transform_om_oc(df = A)
+kk <- transform_om_oc(df = A)
 
 
 ###################################
