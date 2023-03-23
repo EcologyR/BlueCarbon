@@ -84,7 +84,7 @@ transform_om_oc <- function(df = NULL) {
   #else function for specie
   #else function for ecosystem
 
-  df$POC<- NA
+  df$POC <- NA
 
   for(i in 1:nrow(df)) {
 
@@ -115,6 +115,26 @@ transform_om_oc <- function(df = NULL) {
   ## when OM very low, the estimation can give negative values of OC. We change negative values for 0.
 
   df$POC[df$POC < 0] <- 0
+
+  message(
+    paste("Howard et al (2014) applied to",
+          sum(is.na(df$POC)), "observations")
+    )
+
+  df <- df |>
+    mutate(
+      POC = case_when(
+        is.na(POC) & OM <= 0.2 & Ecosystem == "Seagrass" ~
+          0.4 * OM - 0.21,
+        is.na(POC) & OM > 0.2 & Ecosystem == "Seagrass" ~
+          0.43 * OM - 0.33,
+        is.na(POC) & Ecosystem == "Salt Marsh" ~
+          0.47 * OM + 0.0008 * OM^2,
+        T ~ POC
+      )
+    )
+
+  df
 
 }
 
