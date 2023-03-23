@@ -263,7 +263,7 @@ for(i in 1:length(X)) {
         Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
         Data[nrow(Data),which(colnames(Data)=="h")]<-
           Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
-        Data <-Data %>% mutate (OCgcm2 = DDBD*(POC/100)*h)
+        Data <-Data %>% mutate (OCgcm2 = DBD*(POC/100)*h)
 
 
         #For those cores longer than the extrapolation depth we estimate stock the observed stock at that depth and from linear models
@@ -315,35 +315,35 @@ for(i in 1:length(X)) {
 
 CorMat<-cor(na.omit(ExtS[,c(2:6)]), method = "pearson")
 
-corrplot(CorMat, type = "upper", order = "hclust",
+
+corrplot::corrplot(CorMat, type = "upper", order = "hclust",
          tl.col = "black", tl.srt = 45)
 
-write.csv(CorMat,file.path(Folder,"Corr.Extrapolation.csv"),sep=";", dec=",")
+#write.csv(CorMat,file.path(Folder,"Corr.Extrapolation.csv"),sep=";", dec=",")
 
 
 ggplot(ExtS, aes(ExtS[,2], ExtS[,3]))+xlab("1m stock")+ ylab("Model 1m stock")+
-  geom_point(aes(ExtS[,2], ExtS[,3],color="90cm"), size=2)+
-  geom_point(aes(ExtS[,2], ExtS[,4],color="75cm"), size=2)+
-  geom_point(aes(ExtS[,2], ExtS[,5],color="50cm"), size=2)+
-  geom_point(aes(ExtS[,2], ExtS[,6],color="25cm"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,3],color="90%"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,4],color="75%"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,5],color="50%"), size=2)+
+  geom_point(aes(ExtS[,2], ExtS[,6],color="25%"), size=2)+
   theme(text = element_text(size=15))+
   #geom_text_repel(aes(label=A[,1]), size=4)+
   xlim(0,5)+ylim(0,5)+
   geom_abline()
 
-A<- A %>% mutate (DMin.D = Min.D/(1-(Compresion/100)))
 
-ExtS<-ExtS %>% mutate (Error.90 = (abs(S.1m-EXT.90cm)*100)/S.1m)
-ExtS<-ExtS %>% mutate (Error.75 = (abs(S.1m-EXT.75cm)*100)/S.1m)
-ExtS<-ExtS %>% mutate (Error.50 = (abs(S.1m-EXT.50cm)*100)/S.1m)
-ExtS<-ExtS %>% mutate (Error.25 = (abs(S.1m-EXT.25cm)*100)/S.1m)
+ExtS<-ExtS %>% mutate (Error.90 = (abs(S.1m-EXT.90)*100)/S.1m)
+ExtS<-ExtS %>% mutate (Error.75 = (abs(S.1m-EXT.75)*100)/S.1m)
+ExtS<-ExtS %>% mutate (Error.50 = (abs(S.1m-EXT.50)*100)/S.1m)
+ExtS<-ExtS %>% mutate (Error.25 = (abs(S.1m-EXT.25)*100)/S.1m)
 
 summary(ExtS)
 
 
 #Global Error
 m.ExtS<-ExtS[,c(1,9:12)]
-m.ExtS<-melt(m.ExtS,id=c("Core.ID"))
+m.ExtS<-reshape::melt(m.ExtS,id=c("Core.ID"))
 
 ggplot(m.ExtS,aes(variable, value))+
   geom_boxplot()+
@@ -351,6 +351,12 @@ ggplot(m.ExtS,aes(variable, value))+
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+}
+
+
+test_extrapolation (df = A, Depth = 100)
+
+
 
 
 #By ecosystem
