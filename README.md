@@ -15,7 +15,8 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 <!-- [![CodeFactor](https://www.codefactor.io/repository/github/ecologyr/templaterpackage/badge)](https://www.codefactor.io/repository/github/ecologyr/templaterpackage) -->
 <!-- badges: end -->
 
-The goal of templateRpackage is to …
+The goal of BlueCarbon is to facilitate the estimation of organic carbon
+stocks and fluxes from soil/sediment cores from blue carbon ecosystems
 
 ## Installation
 
@@ -70,21 +71,7 @@ files, so they display on GitHub and CRAN.
 If using this package, please cite it:
 
 ``` r
-citation("BlueCarbon")
-
-To cite templateRpackage in publications use:
-
-  Rodriguez-Sanchez F. 2023. templateRpackage.
-  https://ecologyr.github.io/templateRpackage/
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,
-    title = {templateRpackage},
-    author = {Francisco Rodriguez-Sanchez},
-    year = {2023},
-    url = {https://ecologyr.github.io/templateRpackage/},
-  }
+#citation("BlueCarbon")
 ```
 
 ## Funding
