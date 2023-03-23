@@ -26,7 +26,16 @@ A <- read.csv(here("Codigo", "withPOC.csv"), sep = ";")
 
 # Organic matter to organic carbon -------------------------------------------------------------------
 
+#' Title
+#'
+#' @param df
+#'
+#' @return
+#' @export
+#'
+#' @examples
 transform_om_oc <- function(df = NULL) {
+
   #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
   #skip those models with R2<0.5 or P value>0.05
 
@@ -134,7 +143,7 @@ transform_om_oc <- function(df = NULL) {
       )
     )
 
-  df
+  return(df)
 
 }
 
@@ -217,10 +226,9 @@ for(i in 1:length(X)) {
         Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
         model<-lm(OCM ~ Max.D, data=Data)
         BCS[i,4]<-coef(model)[1] + Depth*coef(model)[2]}}
-
-    print(BCS)
-
-  }}}
+    }}
+return(BCS)
+}
 
 
 stocks<-estimate_stock(A,100)
@@ -369,8 +377,6 @@ ggplot2::ggplot(ExtS, aes(ExtS[,2], ExtS[,3]))+xlab("1m stock")+ ylab("Model 1m 
   xlim(0,5)+ylim(0,5)+
   geom_abline()
 
-
-
 }
 
 
@@ -483,10 +489,9 @@ for(i in 1:length(X)) {
       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
       *(TimeFrame-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/TimeFrame)
 
-    print(BCF)
-
-
-  }}}
+  }}
+return(BCF)
+}
 
 estimate_flux(df=A,TimeFrame=100)
 
