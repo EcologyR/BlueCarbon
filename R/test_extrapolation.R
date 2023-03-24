@@ -75,7 +75,8 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
     if (max(Data$Max.D)>=Depth)
 
     {
-      Data<-Data[c(1:(length(which(Data$Max.D <=Depth))+1)),]
+      if (Data$Data$Max.D ==Depth) {Data<-Data} esle {Data<-Data[c(1:(length(which(Data$Max.D <=Depth))+1)),]}
+
 
       ExtS[i,2]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
                      (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Max.D)-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))
