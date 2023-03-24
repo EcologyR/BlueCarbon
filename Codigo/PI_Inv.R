@@ -170,7 +170,7 @@ df_OC <- transform_om_oc(df = A)
 #' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
 #'
-#' @return stocks: data frame with columns Core.id, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
+#' @return data frame with columns Core.id, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
 #' @export
 #'
 #' @examples
@@ -415,7 +415,7 @@ test_extrapolation (df = df_OC, Depth = 100)
 #' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
 #' @param TimeFrame standardization time frame, by default 100 years
 #'
-#' @return fluxes: data frame with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
+#' @return data frame with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 #' @export
 #'
 #' @examples
