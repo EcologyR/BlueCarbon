@@ -33,7 +33,7 @@ estimate_flux<- function(df=NULL,TimeFrame=100) {
   if (is.numeric(df$Age)==FALSE) {stop("Age data is not class numeric, please chaeck")}
 
 
-  df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
+  df <-df |> mutate (Center = Min.D+((Max.D-Min.D)/2))
 
   #select those cores with chronological models
   AD = filter(df, !is.na(Age))
@@ -75,7 +75,7 @@ estimate_flux<- function(df=NULL,TimeFrame=100) {
       Data[nrow(Data),which(colnames(Data)=="h")]<-
         Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
 
-      Data <-Data %>% mutate (OCgcm2 = DBD*(POC/100)*h)
+      Data <-Data |> mutate (OCgcm2 = DBD*(POC/100)*h)
 
       #estimation of the average carbon flux for the whole core (OC stock/Max Age)
       BCF[i,2]<-(sum(Data[,which(colnames(Data)=="OCgcm2")]))/max(Data$Age)

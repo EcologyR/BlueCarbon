@@ -31,7 +31,7 @@ estimate_stock <- function(df = NULL, Depth = 100) {
   if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
 
 
-  df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
+  df <-df |> mutate (Center = Min.D+((Max.D-Min.D)/2))
 
   df = filter(df, !is.na(POC))
 
@@ -69,7 +69,7 @@ estimate_stock <- function(df = NULL, Depth = 100) {
         Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
 
       #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-      Data <-Data %>% mutate (OCgcm2 = DBD*(POC/100)*h)
+      Data <-Data |> mutate (OCgcm2 = DBD*(POC/100)*h)
 
       #estimation of the OC stoack in the whole core
       BCS[i,2]<-sum(Data[,which(colnames(Data)=="OCgcm2")])
@@ -94,7 +94,7 @@ estimate_stock <- function(df = NULL, Depth = 100) {
         #if core shorter than than the standarization depth we model the OC acumulated mass with depth and predict the stock at 1m
         else {
 
-          Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
+          Data <-Data |> mutate (OCM = cumsum(OCgcm2))
           model<-lm(OCM ~ Max.D, data=Data)
           BCS[i,4]<-coef(model)[1] + Depth*coef(model)[2]}}
     }}
