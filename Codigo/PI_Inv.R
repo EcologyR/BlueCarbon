@@ -26,14 +26,17 @@ A <- read.csv(here("Codigo", "example.csv"), sep = ";")
 
 # Organic matter to organic carbon -------------------------------------------------------------------
 
-#' Title
+#' Organic carbon estimation
 #'
-#' @param df
+#' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
-#' @return
+#' @param df A data frame with columns Core.ID, Ecosystem, Genus, Site.ID, OM, and OC.
+#'
+#' @return the initial data frame + one column with organic carbon values
 #' @export
 #'
 #' @examples
+
 transform_om_oc <- function(df = NULL) {
 
   #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
@@ -158,7 +161,19 @@ df_OC <- transform_om_oc(df = A)
 ###estimate stocks for the whole core + 1m with extrapolation of OC accumulated mass if needed
 #####
 
-#Estimation of the sample center
+
+#' Organic Carbon Stock estimation
+#'
+#' @description Estimates the carbon stock from soil core data until a specific depth, 100 cm by default. If the core do not reach the
+#' standardization depth it extrapolate the stock from a linear model between the organic carbon accumulated mass and depth.
+#'
+#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param Depth standardization soil depth, by default 100 cm.
+#'
+#' @return stocks: data frame with columns Core.id, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
+#' @export
+#'
+#' @examples
 
 estimate_stock <- function(df = NULL, Depth = 100) {
 
@@ -171,7 +186,7 @@ X<-split(df, df$Core.ID)
 BCS <- data.frame(Core.ID=character(),
                   S.WC=numeric(),
                   D.Max=numeric(),
-                  S.1m=numeric())
+                  Stock=numeric())
 
 for(i in 1:length(X)) {
   BCS[i,1]<-names(X[i])
@@ -232,7 +247,6 @@ for(i in 1:length(X)) {
 return(BCS)
 }
 
-
 stocks<-estimate_stock(df_OC,100)
 
 
@@ -240,6 +254,18 @@ stocks<-estimate_stock(df_OC,100)
 
 ## Testing if extrapolations from accumulated OC mass report similar values than the estimation
 #of 1m stocks using those cores longer than 1 meter
+
+#' Test differences between observed and extrapolated stocks
+#'
+#' @description subset those cores that reach the standardization depth and estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
+#'
+#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param Depth standardization soil depth, by default 100 cm.
+#'
+#' @return A data frame with the observed and extrapolated stocks. A plot with comparisons.
+#' @export
+#'
+#' @examples
 
 test_extrapolation <- function(df = NULL, Depth = 100) {
 
@@ -380,6 +406,19 @@ test_extrapolation (df = df_OC, Depth = 100)
 
 
 # C fluxes estimation -----------------------------------------------------
+
+
+#' Estimate the average organic carbon flux
+#'
+#' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
+#'
+#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
+#' @param TimeFrame standardization time frame, by default 100 years
+#'
+#' @return fluxes: data frame with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
+#' @export
+#'
+#' @examples
 
 
 estimate_flux<- function(df=NULL,TimeFrame=100) {
