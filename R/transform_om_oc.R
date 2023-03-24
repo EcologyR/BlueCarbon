@@ -56,7 +56,7 @@ transform_om_oc <- function(df = NULL) {
 
 
     #we only model those ecosystem, specie, and station with more than 5 samples were OC and LOI were mwasured
-    if((nrow(Data %>% filter_at(vars(OM,OC),all_vars(!is.na(.)))))<5) next
+    if((nrow(Data |> filter_at(vars(OM,OC),all_vars(!is.na(.)))))<5) next
 
 
     else{
