@@ -2,15 +2,33 @@
 #'
 #' @description subset those cores that reach the standardization depth and estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
 #'
-#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
 #'
-#' @return A data frame with the observed and extrapolated stocks. A plot with comparisons.
+#' @return A [data.frame] with the observed and extrapolated stocks. A plot with comparisons.
 #' @export
 #'
 #' @examples
 
 test_extrapolation <- function(df = NULL, Depth = 100) {
+
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
+
+  # name of the columns
+  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
+  if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necesary columns in functions documentation")}
+  if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necesary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necesary columns in functions documentation")}
+  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necesary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$Min.D)==FALSE) {stop("Minimum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$Max.D)==FALSE) {stop("Maximum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please chaeck")}
+  if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
+
 
   df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
   X<-split(df, df$Core.ID)

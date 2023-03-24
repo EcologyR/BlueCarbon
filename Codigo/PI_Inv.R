@@ -30,9 +30,9 @@ A <- read.csv(here("Codigo", "example.csv"), sep = ";")
 #'
 #' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
-#' @param df A data frame with columns Core.ID, Ecosystem, Genus, Site.ID, OM, and OC.
+#' @param df A [data.frame] with, at least, columns Core.ID, Ecosystem, Specie, Site.ID, OM, and OC.
 #'
-#' @return the initial data frame + one column with organic carbon values
+#' @return the initial [data.frame] + one column with organic carbon values
 #' @export
 #'
 #' @examples
@@ -42,10 +42,28 @@ transform_om_oc <- function(df = NULL) {
   #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
   #skip those models with R2<0.5 or P value>0.05
 
+  # check if the class of the parameters objects, the names and class of the columns of df are correct
+
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+
+  # name of the columns
+  if ("Site.ID" %in% colnames(df)==FALSE) {stop("There is not column named Site.ID. Please, check necesary columns in functions documentation")}
+  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
+  if ("Ecosystem" %in% colnames(df)==FALSE) {stop("There is not column named Ecosystem. Please, check necesary columns in functions documentation")}
+  if ("Specie" %in% colnames(df)==FALSE) {stop("There is not column named Specie. Please, check necesary columns in functions documentation")}
+  if ("OM" %in% colnames(df)==FALSE) {stop("There is not column named OM. Please, check necesary columns in functions documentation")}
+  if ("OC" %in% colnames(df)==FALSE) {stop("There is not column named OC. Please, check necesary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$OM)==FALSE) {stop("Organic matter data is not class numeric, please chaeck")}
+  if (is.numeric(df$OC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
+
+
   #create df list of dataframes with data from each ecosystem, specie, and station (site)
   table(df$Ecosystem)
   X<-split(df, df$Ecosystem)
-  X2<-split(df, df$Genus)
+  X2<-split(df, df$Specie)
   X3<-split(df, df$Site.ID)
   X<-c(X,X2,X3)
   length(X)
@@ -65,7 +83,7 @@ transform_om_oc <- function(df = NULL) {
     colnames(Data)<-colnames(df)
 
 
-    #we only model those ecosystem, genus, and station with more than 5 samples were OC and LOI were mwasured
+    #we only model those ecosystem, specie, and station with more than 5 samples were OC and LOI were mwasured
     if((nrow(Data %>% filter_at(vars(OM,OC),all_vars(!is.na(.)))))<5) next
 
 
@@ -110,11 +128,11 @@ transform_om_oc <- function(df = NULL) {
       (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="slope" )])*
       df[i,which( colnames(df)=="OM" )] }
 
-      else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="int")])==FALSE)
+      else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
 
       {df[i,which( colnames(df)=="POC" )]<-
-        OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="int" )]+
-        (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Genus" )])),which(colnames(OCEst)=="slope" )])*
+        OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int" )]+
+        (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="slope" )])*
         df[i,which( colnames(df)=="OM" )]}
 
         else {df[i,which( colnames(df)=="POC" )]<-
@@ -167,15 +185,33 @@ df_OC <- transform_om_oc(df = A)
 #' @description Estimates the carbon stock from soil core data until a specific depth, 100 cm by default. If the core do not reach the
 #' standardization depth it extrapolate the stock from a linear model between the organic carbon accumulated mass and depth.
 #'
-#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
 #'
-#' @return data frame with columns Core.id, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
+#' @return [data.frame] with columns Core.id, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
 #' @export
 #'
 #' @examples
 
 estimate_stock <- function(df = NULL, Depth = 100) {
+
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
+
+  # name of the columns
+  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
+  if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necesary columns in functions documentation")}
+  if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necesary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necesary columns in functions documentation")}
+  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necesary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$Min.D)==FALSE) {stop("Minimum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$Max.D)==FALSE) {stop("Maximum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please chaeck")}
+  if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
+
 
 df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
 
@@ -259,15 +295,33 @@ stocks<-estimate_stock(df_OC,100)
 #'
 #' @description subset those cores that reach the standardization depth and estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
 #'
-#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
 #'
-#' @return A data frame with the observed and extrapolated stocks. A plot with comparisons.
+#' @return A [data.frame] with the observed and extrapolated stocks. A plot with comparisons.
 #' @export
 #'
 #' @examples
 
 test_extrapolation <- function(df = NULL, Depth = 100) {
+
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
+
+  # name of the columns
+  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
+  if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necesary columns in functions documentation")}
+  if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necesary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necesary columns in functions documentation")}
+  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necesary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$Min.D)==FALSE) {stop("Minimum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$Max.D)==FALSE) {stop("Maximum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please chaeck")}
+  if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
+
 
   df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
   X<-split(df, df$Core.ID)
@@ -412,16 +466,35 @@ test_extrapolation (df = df_OC, Depth = 100)
 #'
 #' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 #'
-#' @param df A data frame with columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
+#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
 #' @param TimeFrame standardization time frame, by default 100 years
 #'
-#' @return data frame with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
+#' @return [data.frame] with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 #' @export
 #'
 #' @examples
 
 
 estimate_flux<- function(df=NULL,TimeFrame=100) {
+
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  if (is.numeric(TimeFrame)==FALSE) {stop("The TimeFrame provided is not class numeric, please chaeck data and transforme")}
+
+  # name of the columns
+  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
+  if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necesary columns in functions documentation")}
+  if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necesary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necesary columns in functions documentation")}
+  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necesary columns in functions documentation")}
+  if ("Age" %in% colnames(df)==FALSE) {stop("There is not column named Age. Please, check necesary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$Min.D)==FALSE) {stop("Minimum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$Max.D)==FALSE) {stop("Maximum depth data is not class numeric, please chaeck")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please chaeck")}
+  if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
+  if (is.numeric(df$Age)==FALSE) {stop("Age data is not class numeric, please chaeck")}
 
 
 df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
