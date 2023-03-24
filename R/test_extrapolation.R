@@ -30,7 +30,7 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
   if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
 
 
-  df <-df %>% mutate (Center = Min.D+((Max.D-Min.D)/2))
+  df <-df |> mutate (Center = Min.D+((Max.D-Min.D)/2))
   X<-split(df, df$Core.ID)
 
   ExtS<- data.frame(Core.ID=character(),
@@ -38,9 +38,7 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
                     EXT.90=numeric(),
                     EXT.75=numeric(),
                     EXT.50=numeric(),
-                    EXT.25=numeric(),
-                    Ecosystem=character(),
-                    Genus=character())
+                    EXT.25=numeric())
 
 
 
@@ -48,8 +46,6 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
     ExtS[i,1]<-names(X[i])
     Data<-as.data.frame(X[i])
     colnames(Data)<-colnames(df)
-    ExtS[i,7]<-Data[1,which( colnames(df)=="Ecosystem" )]
-    ExtS[i,8]<-Data[1,which( colnames(df)=="Genus" )]
 
     Data = filter(Data, !is.na(POC))
 
@@ -71,7 +67,7 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
     Data[1,which(colnames(Data)=="h")]<-Data[1,which(colnames(Data)=="Center")]
     Data[nrow(Data),which(colnames(Data)=="h")]<-
       Data[nrow(Data),which(colnames(Data)=="Max.D")]-Data[nrow(Data),which(colnames(Data)=="Center")]
-    Data <-Data %>% mutate (OCgcm2 = DBD*(POC/100)*h)
+    Data <-Data |> mutate (OCgcm2 = DBD*(POC/100)*h)
 
 
     #For those cores longer than the extrapolation depth we estimate stock the observed stock at that depth and from linear models
@@ -85,7 +81,7 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
                      (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Max.D)-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))
                       *(Depth-Data[(nrow(Data)-1),which(colnames(Data)=="Max.D")]))))
 
-      Data <-Data %>% mutate (OCM = cumsum(OCgcm2))
+      Data <-Data |> mutate (OCM = cumsum(OCgcm2))
 
       ninety<-Depth*0.9 #90% of the extrapolation length
       seventy<-Depth*0.75 #90% of the extrapolation length
@@ -130,10 +126,10 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
   #write.csv(CorMat,file.path(Folder,"Corr.Extrapolation.csv"),sep=";", dec=",")
 
 
-  ExtS<-ExtS %>% mutate (Error.90 = (abs(S.1m-EXT.90)*100)/S.1m)
-  ExtS<-ExtS %>% mutate (Error.75 = (abs(S.1m-EXT.75)*100)/S.1m)
-  ExtS<-ExtS %>% mutate (Error.50 = (abs(S.1m-EXT.50)*100)/S.1m)
-  ExtS<-ExtS %>% mutate (Error.25 = (abs(S.1m-EXT.25)*100)/S.1m)
+  ExtS<-ExtS |> mutate (Error.90 = (abs(S.1m-EXT.90)*100)/S.1m)
+  ExtS<-ExtS |> mutate (Error.75 = (abs(S.1m-EXT.75)*100)/S.1m)
+  ExtS<-ExtS |> mutate (Error.50 = (abs(S.1m-EXT.50)*100)/S.1m)
+  ExtS<-ExtS |> mutate (Error.25 = (abs(S.1m-EXT.25)*100)/S.1m)
 
   summary(ExtS)
 
