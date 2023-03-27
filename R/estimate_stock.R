@@ -18,11 +18,11 @@ estimate_stock <- function(df = NULL, Depth = 100) {
   if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
   # name of the columns
-  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
-  if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necesary columns in functions documentation")}
-  if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necesary columns in functions documentation")}
-  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necesary columns in functions documentation")}
-  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necesary columns in functions documentation")}
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
+  if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
+  if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
+  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necessary columns in functions documentation")}
 
   # class of the columns
   if (is.numeric(df$Min.D)==FALSE) {stop("Minimum depth data is not class numeric, please chaeck")}
@@ -35,9 +35,9 @@ estimate_stock <- function(df = NULL, Depth = 100) {
 
   df = filter(df, !is.na(POC))
 
-  X<-split(df, df$Core.ID)
+  X<-split(df, df$CoreID)
 
-  BCS <- data.frame(Core.ID=character(),
+  BCS <- data.frame(CoreID=character(),
                     S.WC=numeric(),
                     D.Max=numeric(),
                     Stock=numeric())

@@ -1,6 +1,4 @@
-exampledata <- data.frame(
-  x = runif(30),
-  y = runif(30)
-)
+exampledata <- read.csv("data-raw/example.csv", sep= ";")
+
 
 usethis::use_data(exampledata, overwrite = TRUE)

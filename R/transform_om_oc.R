@@ -20,10 +20,10 @@ transform_om_oc <- function(df = NULL) {
   if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
 
   # name of the columns
-  if ("Site.ID" %in% colnames(df)==FALSE) {stop("There is not column named Site.ID. Please, check necesary columns in functions documentation")}
-  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
-  if ("Ecosystem" %in% colnames(df)==FALSE) {stop("There is not column named Ecosystem. Please, check necesary columns in functions documentation")}
-  if ("Specie" %in% colnames(df)==FALSE) {stop("There is not column named Specie. Please, check necesary columns in functions documentation")}
+  if ("SiteID" %in% colnames(df)==FALSE) {stop("There is not column named SiteID. Please, check necessary columns in functions documentation")}
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
+  if ("Ecosystem" %in% colnames(df)==FALSE) {stop("There is not column named Ecosystem. Please, check necessary columns in functions documentation")}
+  if ("Specie" %in% colnames(df)==FALSE) {stop("There is not column named Specie. Please, check necessary columns in functions documentation")}
   if ("OM" %in% colnames(df)==FALSE) {stop("There is not column named OM. Please, check necesary columns in functions documentation")}
   if ("OC" %in% colnames(df)==FALSE) {stop("There is not column named OC. Please, check necesary columns in functions documentation")}
 
@@ -36,7 +36,7 @@ transform_om_oc <- function(df = NULL) {
   table(df$Ecosystem)
   X<-split(df, df$Ecosystem)
   X2<-split(df, df$Specie)
-  X3<-split(df, df$Site.ID)
+  X3<-split(df, df$SiteID)
   X<-c(X,X2,X3)
   length(X)
 
@@ -82,7 +82,7 @@ transform_om_oc <- function(df = NULL) {
 
   ## Use the models estimated to predict OC from OM content for those samples with no OC data
   #If there is OC data for that sample, keep original OC data,
-  #else use function estimated for that Site.ID
+  #else use function estimated for that SiteID
   #else function for specie
   #else function for ecosystem
 
@@ -93,11 +93,11 @@ transform_om_oc <- function(df = NULL) {
     if (is.na(df[i,which( colnames(df)=="OC" )])==FALSE)
     {df[i,which( colnames(df)=="POC" )]<-df[i,which( colnames(df)=="OC" )]}
 
-    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="int")])==FALSE)
+    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int")])==FALSE)
 
     {df[i,which( colnames(df)=="POC" )]<-
-      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="int" )]+
-      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Site.ID" )])),which(colnames(OCEst)=="slope" )])*
+      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int" )]+
+      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="slope" )])*
       df[i,which( colnames(df)=="OM" )] }
 
       else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
