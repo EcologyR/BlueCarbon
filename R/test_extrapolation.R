@@ -20,9 +20,9 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
   }
 
   # name of the columns
-  if ("Core.ID" %in% colnames(df) == FALSE) {
+  if ("CoreID" %in% colnames(df) == FALSE) {
     stop(
-      "There is not column named Core.ID. Please, check necesary columns in functions documentation"
+      "There is not column named CoreID. Please, check necesary columns in functions documentation"
     )
   }
   if ("Min.D" %in% colnames(df) == FALSE) {
@@ -62,10 +62,10 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
 
 
   df <- df |> mutate (Center = Min.D + ((Max.D - Min.D) / 2))
-  X <- split(df, df$Core.ID)
+  X <- split(df, df$CoreID)
 
   ExtS <- data.frame(
-    Core.ID = character(),
+    CoreID = character(),
     S.1m = numeric(),
     EXT.90 = numeric(),
     EXT.75 = numeric(),
@@ -110,13 +110,13 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
 
       #For those cores longer than the extrapolation depth we estimate stock the observed stock at that depth and from linear models
       # using data from the 90, 75, 50 and 25 % of the extrapolation depth
-      if (max(Data$Max.D) >= Depth)
+      if (max(Data$Max.D) <= Depth) next
 
-      {
-        if (Data$Data$Max.D == Depth) {
+
+        if (max(Data$Max.D) == Depth) {
           Data <-
             Data
-        } esle {
+        } else {
           Data <- Data[c(1:(length(which(
             Data$Max.D <= Depth
           )) + 1)), ]
@@ -164,8 +164,6 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
           model25 <- lm(OCM ~ Max.D, data = Data)
           ExtS[i, 6] <- coef(model25)[1] + 100 * coef(model25)[2]
         }
-
-      }
     }
   }
 
@@ -198,19 +196,20 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
 
 
   #Global Error
-  m.ExtS <- ExtS[, c(1, 9:12)]
-  m.ExtS <- reshape::melt(m.ExtS, id = c("Core.ID"))
+  m.ExtS <- ExtS[, c(1, 7:10)]
+  m.ExtS <- reshape::melt(m.ExtS, id = c("CoreID"))
 
-  ggplot2::ggplot(m.ExtS, aes(variable, value)) +
+  P1<-ggplot2::ggplot(m.ExtS, aes(variable, value)) + ylab("% of deviation from observed value") + xlab("% of standar depth") +
     geom_boxplot() +
     geom_jitter() +
+    scale_x_discrete(labels=c("Error.90" = "90%", "Error.75" = "75%", "Error.50" = "50%", "Error.25" = "25%"))+
     theme(
-      axis.title.x = element_blank(),
-      axis.text.x = element_blank(),
+      #axis.title.x = element_blank(),
+      #axis.text.x = element_blank(),
       axis.ticks.x = element_blank()
     )
 
-  ggplot2::ggplot(ExtS, aes(ExtS[, 2], ExtS[, 3])) + xlab("1m stock") + ylab("Model 1m stock") +
+  P2<-ggplot2::ggplot(ExtS, aes(ExtS[, 2], ExtS[, 3])) + xlab("Observed Stock") + ylab("Extrapolated stock") +
     geom_point(aes(ExtS[, 2], ExtS[, 3], color = "90%"), size = 2) +
     geom_point(aes(ExtS[, 2], ExtS[, 4], color = "75%"), size = 2) +
     geom_point(aes(ExtS[, 2], ExtS[, 5], color = "50%"), size = 2) +
@@ -219,5 +218,9 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
     #geom_text_repel(aes(label=A[,1]), size=4)+
     xlim(0, 5) + ylim(0, 5) +
     geom_abline()
+
+Extrapolation_plot<-gridExtra::grid.arrange(P1,P2, ncol=2)
+
+return(Extrapolation_plot)
 
 }
