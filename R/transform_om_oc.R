@@ -118,10 +118,12 @@ transform_om_oc <- function(df = NULL) {
 
   df$POC[df$POC < 0] <- 0
 
+
+  if (sum(is.na(df$POC) & !is.na(df$OM))>=1) {
   message(
     paste("Howard et al (2014) applied to",
-          sum(is.na(df$POC)), "observations")
-  )
+          sum(is.na(df$POC) & !is.na(df$OM) ), "observations")
+  )}
 
   df <- df |>
     mutate(
