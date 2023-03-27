@@ -18,7 +18,7 @@ estimate_flux<- function(df=NULL,TimeFrame=100) {
   if (is.numeric(TimeFrame)==FALSE) {stop("The TimeFrame provided is not class numeric, please chaeck data and transforme")}
 
   # name of the columns
-  if ("Core.ID" %in% colnames(df)==FALSE) {stop("There is not column named Core.ID. Please, check necesary columns in functions documentation")}
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necesary columns in functions documentation")}
   if ("Min.D" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necesary columns in functions documentation")}
   if ("Max.D" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necesary columns in functions documentation")}
   if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necesary columns in functions documentation")}
@@ -38,11 +38,11 @@ estimate_flux<- function(df=NULL,TimeFrame=100) {
   #select those cores with chronological models
   AD = filter(df, !is.na(Age))
 
-  length(unique(AD$Core.ID))# number of cores with age estimations
+  length(unique(AD$CoreID))# number of cores with age estimations
 
-  X<-split(AD, AD$Core.ID)
+  X<-split(AD, AD$CoreID)
 
-  BCF <- data.frame(Core.ID=character(),
+  BCF <- data.frame(CoreID=character(),
                     F.WC=numeric(),
                     A.Max=numeric(),
                     Flux=numeric())
