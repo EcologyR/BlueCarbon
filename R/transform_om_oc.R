@@ -134,6 +134,8 @@ transform_om_oc <- function(df = NULL) {
           0.43 * OM - 0.33,
         is.na(POC) & Ecosystem == "Salt Marsh" ~
           0.47 * OM + 0.0008 * OM^2,
+        is.na(POC) & Ecosystem == "Mangrove" ~
+          0.415 * OM - 2.89,
         T ~ POC
       )
     )

@@ -221,6 +221,7 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
 
 Extrapolation_plot<-gridExtra::grid.arrange(P1,P2, ncol=2)
 
+return(ExtS)
 return(Extrapolation_plot)
 
 }
