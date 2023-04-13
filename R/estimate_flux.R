@@ -90,9 +90,10 @@ estimate_flux<- function(df=NULL,TimeFrame=100) {
       } else {
         Data<-Data[c(1:(length(which(Data$Age <=TimeFrame))+1)),]
 
-        BCF[i,4]<-((((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
-                       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))
-                        *(TimeFrame-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))))/TimeFrame)
+        BCF[i,4]<-(
+          (sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")])+
+                       (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$Age)-Data[(nrow(Data)-1),which(colnames(Data)=="Age")])))
+                        *(TimeFrame-Data[(nrow(Data)-1),which(colnames(Data)=="Age")]))/TimeFrame)
       }
 
     }}
