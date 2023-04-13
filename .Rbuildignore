@@ -1,4 +1,4 @@
-^templateRpackage\.Rproj$
+^BlueCarbon\.Rproj$
 ^\.Rproj\.user$
 
 ^README\.Rmd$
@@ -10,3 +10,5 @@
 ^docs$
 ^pkgdown$
 .Rprofile
+Codigo/
+
