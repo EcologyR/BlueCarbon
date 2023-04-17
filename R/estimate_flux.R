@@ -17,26 +17,26 @@
 #' @examples
 
 
-estimate_flux<- function(df=NULL,TimeFrame=100, Core.ID="Core.ID", DMin= "DMin", DMax="DMax", DBD= "DBD", POC="POC", Age="Age") {
+estimate_flux<- function(df=NULL,TimeFrame=100, CoreID="CoreID", DMin= "DMin", DMax="DMax", DBD= "DBD", POC="POC", Age="Age") {
 
   # class of the dataframe
   if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
   if (is.numeric(TimeFrame)==FALSE) {stop("The TimeFrame provided is not class numeric, please chaeck data and transforme")}
 
 
-  df2<-as.data.frame(cbind(df[[Core.ID]], df[[DMin]],df[[DMax]],df[[DBD]], df[[POC]], df[[Age]]))
-  colnames(df2)<-c("Core.ID","DMin","DMax","DBD","POC", "Age")
+  df2<-as.data.frame(cbind(df[[CoreID]], df[[DMin]],df[[DMax]],df[[DBD]], df[[POC]], df[[Age]]))
+  colnames(df2)<-c("CoreID","DMin","DMax","DBD","POC", "Age")
   df2[, 2:6] <- sapply(df2[, 2:6], as.numeric)
 
   #select those cores with chronological models
   df3 = filter(df2, !is.na(Age))
   df4 = filter(df3, !is.na(POC))
 
-  df4<-estimate_h (df4, Core.ID=Core.ID, DMin= "DMin", DMax="DMax")
+  df4<-estimate_h (df4, CoreID=CoreID, DMin= "DMin", DMax="DMax")
 
-  X<-split(df4, df4$Core.ID)
+  X<-split(df4, df4$CoreID)
 
-  BCF <- data.frame(Core.ID=character(),
+  BCF <- data.frame(CoreID=character(),
                     F.WC=numeric(),
                     A.Max=numeric(),
                     Flux=numeric())

@@ -3,36 +3,36 @@
 #' @description Estimates the carbon stock from soil core data until a specific depth, 100 cm by default. If the core do not reach the
 #' standardization depth it extrapolate the stock from a linear model between the organic carbon accumulated mass and depth.
 #'
-#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A [data.frame] with, at least, columns: CoreID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
-#' @param Core.ID the name of the column (between "") from the df with the Core identification for each sample
+#' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
 #' @param DMin the name of the column (between "") from the df with the minimum depth of that sample (already corrected if needed)
 #' @param DMax the name of the column (between "") from the df with the maximum depth of that sample (already corrected if needed)
 #' @param DBD the name of the column (between "") from the df with the dry bulk density of that sample (already corrected if needed)
 #' @param POC the name of the column (between "") from the df with the percentage of organic carbon in the sample
 #'
-#' @return [data.frame] with columns Core.id, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
+#' @return [data.frame] with columns CoreID, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
 #' @export
 #'
 #' @examples
 
-estimate_stock <- function(df = NULL, Depth = 100,  Core.ID="Core.ID", DMin= "DMin", DMax="DMax", DBD= "DBD", POC="POC") {
+estimate_stock <- function(df = NULL, Depth = 100,  CoreID="CoreID", DMin= "DMin", DMax="DMax", DBD= "DBD", POC="POC") {
 
   # class of the dataframe
   if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
   if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
-  df2<-as.data.frame(cbind(df[[Core.ID]], df[[DMin]],df[[DMax]],df[[DBD]], df[[POC]]))
-  colnames(df2)<-c("Core.ID","DMin","DMax","DBD","POC")
+  df2<-as.data.frame(cbind(df[[CoreID]], df[[DMin]],df[[DMax]],df[[DBD]], df[[POC]]))
+  colnames(df2)<-c("CoreID","DMin","DMax","DBD","POC")
   df2[, 2:5] <- sapply(df2[, 2:5], as.numeric)
 
   df2 = filter(df2, !is.na(POC))
 
-  df3<-estimate_h (df2, Core.ID=Core.ID, DMin= "DMin", DMax="DMax")
+  df3<-estimate_h (df2, CoreID=CoreID, DMin= "DMin", DMax="DMax")
 
-  X<-split(df3, df3$Core.ID)
+  X<-split(df3, df3$CoreID)
 
-  BCS <- data.frame(Core.ID=character(),
+  BCS <- data.frame(CoreID=character(),
                     S.WC=numeric(),
                     D.Max=numeric(),
                     Stock=numeric())

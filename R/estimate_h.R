@@ -3,7 +3,7 @@
 #' @description checks for space between samples and, if any, divide this space between the previous and next sample to return sample thickness withouth gaps in the core
 #'
 #' @param df A [data.frame] with with the required columns
-#' @param Core.ID the name of the column (between "") from the df with the Core identification for each sample
+#' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
 #' @param DMin the name of the column (between "") from the df with the minimum depth of that sample (already corrected if needed)
 #' @param DMax the name of the column (between "") from the df with the maximum depth of that sample (already corrected if needed)
 #'
@@ -11,11 +11,11 @@
 #' @export
 #'
 #' @examples
-estimate_h <- function(df = NULL, Core.ID="Core.ID", DMin= "DMin", DMax="DMax") {
+estimate_h <- function(df = NULL, CoreID="CoreID", DMin= "DMin", DMax="DMax") {
 
 
-  df2<-as.data.frame(cbind(df[[Core.ID]], df[[DMin]],df[[DMax]]))
-  colnames(df2)<-c("Core.ID","DMin","DMax")
+  df2<-as.data.frame(cbind(df[[CoreID]], df[[DMin]],df[[DMax]]))
+  colnames(df2)<-c("CoreID","DMin","DMax")
   df2[, 2:3] <- sapply(df2[, 2:3], as.numeric)
 
   #check for NAs in depth columns
@@ -26,8 +26,8 @@ estimate_h <- function(df = NULL, Core.ID="Core.ID", DMin= "DMin", DMax="DMax") 
 
   # create individual data frames per each core
 
-  df2$Core.ID <- factor(df2$Core.ID, levels=unique(df2$Core.ID))
-  X<-split(df2, df2$Core.ID)
+  df2$CoreID <- factor(df2$CoreID, levels=unique(df2$CoreID))
+  X<-split(df2, df2$CoreID)
 
 
   columns<-c("EMin","EMax","h")
