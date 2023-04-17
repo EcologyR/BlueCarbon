@@ -3,13 +3,20 @@
 #' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
 #' @param df A [data.frame] with, at least, columns Core.ID, Ecosystem, Specie, Site.ID, OM, and OC.
+#' @param SiteID the name of the column (between "") from the df with the sampling site identification for each sample
+#' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
+#' @param Ecosystem the name of the column (between "") from the df with the Ecosystem type for each sample
+#' @param Specie the name of the column (between "") from the df with the predominant specie for each sample
+#' @param OM the name of the column (between "") from the df with the percentage of organic matter of that sample
+#' @param OC the name of the column (between "") from the df with the percentage of organic carbon in the sample
 #'
-#' @return the initial [data.frame] + one column with organic carbon values
+#'
+#' @return the initial [data.frame] + one column with organic carbon values (fOC = final organic carbon)
 #' @export
 #'
 #' @examples
 
-transform_om_oc <- function(df = NULL) {
+transform_om_oc <- function(df = NULL, SiteID="SiteID", CoreID="CoreID", Ecosystem="Ecosystem", Specie="Specie", OM="OM", OC="OC") {
 
   #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
   #skip those models with R2<0.5 or P value>0.05
@@ -17,26 +24,16 @@ transform_om_oc <- function(df = NULL) {
   # check if the class of the parameters objects, the names and class of the columns of df are correct
 
   # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please check data and transforme")}
 
-  # name of the columns
-  if ("SiteID" %in% colnames(df)==FALSE) {stop("There is not column named SiteID. Please, check necessary columns in functions documentation")}
-  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("Ecosystem" %in% colnames(df)==FALSE) {stop("There is not column named Ecosystem. Please, check necessary columns in functions documentation")}
-  if ("Specie" %in% colnames(df)==FALSE) {stop("There is not column named Specie. Please, check necessary columns in functions documentation")}
-  if ("OM" %in% colnames(df)==FALSE) {stop("There is not column named OM. Please, check necesary columns in functions documentation")}
-  if ("OC" %in% colnames(df)==FALSE) {stop("There is not column named OC. Please, check necesary columns in functions documentation")}
-
-  # class of the columns
-  if (is.numeric(df$OM)==FALSE) {stop("Organic matter data is not class numeric, please chaeck")}
-  if (is.numeric(df$OC)==FALSE) {stop("Organic carbon data is not class numeric, please chaeck")}
-
+  df2<-as.data.frame(cbind(df[[SiteID]], df[[CoreID]], df[[Ecosystem]],df[[Specie]],df[[OM]], df[[OC]]))
+  colnames(df2)<-c("SiteID", "CoreID", "Ecosystem","Specie","OM","OC")
+  df2[, 5:6] <- sapply(df2[, 5:6], as.numeric)
 
   #create df list of dataframes with data from each ecosystem, specie, and station (site)
-  table(df$Ecosystem)
-  X<-split(df, df$Ecosystem)
-  X2<-split(df, df$Specie)
-  X3<-split(df, df$SiteID)
+  X<-split(df2, df2$Ecosystem)
+  X2<-split(df2, df2$Specie)
+  X3<-split(df2, df2$SiteID)
   X<-c(X,X2,X3)
   length(X)
 
@@ -52,7 +49,7 @@ transform_om_oc <- function(df = NULL) {
   for(i in 1:length(X)) {
     OCEst[i,1]<-names(X[i])
     Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df)
+    colnames(Data)<-colnames(df2)
 
 
     #we only model those ecosystem, specie, and station with more than 5 samples were OC and LOI were mwasured
@@ -86,60 +83,61 @@ transform_om_oc <- function(df = NULL) {
   #else function for specie
   #else function for ecosystem
 
-  df$POC <- NA
+  df2$fOC <- NA
 
-  for(i in 1:nrow(df)) {
+  for(i in 1:nrow(df2)) {
 
-    if (is.na(df[i,which( colnames(df)=="OC" )])==FALSE)
-    {df[i,which( colnames(df)=="POC" )]<-df[i,which( colnames(df)=="OC" )]}
+    if (is.na(df2[i,which( colnames(df2)=="OC" )])==FALSE)
+    {df2[i,which( colnames(df2)=="fOC" )]<-df2[i,which( colnames(df2)=="OC" )]}
 
-    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int")])==FALSE)
+    else { if (is.na(OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="SiteID" )])),which(colnames(OCEst)=="int")])==FALSE)
 
-    {df[i,which( colnames(df)=="POC" )]<-
-      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int" )]+
-      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="slope" )])*
-      df[i,which( colnames(df)=="OM" )] }
+    {df2[i,which( colnames(df2)=="fOC" )]<-
+      OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="SiteID" )])),which(colnames(OCEst)=="int" )]+
+      (OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="SiteID" )])),which(colnames(OCEst)=="slope" )])*
+      df2[i,which( colnames(df2)=="OM" )] }
 
-      else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
+      else{ if (is.na(OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
 
-      {df[i,which( colnames(df)=="POC" )]<-
-        OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int" )]+
-        (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="slope" )])*
-        df[i,which( colnames(df)=="OM" )]}
+      {df2[i,which( colnames(df2)=="fOC" )]<-
+        OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="Specie" )])),which(colnames(OCEst)=="int" )]+
+        (OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="Specie" )])),which(colnames(OCEst)=="slope" )])*
+        df2[i,which( colnames(df2)=="OM" )]}
 
-        else {df[i,which( colnames(df)=="POC" )]<-
-          OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
-          (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
-          df[i,which( colnames(df)=="OM" )]}}}
+        else {df2[i,which( colnames(df2)=="fOC" )]<-
+          OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
+          (OCEst[which(rownames(OCEst)==(df2[i,which( colnames(df2)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
+          df2[i,which( colnames(df2)=="OM" )]}}}
 
   }
 
   ## when OM very low, the estimation can give negative values of OC. We change negative values for 0.
 
-  df$POC[df$POC < 0] <- 0
+  df2$fOC[df2$fOC < 0] <- 0
 
 
-  if (sum(is.na(df$POC) & !is.na(df$OM))>=1) {
+  if (sum(is.na(df2$fOC) & !is.na(df2$OM))>=1) {
   message(
     paste("Howard et al (2014) applied to",
-          sum(is.na(df$POC) & !is.na(df$OM) ), "observations")
+          sum(is.na(df2$fOC) & !is.na(df2$OM) ), "observations")
   )}
 
-  df <- df |>
+  df2 <- df2 |>
     mutate(
-      POC = case_when(
-        is.na(POC) & OM <= 0.2 & Ecosystem == "Seagrass" ~
+      fOC = case_when(
+        is.na(fOC) & OM <= 0.2 & Ecosystem == "Seagrass" ~
           0.4 * OM - 0.21,
-        is.na(POC) & OM > 0.2 & Ecosystem == "Seagrass" ~
+        is.na(fOC) & OM > 0.2 & Ecosystem == "Seagrass" ~
           0.43 * OM - 0.33,
-        is.na(POC) & Ecosystem == "Salt Marsh" ~
+        is.na(fOC) & Ecosystem == "Salt Marsh" ~
           0.47 * OM + 0.0008 * OM^2,
-        is.na(POC) & Ecosystem == "Mangrove" ~
+        is.na(fOC) & Ecosystem == "Mangrove" ~
           0.415 * OM - 2.89,
-        T ~ POC
+        T ~ fOC
       )
     )
 
-  return(df)
+  return(df2)
+  return(OCEst)
 
 }
