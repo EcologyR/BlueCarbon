@@ -1,11 +1,13 @@
 #' Estimation of the thickness of the sample
 #'
+#' @description checks for space between samples and, if any, divide this space between the previous and next sample to return sample thickness withouth gaps in the core
+#'
 #' @param df A [data.frame] with with the required columns
 #' @param Core.ID the name of the column (between "") from the df with the Core identification for each sample
 #' @param DMin the name of the column (between "") from the df with the minimum depth of that sample (already corrected if needed)
 #' @param DMax the name of the column (between "") from the df with the maximum depth of that sample (already corrected if needed)
 #'
-#' @return the initial [data.frame] with three additional columns: EMin (estimated minimun depth of the sample), EMax (estimated maximun depth of the sample) and h (estimated thikness of the sample)
+#' @return the initial [data.frame] with three additional columns: EMin (estimated minimum depth of the sample), EMax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
 #' @export
 #'
 #' @examples
@@ -47,7 +49,7 @@ estimate_h <- function(df = NULL, Core.ID="Core.ID", DMin= "DMin", DMax="DMax") 
         space[j]<-FALSE} else {space[j]<-TRUE}}
 
     if (any(space==TRUE)) {
-      # if there are spaces between samples it estimate the medium point between the maximun depth of the sample and the minimun depth of the next sample
+      # if there are spaces between samples it estimate the medium point between the maximum depth of the sample and the minimun depth of the next sample
       # and divide that distance between both samples
       Data <- cbind(Data, EMin=NA, EMax=NA)
       Data[1,"EMin"]<-0
