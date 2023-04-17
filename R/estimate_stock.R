@@ -26,10 +26,9 @@ estimate_stock <- function(df = NULL, Depth = 100,  Core.ID="Core.ID", DMin= "DM
   colnames(df2)<-c("Core.ID","DMin","DMax","DBD","POC")
   df2[, 2:5] <- sapply(df2[, 2:5], as.numeric)
 
+  df2 = filter(df2, !is.na(POC))
 
   df3<-estimate_h (df2, Core.ID=Core.ID, DMin= "DMin", DMax="DMax")
-
-  df3 = filter(df3, !is.na(POC))
 
   X<-split(df3, df3$Core.ID)
 
