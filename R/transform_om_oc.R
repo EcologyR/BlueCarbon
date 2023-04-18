@@ -2,7 +2,7 @@
 #'
 #' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
-#' @param df A [data.frame] with, at least, columns Core.ID, Ecosystem, Specie, Site.ID, OM, and OC.
+#' @param df A [data.frame] with, at least, columns CoreID, Ecosystem, Specie, SiteID, OM, and OC.
 #' @param SiteID the name of the column (between "") from the df with the sampling site identification for each sample
 #' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
 #' @param Ecosystem the name of the column (between "") from the df with the Ecosystem type for each sample
@@ -53,19 +53,19 @@ transform_om_oc <- function(df = NULL, SiteID="SiteID", CoreID="CoreID", Ecosyst
 
 
     #we only model those ecosystem, specie, and station with more than 5 samples were OC and LOI were mwasured
-    if((nrow(Data |> filter_at(vars(OM,OC),all_vars(!is.na(.)))))<5) next
+    if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))<5) next
 
 
     else{
 
       model<-lm(OC ~ OM, data=Data)
 
-      if(summary(model)$r.squared<0.5 | glance(model)$p.value>0.05 ) next
+      if(summary(model)$r.squared<0.5 | broom::glance(model)$p.value>0.05 ) next
 
       else{
 
         OCEst[i,2]<-summary(model)$r.squared
-        OCEst[i,3]<-glance(model)$p.value
+        OCEst[i,3]<-broom::glance(model)$p.value
         OCEst[i,4]<-summary(model)$fstatistic[1]
         OCEst[i,5]<-model$coefficients[1]
         OCEst[i,6]<-model$coefficients[2]
@@ -123,8 +123,8 @@ transform_om_oc <- function(df = NULL, SiteID="SiteID", CoreID="CoreID", Ecosyst
   )}
 
   df2 <- df2 |>
-    mutate(
-      fOC = case_when(
+    dplyr::mutate(
+      fOC = dplyr::case_when(
         is.na(fOC) & OM <= 0.2 & Ecosystem == "Seagrass" ~
           0.4 * OM - 0.21,
         is.na(fOC) & OM > 0.2 & Ecosystem == "Seagrass" ~
@@ -137,7 +137,10 @@ transform_om_oc <- function(df = NULL, SiteID="SiteID", CoreID="CoreID", Ecosyst
       )
     )
 
-  return(df2)
-  return(OCEst)
+  df3<-cbind(df,df2$fOC)
+  colnames(df3)<-c(colnames(df),"fOC")
+
+  return(df3)
+  #return(OCEst)
 
 }
