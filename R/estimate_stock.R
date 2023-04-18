@@ -26,9 +26,67 @@ estimate_stock <- function(df = NULL, Depth = 100,  CoreID="CoreID", DMin= "DMin
   colnames(df2)<-c("CoreID","DMin","DMax","DBD","POC")
   df2[, 2:5] <- sapply(df2[, 2:5], as.numeric)
 
-  df2 = filter(df2, !is.na(POC))
+  df2<-df2[!is.na(df2$POC),]
 
-  df3<-estimate_h (df2, CoreID=CoreID, DMin= "DMin", DMax="DMax")
+
+  # estimate thickness of the sample
+
+  # create individual data frames per each core
+
+  df2$CoreID <- factor(df2$CoreID, levels=unique(df2$CoreID))
+  X<-split(df2, df2$CoreID)
+
+
+  columns<-c("EMin","EMax","h")
+  Fdf2 = data.frame(matrix(nrow = 0, ncol = length(columns)))
+  colnames(Fdf2) = columns
+
+  for(i in 1:length(X)) {
+
+    Data<-as.data.frame(X[i])
+    colnames(Data)<-colnames(df2)
+
+    #check if there is spaces between samples (e.g, first sample ends at 5 cm and next starts at 7)
+    space<- c()
+
+    for (j in 1:(nrow(Data)-1)) {
+
+      # if there are no spaces between samples min and maximun depth of samples remain the same
+      if (Data[j,which(colnames(Data)=="DMax")] == Data[j+1,which(colnames(Data)=="DMin")]) {
+        space[j]<-FALSE} else {space[j]<-TRUE}}
+
+    if (any(space==TRUE)) {
+      # if there are spaces between samples it estimate the medium point between the maximum depth of the sample and the minimun depth of the next sample
+      # and divide that distance between both samples
+      Data <- cbind(Data, EMin=NA, EMax=NA)
+      Data[1,"EMin"]<-0
+      Data[nrow(Data),"EMax"]<-Data[nrow(Data),"DMax"]
+      for (j in 1:(nrow(Data)-1)) {
+        if(space[j]==TRUE) {
+          Data[j,"EMax"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)
+          Data[j+1,"EMin"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)} else {
+            Data[j,"EMax"]<-Data[j,"DMax"]
+            Data[j+1,"EMin"]<-Data[j+1,"DMin"]}}
+
+    }  else{
+      Data <- cbind(Data, EMin=NA, EMax=NA)
+      Data$EMin<-Data$DMin
+      Data$EMax<-Data$DMax
+
+    }
+
+    Data <- cbind(Data, h=NA)
+
+    #estimation of the thickness of the sample (h) from the new minimun and max depth of the sample
+
+    Data<- Data |> dplyr::mutate (h = EMax-EMin)
+
+    Fdf2<-rbind(Fdf2, Data[,c(6:8)])
+  }
+  df3<-cbind(df2, Fdf2)
+
+
+  # estimate stocks
 
   X<-split(df3, df3$CoreID)
 
