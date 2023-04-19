@@ -16,7 +16,7 @@
 #'
 #' @examples
 
-transform_om_oc <- function(df = NULL, SiteID="SiteID", CoreID="CoreID", Ecosystem="Ecosystem", Specie="Specie", OM="OM", OC="OC") {
+transform_om_oc <- function(df = NULL) {
 
   #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
   #skip those models with R2<0.5 or P value>0.05
@@ -146,10 +146,7 @@ transform_om_oc <- function(df = NULL, SiteID="SiteID", CoreID="CoreID", Ecosyst
       )
     )
 
-  dff<-cbind(df,df$fOC)
-  colnames(dff)<-c(colnames(df),"fOC")
-
-  return(dff)
+  return(df)
   #return(OCEst)
 
 }
