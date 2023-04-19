@@ -18,8 +18,8 @@ estimate_h <- function(df = NULL) {
 
   # name of the columns
   if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
-  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named DMin. Please, check necessary columns in functions documentation")}
+  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named DMax. Please, check necessary columns in functions documentation")}
 
   # class of the columns
   if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
@@ -39,6 +39,7 @@ estimate_h <- function(df = NULL) {
   columns<-c("EMin","EMax","h")
   Fdf2 = data.frame(matrix(nrow = 0, ncol = length(columns)))
   colnames(Fdf2) = columns
+
 
   for(i in 1:length(X)) {
 
@@ -80,7 +81,10 @@ estimate_h <- function(df = NULL) {
 
     Data<- Data |> dplyr::mutate (h = EMax-EMin)
 
-    Fdf2<-rbind(Fdf2, Data[,c(4:6)])
+    temp<-cbind(Data$EMin, Data$EMax, Data$h)
+    colnames(temp)<-colnames(Fdf2)
+    Fdf2<-rbind(Fdf2, temp)
+
   }
   Fdf<-cbind(df, Fdf2)
 

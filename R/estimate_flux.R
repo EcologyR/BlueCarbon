@@ -17,24 +17,36 @@
 #' @examples
 
 
-estimate_flux<- function(df=NULL,TimeFrame=100, CoreID="CoreID", DMin= "DMin", DMax="DMax", DBD= "DBD", POC="POC", Age="Age") {
+estimate_flux<- function(df=NULL,TimeFrame=100) {
 
   # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
-  if (is.numeric(TimeFrame)==FALSE) {stop("The TimeFrame provided is not class numeric, please chaeck data and transforme")}
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please check data and transforme")}
+  if (is.numeric(TimeFrame)==FALSE) {stop("The TimeFrame provided is not class numeric, please check data and transforme")}
+
+  # name of the columns
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
+  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
+  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
+  if ("fOC" %in% colnames(df)==FALSE) {stop("There is not column named fOC. Please, check necessary columns in functions documentation")}
+  if ("Age" %in% colnames(df)==FALSE) {stop("There is not column named Age. Please, check necessary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
+  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please check")}
+  if (is.numeric(df$fOC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
+  if (is.numeric(df$Age)==FALSE) {stop("Age data is not class numeric, please check")}
 
 
-  df2<-as.data.frame(cbind(df[[CoreID]], df[[DMin]],df[[DMax]],df[[DBD]], df[[POC]], df[[Age]]))
-  colnames(df2)<-c("CoreID","DMin","DMax","DBD","POC", "Age")
-  df2[, 2:6] <- sapply(df2[, 2:6], as.numeric)
 
   #select those cores with chronological models
-  df3 = filter(df2, !is.na(Age))
-  df4 = filter(df3, !is.na(POC))
+  df<-df[!is.na(df$Age),]
+  df<-df[!is.na(df$fOC),]
 
-  df4<-estimate_h (df4, CoreID=CoreID, DMin= "DMin", DMax="DMax")
+  df<-estimate_h (df)
 
-  X<-split(df4, df4$CoreID)
+  X<-split(df, df$CoreID)
 
   BCF <- data.frame(CoreID=character(),
                     F.WC=numeric(),
@@ -45,13 +57,13 @@ estimate_flux<- function(df=NULL,TimeFrame=100, CoreID="CoreID", DMin= "DMin", D
   for(i in 1:length(X)) {
     BCF[i,1]<-names(X[i])
     Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df4)
+    colnames(Data)<-colnames(df)
 
     if(nrow(Data)<3) next
 
     else{
 
-      Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(POC/100)*h)
+      Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(fOC/100)*h)
 
       #estimation of the average carbon flux for the whole core (OC stock/Max Age)
       BCF[i,2]<-(sum(Data[,which(colnames(Data)=="OCgcm2")]))/max(Data$Age)

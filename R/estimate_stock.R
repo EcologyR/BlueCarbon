@@ -27,20 +27,17 @@ estimate_stock <- function(df = NULL, Depth = 100) {
   if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
   if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
   if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
-  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necessary columns in functions documentation")}
+  if ("fOC" %in% colnames(df)==FALSE) {stop("There is not column named fOC. Please, check necessary columns in functions documentation")}
 
   # class of the columns
   if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
   if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
   if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please check")}
-  if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
-
-  # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please check data and transforme")}
-  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please check data and transforme")}
+  if (is.numeric(df$fOC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
 
 
-  df<-df[!is.na(df$POC),]
+
+  df<-df[!is.na(df$fOC),]
 
   # estimate thickness of the sample
 
@@ -65,7 +62,7 @@ estimate_stock <- function(df = NULL, Depth = 100) {
     else{
 
       #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-      Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(POC/100)*h)
+      Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(fOC/100)*h)
 
       #estimation of the OC stock in the whole core
       BCS[i,2]<-sum(Data[,which(colnames(Data)=="OCgcm2")])
@@ -91,7 +88,7 @@ estimate_stock <- function(df = NULL, Depth = 100) {
                         (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$EMax)-Data[(nrow(Data)-1),which(colnames(Data)=="EMax")]))
                          *(Depth-Data[(nrow(Data)-1),which(colnames(Data)=="EMax")]))))}}
 
-        #if core shorter than than the standarization depth we model the OC acumulated mass with depth and predict the stock at that depth
+        #if core shorter than than the standardization depth we model the OC acumulated mass with depth and predict the stock at that depth
         else {
 
           Data <-Data |> dplyr::mutate (OCM = cumsum(OCgcm2))
