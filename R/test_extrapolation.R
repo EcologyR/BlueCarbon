@@ -11,62 +11,49 @@
 #' @examples
 
 test_extrapolation <- function(df = NULL, Depth = 100) {
+
   # class of the dataframe
-  if (is.data.frame(df) == FALSE) {
-    stop("The data provided is not class data.frame, please chaeck data and transforme")
-  }
-  if (is.numeric(Depth) == FALSE) {
-    stop("The Depth provided is not class numeric, please chaeck data and transforme")
-  }
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
   # name of the columns
-  if ("CoreID" %in% colnames(df) == FALSE) {
-    stop(
-      "There is not column named CoreID. Please, check necesary columns in functions documentation"
-    )
-  }
-  if ("Min.D" %in% colnames(df) == FALSE) {
-    stop(
-      "There is not column named Min.D. Please, check necesary columns in functions documentation"
-    )
-  }
-  if ("Max.D" %in% colnames(df) == FALSE) {
-    stop(
-      "There is not column named Max.D. Please, check necesary columns in functions documentation"
-    )
-  }
-  if ("DBD" %in% colnames(df) == FALSE) {
-    stop(
-      "There is not column named DBD. Please, check necesary columns in functions documentation"
-    )
-  }
-  if ("POC" %in% colnames(df) == FALSE) {
-    stop(
-      "There is not column named POC. Please, check necesary columns in functions documentation"
-    )
-  }
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
+  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
+  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
+  if ("fOC" %in% colnames(df)==FALSE) {stop("There is not column named fOC. Please, check necessary columns in functions documentation")}
 
   # class of the columns
-  if (is.numeric(df$Min.D) == FALSE) {
-    stop("Minimum depth data is not class numeric, please chaeck")
-  }
-  if (is.numeric(df$Max.D) == FALSE) {
-    stop("Maximum depth data is not class numeric, please chaeck")
-  }
-  if (is.numeric(df$DBD) == FALSE) {
-    stop("Dry Bulk Density data is not class numeric, please chaeck")
-  }
-  if (is.numeric(df$POC) == FALSE) {
-    stop("Organic carbon data is not class numeric, please chaeck")
-  }
+  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
+  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please check")}
+  if (is.numeric(df$fOC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
 
 
-  df <- df |> mutate (Center = Min.D + ((Max.D - Min.D) / 2))
-  X <- split(df, df$CoreID)
+  # we select those cores larger than the standard depth
+
+  columns<-colnames(df)
+  DataE = data.frame(matrix(nrow = 0, ncol = length(columns)))
+  colnames(DataE) = columns
+
+
+
+   X <- split(df, df$CoreID)
+
+  for (i in 1:length(X)) {
+    Data <- as.data.frame(X[i])
+    colnames(Data) <- colnames(df)
+
+    if (max(Data$DMax) < Depth) next
+
+    DataE<-rbind(DataE,Data)}
+
+
+   # estimate the stock at the standar depth
 
   ExtS <- data.frame(
     CoreID = character(),
-    S.1m = numeric(),
+    EXT.100 = numeric(),
     EXT.90 = numeric(),
     EXT.75 = numeric(),
     EXT.50 = numeric(),
@@ -74,98 +61,56 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
   )
 
 
-
-  for (i in 1:length(X)) {
-    ExtS[i, 1] <- names(X[i])
-    Data <- as.data.frame(X[i])
-    colnames(Data) <- colnames(df)
-
-    Data = filter(Data,!is.na(POC))
-
-    if (nrow(Data) < 3)
-      next
+    hundreth<- Depth #100% of the extrapolation length
+    ninety <- Depth * 0.9 #90% of the extrapolation length
+    seventy <- Depth * 0.75 #90% of the extrapolation length
+    fifhty <- Depth * 0.50 #90% of the extrapolation length
+    twentififty <- Depth * 0.25 #90% of the extrapolation length
 
 
-    else {
-      Data$h <- NA
+    #estimate observed stock
+    temp100<-estimate_stock (DataE, Depth=hundreth)
+    ExtS[c(1:nrow(temp100)),"CoreID"]<-temp100$CoreID
+    ExtS$EXT.100<-temp100$Stock
 
-      #estimation of the thickness of the sample (h)
-      for (j in 2:(nrow(Data) - 1)) {
-        Data[j, which(colnames(Data) == "h")] <-
-          ((Data[j, which(colnames(Data) == "Center")] - Data[(j - 1), which(colnames(Data) ==
-                                                                               "Center")]) / 2) +
-          ((Data[(j + 1), which(colnames(Data) == "Center")] - Data[j, which(colnames(Data) ==
-                                                                               "Center")]) / 2)
+   # estimate stock with a 90, 75, 50 and 25 percentage of the standard depth
 
-      }
+    X <- split(DataE, DataE$CoreID)
 
-      #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-      Data[1, which(colnames(Data) == "h")] <-
-        Data[1, which(colnames(Data) == "Center")]
-      Data[nrow(Data), which(colnames(Data) == "h")] <-
-        Data[nrow(Data), which(colnames(Data) == "Max.D")] - Data[nrow(Data), which(colnames(Data) ==
-                                                                                      "Center")]
-      Data <- Data |> mutate (OCgcm2 = DBD * (POC / 100) * h)
+    for (i in 1:length(X)) {
+      Data <- as.data.frame(X[i])
+      colnames(Data) <- colnames(DataE)
 
+    Data<-Data[!is.na(Data$fOC),]
+    Data<-estimate_h(Data)
 
-      #For those cores longer than the extrapolation depth we estimate stock the observed stock at that depth and from linear models
-      # using data from the 90, 75, 50 and 25 % of the extrapolation depth
-      if (max(Data$Max.D) <= Depth) next
+    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
+    Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(fOC/100)*h)
 
+    #estimate organic carbon accumulated mass
+    Data <-Data |> dplyr::mutate (OCM = cumsum(OCgcm2))
 
-        if (max(Data$Max.D) == Depth) {
-          Data <-
-            Data
-        } else {
-          Data <- Data[c(1:(length(which(
-            Data$Max.D <= Depth
-          )) + 1)), ]
-        }
+    Data<- subset(Data,Data$DMax<=ninety)
 
+    if (nrow(Data)>3){
+      model90<-lm(OCM ~ DMax, data=Data)
+      ExtS[i,3]<-coef(model90)[1] + 100*coef(model90)[2]}
 
-        ExtS[i, 2] <-
-          (((sum(Data[c(1:(nrow(Data) - 1)), which(colnames(Data) == "OCgcm2")])) +
-              (Data[nrow(Data), which(colnames(Data) == "OCgcm2")] /
-                 ((max(Data$Max.D) - Data[(nrow(Data) - 1), which(colnames(Data) == "Max.D")])
-                 )
-               * (
-                 Depth - Data[(nrow(Data) - 1), which(colnames(Data) == "Max.D")]
-               ))))
+    Data<- subset(Data,Data$DMax<=seventy)
+    if (nrow(Data)>3){
+      model75<-lm(OCM ~ DMax, data=Data)
+      ExtS[i,4]<-coef(model75)[1] + 100*coef(model75)[2]}
 
-        Data <- Data |> mutate (OCM = cumsum(OCgcm2))
+    Data<- subset(Data,Data$DMax<=fifhty)
+    if (nrow(Data)>3){
+      model50<-lm(OCM ~ DMax, data=Data)
+      ExtS[i,5]<-coef(model50)[1] + 100*coef(model50)[2]}
 
-        ninety <- Depth * 0.9 #90% of the extrapolation length
-        seventy <- Depth * 0.75 #90% of the extrapolation length
-        fifhty <- Depth * 0.50 #90% of the extrapolation length
-        twentififty <- Depth * 0.25 #90% of the extrapolation length
+    Data<- subset(Data,Data$DMax<=twentififty)
+    if (nrow(Data)>3){
+      model25<-lm(OCM ~ DMax, data=Data)
+      ExtS[i,6]<-coef(model25)[1] + 100*coef(model25)[2]}}
 
-
-        Data <- subset(Data, Data$Max.D <= ninety)
-
-        if (nrow(Data) > 3) {
-          model90 <- lm(OCM ~ Max.D, data = Data)
-          ExtS[i, 3] <- coef(model90)[1] + 100 * coef(model90)[2]
-        }
-
-        Data <- subset(Data, Data$Max.D <= seventy)
-        if (nrow(Data) > 3) {
-          model75 <- lm(OCM ~ Max.D, data = Data)
-          ExtS[i, 4] <- coef(model75)[1] + 100 * coef(model75)[2]
-        }
-
-        Data <- subset(Data, Data$Max.D <= fifhty)
-        if (nrow(Data) > 3) {
-          model50 <- lm(OCM ~ Max.D, data = Data)
-          ExtS[i, 5] <- coef(model50)[1] + 100 * coef(model50)[2]
-        }
-
-        Data <- subset(Data, Data$Max.D <= twentififty)
-        if (nrow(Data) > 3) {
-          model25 <- lm(OCM ~ Max.D, data = Data)
-          ExtS[i, 6] <- coef(model25)[1] + 100 * coef(model25)[2]
-        }
-    }
-  }
 
   #############
   # we test the correlation between the stock at 1m estimated from real data and the models
@@ -187,10 +132,10 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
   #write.csv(CorMat,file.path(Folder,"Corr.Extrapolation.csv"),sep=";", dec=",")
 
 
-  ExtS <- ExtS |> mutate (Error.90 = (abs(S.1m - EXT.90) * 100) / S.1m)
-  ExtS <- ExtS |> mutate (Error.75 = (abs(S.1m - EXT.75) * 100) / S.1m)
-  ExtS <- ExtS |> mutate (Error.50 = (abs(S.1m - EXT.50) * 100) / S.1m)
-  ExtS <- ExtS |> mutate (Error.25 = (abs(S.1m - EXT.25) * 100) / S.1m)
+  ExtS <- ExtS |> dplyr::mutate (Error.90 = (abs(EXT.100 - EXT.90) * 100) / EXT.100)
+  ExtS <- ExtS |> dplyr::mutate (Error.75 = (abs(EXT.100 - EXT.75) * 100) / EXT.100)
+  ExtS <- ExtS |> dplyr::mutate (Error.50 = (abs(EXT.100 - EXT.50) * 100) / EXT.100)
+  ExtS <- ExtS |> dplyr::mutate (Error.25 = (abs(EXT.100 - EXT.25) * 100) / EXT.100)
 
   summary(ExtS)
 
@@ -198,6 +143,8 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
   #Global Error
   m.ExtS <- ExtS[, c(1, 7:10)]
   m.ExtS <- reshape::melt(m.ExtS, id = c("CoreID"))
+
+  library("ggplot2")
 
   P1<-ggplot2::ggplot(m.ExtS, aes(variable, value)) + ylab("% of deviation from observed value") + xlab("% of standar depth") +
     geom_boxplot() +
