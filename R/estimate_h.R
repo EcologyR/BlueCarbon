@@ -11,23 +11,29 @@
 #' @export
 #'
 #' @examples
-estimate_h <- function(df = NULL, CoreID="CoreID", DMin= "DMin", DMax="DMax") {
+estimate_h <- function(df = NULL) {
 
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
 
-  df2<-as.data.frame(cbind(df[[CoreID]], df[[DMin]],df[[DMax]]))
-  colnames(df2)<-c("CoreID","DMin","DMax")
-  df2[, 2:3] <- sapply(df2[, 2:3], as.numeric)
+  # name of the columns
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
+  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
+  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+
+  # class of the columns
+  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
+  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
 
   #check for NAs in depth columns
-
-  if (sum(is.na(df2$DMin))>0){stop("Samples minimun depth column has NAs, please check")}
-  if (sum(is.na(df2$DMax))>0){stop("Samples maximun depth column has NAs, please check")}
+  if (sum(is.na(df$DMin))>0){stop("Samples minimun depth column has NAs, please check")}
+  if (sum(is.na(df$DMax))>0){stop("Samples maximun depth column has NAs, please check")}
 
 
   # create individual data frames per each core
 
-  df2$CoreID <- factor(df2$CoreID, levels=unique(df2$CoreID))
-  X<-split(df2, df2$CoreID)
+  df$CoreID <- factor(df$CoreID, levels=unique(df$CoreID))
+  X<-split(df, df$CoreID)
 
 
   columns<-c("EMin","EMax","h")
@@ -37,7 +43,7 @@ estimate_h <- function(df = NULL, CoreID="CoreID", DMin= "DMin", DMax="DMax") {
   for(i in 1:length(X)) {
 
     Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df2)
+    colnames(Data)<-colnames(df)
 
     #check if there is spaces between samples (e.g, first sample ends at 5 cm and next starts at 7)
     space<- c()

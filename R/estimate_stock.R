@@ -16,79 +16,39 @@
 #'
 #' @examples
 
-estimate_stock <- function(df = NULL, Depth = 100,  CoreID="CoreID", DMin= "DMin", DMax="DMax", DBD= "DBD", POC="POC") {
+estimate_stock <- function(df = NULL, Depth = 100) {
 
   # class of the dataframe
   if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
   if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
-  df2<-as.data.frame(cbind(df[[CoreID]], df[[DMin]],df[[DMax]],df[[DBD]], df[[POC]]))
-  colnames(df2)<-c("CoreID","DMin","DMax","DBD","POC")
-  df2[, 2:5] <- sapply(df2[, 2:5], as.numeric)
+  # name of the columns
+  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
+  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
+  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
+  if ("POC" %in% colnames(df)==FALSE) {stop("There is not column named POC. Please, check necessary columns in functions documentation")}
 
-  df2<-df2[!is.na(df2$POC),]
+  # class of the columns
+  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
+  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
+  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please check")}
+  if (is.numeric(df$POC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
 
+  # class of the dataframe
+  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please check data and transforme")}
+  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please check data and transforme")}
+
+
+  df<-df[!is.na(df$POC),]
 
   # estimate thickness of the sample
 
-  # create individual data frames per each core
-
-  df2$CoreID <- factor(df2$CoreID, levels=unique(df2$CoreID))
-  X<-split(df2, df2$CoreID)
-
-
-  columns<-c("EMin","EMax","h")
-  Fdf2 = data.frame(matrix(nrow = 0, ncol = length(columns)))
-  colnames(Fdf2) = columns
-
-  for(i in 1:length(X)) {
-
-    Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df2)
-
-    #check if there is spaces between samples (e.g, first sample ends at 5 cm and next starts at 7)
-    space<- c()
-
-    for (j in 1:(nrow(Data)-1)) {
-
-      # if there are no spaces between samples min and maximun depth of samples remain the same
-      if (Data[j,which(colnames(Data)=="DMax")] == Data[j+1,which(colnames(Data)=="DMin")]) {
-        space[j]<-FALSE} else {space[j]<-TRUE}}
-
-    if (any(space==TRUE)) {
-      # if there are spaces between samples it estimate the medium point between the maximum depth of the sample and the minimun depth of the next sample
-      # and divide that distance between both samples
-      Data <- cbind(Data, EMin=NA, EMax=NA)
-      Data[1,"EMin"]<-0
-      Data[nrow(Data),"EMax"]<-Data[nrow(Data),"DMax"]
-      for (j in 1:(nrow(Data)-1)) {
-        if(space[j]==TRUE) {
-          Data[j,"EMax"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)
-          Data[j+1,"EMin"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)} else {
-            Data[j,"EMax"]<-Data[j,"DMax"]
-            Data[j+1,"EMin"]<-Data[j+1,"DMin"]}}
-
-    }  else{
-      Data <- cbind(Data, EMin=NA, EMax=NA)
-      Data$EMin<-Data$DMin
-      Data$EMax<-Data$DMax
-
-    }
-
-    Data <- cbind(Data, h=NA)
-
-    #estimation of the thickness of the sample (h) from the new minimun and max depth of the sample
-
-    Data<- Data |> dplyr::mutate (h = EMax-EMin)
-
-    Fdf2<-rbind(Fdf2, Data[,c(6:8)])
-  }
-  df3<-cbind(df2, Fdf2)
-
+  dfh<-estimate_h(df)
 
   # estimate stocks
 
-  X<-split(df3, df3$CoreID)
+  X<-split(dfh, dfh$CoreID)
 
   BCS <- data.frame(CoreID=character(),
                     S.WC=numeric(),
@@ -98,7 +58,7 @@ estimate_stock <- function(df = NULL, Depth = 100,  CoreID="CoreID", DMin= "DMin
   for(i in 1:length(X)) {
     BCS[i,1]<-names(X[i])
     Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df3)
+    colnames(Data)<-colnames(dfh)
 
     if(nrow(Data)<3) next
 
@@ -107,7 +67,7 @@ estimate_stock <- function(df = NULL, Depth = 100,  CoreID="CoreID", DMin= "DMin
       #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
       Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(POC/100)*h)
 
-      #estimation of the OC stoack in the whole core
+      #estimation of the OC stock in the whole core
       BCS[i,2]<-sum(Data[,which(colnames(Data)=="OCgcm2")])
       BCS[i,3]<-max(Data[,which(colnames(Data)=="EMax")])
 
@@ -117,17 +77,21 @@ estimate_stock <- function(df = NULL, Depth = 100,  CoreID="CoreID", DMin= "DMin
 
       else{
 
-        # if the core longer than the standarization depth we estimate the stock until 1m depth
+        # if the core longer than the standardization depth we estimate the stock until that depth
         if (max(Data$EMax)>=Depth)
 
         {
           Data<-Data[c(1:(length(which(Data$EMax <=Depth))+1)),]
 
+          if(nrow(Data)<3) next
+
+          else{
+
           BCS[i,4]<-(((sum(Data[c(1:(nrow(Data)-1)),which(colnames(Data)=="OCgcm2")]))+
                         (Data[nrow(Data),which(colnames(Data)=="OCgcm2")]/((max(Data$EMax)-Data[(nrow(Data)-1),which(colnames(Data)=="EMax")]))
-                         *(Depth-Data[(nrow(Data)-1),which(colnames(Data)=="EMax")]))))}
+                         *(Depth-Data[(nrow(Data)-1),which(colnames(Data)=="EMax")]))))}}
 
-        #if core shorter than than the standarization depth we model the OC acumulated mass with depth and predict the stock at 1m
+        #if core shorter than than the standarization depth we model the OC acumulated mass with depth and predict the stock at that depth
         else {
 
           Data <-Data |> dplyr::mutate (OCM = cumsum(OCgcm2))
