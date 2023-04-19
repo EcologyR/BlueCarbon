@@ -2,14 +2,8 @@
 #'
 #' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 #'
-#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
+#' @param df A [data.frame] with, at least, columns: Core.ID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
 #' @param TimeFrame standardization time frame, by default 100 years
-#' @param Core.ID the name of the column (between "") from the df with the Core identification for each sample
-#' @param DMin the name of the column (between "") from the df with the minimum depth of that sample (already corrected if needed)
-#' @param DMax the name of the column (between "") from the df with the maximum depth of that sample (already corrected if needed)
-#' @param DBD the name of the column (between "") from the df with the dry bulk density of that sample (already corrected if needed)
-#' @param POC the name of the column (between "") from the df with the percentage of organic carbon in the sample
-#' @param Age the name of the column (between "") from the df with the percentage of organic carbon in the sample
 #'
 #' @return [data.frame] with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 #' @export

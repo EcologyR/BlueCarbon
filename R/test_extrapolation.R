@@ -2,7 +2,7 @@
 #'
 #' @description subset those cores that reach the standardization depth and estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
 #'
-#' @param df A [data.frame] with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A [data.frame] with, at least, columns: CoreID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
 #'
 #' @return A [data.frame] with the observed and extrapolated stocks. A plot with comparisons.

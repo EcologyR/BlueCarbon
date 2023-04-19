@@ -3,13 +3,6 @@
 #' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
 #' @param df A [data.frame] with, at least, columns CoreID, Ecosystem, Specie, SiteID, OM, and OC.
-#' @param SiteID the name of the column (between "") from the df with the sampling site identification for each sample
-#' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
-#' @param Ecosystem the name of the column (between "") from the df with the Ecosystem type for each sample
-#' @param Specie the name of the column (between "") from the df with the predominant specie for each sample
-#' @param OM the name of the column (between "") from the df with the percentage of organic matter of that sample
-#' @param OC the name of the column (between "") from the df with the percentage of organic carbon in the sample
-#'
 #'
 #' @return the initial [data.frame] + one column with organic carbon values (fOC = final organic carbon)
 #' @export

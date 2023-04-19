@@ -2,10 +2,7 @@
 #'
 #' @description checks for space between samples and, if any, divide this space between the previous and next sample to return sample thickness withouth gaps in the core
 #'
-#' @param df A [data.frame] with with the required columns
-#' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
-#' @param DMin the name of the column (between "") from the df with the minimum depth of that sample (already corrected if needed)
-#' @param DMax the name of the column (between "") from the df with the maximum depth of that sample (already corrected if needed)
+#' @param df A [data.frame] with with, at least, columns CoreID, DMin (minimum depth of the sample)and DMax (maximum depth of the sample)
 #'
 #' @return the initial [data.frame] with three additional columns: EMin (estimated minimum depth of the sample), EMax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
 #' @export

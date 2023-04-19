@@ -3,13 +3,8 @@
 #' @description Estimates the carbon stock from soil core data until a specific depth, 100 cm by default. If the core do not reach the
 #' standardization depth it extrapolate the stock from a linear model between the organic carbon accumulated mass and depth.
 #'
-#' @param df A [data.frame] with, at least, columns: CoreID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A [data.frame] with, at least, columns CoreID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), fOC (organic carbon %)
 #' @param Depth standardization soil depth, by default 100 cm.
-#' @param CoreID the name of the column (between "") from the df with the Core identification for each sample
-#' @param DMin the name of the column (between "") from the df with the minimum depth of that sample (already corrected if needed)
-#' @param DMax the name of the column (between "") from the df with the maximum depth of that sample (already corrected if needed)
-#' @param DBD the name of the column (between "") from the df with the dry bulk density of that sample (already corrected if needed)
-#' @param POC the name of the column (between "") from the df with the percentage of organic carbon in the sample
 #'
 #' @return [data.frame] with columns CoreID, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
 #' @export
