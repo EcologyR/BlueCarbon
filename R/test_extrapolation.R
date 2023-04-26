@@ -18,8 +18,8 @@ test_extrapolation <- function(df = NULL, Depth = 100) {
 
   # name of the columns
   if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named Min.D. Please, check necessary columns in functions documentation")}
-  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named Max.D. Please, check necessary columns in functions documentation")}
+  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named DMin. Please, check necessary columns in functions documentation")}
+  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named DMax. Please, check necessary columns in functions documentation")}
   if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
   if ("fOC" %in% colnames(df)==FALSE) {stop("There is not column named fOC. Please, check necessary columns in functions documentation")}
 
