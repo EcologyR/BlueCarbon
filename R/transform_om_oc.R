@@ -2,59 +2,63 @@
 #'
 #' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
-#' @param df A [data.frame] with, at least, columns CoreID, Ecosystem, Specie, SiteID, OM, and OC.
+#' @param df A tibble or data.frame with, at least, columns CoreID, Ecosystem, Species, SiteID, OM, and OC.
+#' #### FRS: An alternative is to let the user specify the column names for each of these things
 #'
-#' @return the initial [data.frame] + one column with organic carbon values (fOC = final organic carbon)
+#' @return the initial data.frame + one column with organic carbon values (fOC = final organic carbon)
 #' @export
 #'
 #' @examples
 
 transform_om_oc <- function(df = NULL) {
 
-  #### Estimate df linear model to predict OC from OM for each ecosystem, specie and station ###
+  #### Estimate df linear model to predict OC from OM for each ecosystem, species and station ###
   #skip those models with R2<0.5 or P value>0.05
+  #### FRS: Why?
 
   # check if the class of the parameters objects, the names and class of the columns of df are correct
 
-  # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please check data and transforme")}
+  # Note df could be a tibble too
+  if (!inherits(df, "data.frame")) {
+    stop("The data provided must be a tibble or data.frame")
+  }
 
   # name of the columns
-  if ("SiteID" %in% colnames(df)==FALSE) {stop("There is not column named SiteID. Please, check necessary columns in functions documentation")}
-  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("Ecosystem" %in% colnames(df)==FALSE) {stop("There is not column named Ecosystem. Please, check necessary columns in functions documentation")}
-  if ("Specie" %in% colnames(df)==FALSE) {stop("There is not column named Specie. Please, check necessary columns in functions documentation")}
-  if ("OM" %in% colnames(df)==FALSE) {stop("There is not column named OM. Please, check necessary columns in functions documentation")}
-  if ("OC" %in% colnames(df)==FALSE) {stop("There is not column named OC. Please, check necessary columns in functions documentation")}
+  if (!"SiteID" %in% names(df)) {stop("There must be a column named 'SiteID'")}
+  if (!"CoreID" %in% names(df)) {stop("There must be a column named 'CoreID'")}
+  if (!"Ecosystem" %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
+  if (!"Species" %in% names(df)) {stop("There must be a column named 'Species'")}
+  if (!"OM" %in% names(df)) {stop("There must be a column named 'OM'")}
+  if ("OC" %in% names(df)) {stop("There must be a column named 'OC'")}
 
   # class of the columns
-  if (is.numeric(df$OM)==FALSE) {stop("Organic matter data is not class numeric, please check")}
-  if (is.numeric(df$OC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
+  if (!is.numeric(df$OM)) {stop("Organic matter data is not class numeric, please check")}
+  if (!is.numeric(df$OC)) {stop("Organic carbon data is not class numeric, please check")}
 
 
-  #create df list of dataframes with data from each ecosystem, specie, and station (site)
-  X<-split(df, df$Ecosystem)
-  X2<-split(df, df$Specie)
-  X3<-split(df, df$SiteID)
-  X<-c(X,X2,X3)
-  length(X)
+  #create list of dataframes with data from each ecosystem, species, and station (site)
+  X <- split(df, df$Ecosystem)
+  X2 <- split(df, df$Specie)
+  X3 <- split(df, df$SiteID)
+  X <- c(X, X2, X3)
+
 
   #create empty table to log model data
-  OCEst <- data.frame(ID=character(),
-                      R2=numeric(),
-                      P=numeric(),
-                      f=numeric(),
-                      int=numeric(),
-                      slope=numeric()
-  )
+  OCEst <- data.frame(ID = character(),
+                      R2 = numeric(),
+                      P = numeric(),
+                      f = numeric(),
+                      int = numeric(),
+                      slope = numeric()
+                      )
 
-  for(i in 1:length(X)) {
-    OCEst[i,1]<-names(X[i])
-    Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df)
+  for (i in seq_along(X)) {
+    OCEst[i,1] <- names(X[i])
+    Data <- as.data.frame(X[i])
+    names(Data) <- names(df)
 
 
-    #we only model those ecosystem, specie, and station with more than 5 samples were OC and LOI were mwasured
+    #we only model those ecosystem, species, and station with more than 5 samples where OC and LOI were measured
     if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))<5) next
 
 
