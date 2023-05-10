@@ -4,13 +4,16 @@
 #'
 #' @param df A tibble or data.frame with, at least, columns CoreID, Ecosystem, Species, SiteID, OM, and OC.
 #' #### FRS: An alternative is to let the user specify the column names for each of these things
+#' @param Rsq
+#' @param Pval
 #'
 #' @return the initial data.frame + one column with organic carbon values (fOC = final organic carbon)
 #' @export
 #'
-#' @examples
+#' @examples transform_om_oc(A, r_squared = 0.8, p_value = 0.05)
+#' @examples transform_om_oc(A)
 
-transform_om_oc <- function(df = NULL) {
+transform_om_oc <- function(df = NULL, r_squared = 0.5, p_value = 0.05) {
 
   #### Estimate df linear model to predict OC from OM for each ecosystem, species and station ###
   #skip those models with R2<0.5 or P value>0.05
@@ -66,7 +69,7 @@ transform_om_oc <- function(df = NULL) {
 
       model<-lm(OC ~ OM, data=Data)
 
-      if(summary(model)$r.squared<0.5 | broom::glance(model)$p.value>0.05 ) next
+      if(summary(model)$r.squared<r_squared | broom::glance(model)$p.value>p_value ) next
 
       else{
 
