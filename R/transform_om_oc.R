@@ -31,9 +31,9 @@ transform_om_oc <- function(df = NULL, num_sample = 10, r_squared = 0.5, p_value
   if (!"SiteID" %in% names(df)) {stop("There must be a column named 'SiteID'")}
   if (!"CoreID" %in% names(df)) {stop("There must be a column named 'CoreID'")}
   if (!"Ecosystem" %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
-  if (!"Species" %in% names(df)) {stop("There must be a column named 'Species'")}
+  if (!"Specie" %in% names(df)) {stop("There must be a column named 'Specie'")}
   if (!"OM" %in% names(df)) {stop("There must be a column named 'OM'")}
-  if ("OC" %in% names(df)) {stop("There must be a column named 'OC'")}
+  if (!"OC" %in% names(df)) {stop("There must be a column named 'OC'")}
 
   # class of the columns
   if (!is.numeric(df$OM)) {stop("Organic matter data is not class numeric, please check")}
@@ -83,9 +83,6 @@ transform_om_oc <- function(df = NULL, num_sample = 10, r_squared = 0.5, p_value
       }}
   }
 
-  rownames(OCEst)<-OCEst$ID
-
-  # write.csv(OCEst,file.path(Folder,"OM-OC_lm.csv"),sep=";", dec=",")
 
   ## Use the models estimated to predict OC from OM content for those samples with no OC data
   #If there is OC data for that sample, keep original OC data,
@@ -98,26 +95,26 @@ transform_om_oc <- function(df = NULL, num_sample = 10, r_squared = 0.5, p_value
   for(i in 1:nrow(df)) {
 
     if (is.na(df[i,which( colnames(df)=="OC" )])==FALSE)
-    {df[i,which( colnames(df)=="fOC" )]<-df[i,which( colnames(df)=="OC" )]}
+    {df[i,which(colnames(df)=="fOC" )]<-df[i,which( colnames(df)=="OC" )]}
 
-    else { if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int")])==FALSE)
+    else { if (is.na(OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int")])==FALSE)
 
-    {df[i,which( colnames(df)=="fOC" )]<-
-      OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int" )]+
-      (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="slope" )])*
-      df[i,which( colnames(df)=="OM" )] }
+    {df[i,which(colnames(df)=="fOC" )]<-
+      OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int" )]+
+      (OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="slope" )])*
+      df[i,which(colnames(df)=="OM" )] }
 
-      else{ if (is.na(OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
+      else{ if (is.na(OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
 
-      {df[i,which( colnames(df)=="fOC" )]<-
-        OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int" )]+
-        (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="slope" )])*
-        df[i,which( colnames(df)=="OM" )]}
+      {df[i,which(colnames(df)=="fOC" )]<-
+        OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int" )]+
+        (OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="slope" )])*
+        df[i,which(colnames(df)=="OM" )]}
 
-        else {df[i,which( colnames(df)=="fOC" )]<-
-          OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
-          (OCEst[which(rownames(OCEst)==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
-          df[i,which( colnames(df)=="OM" )]}}}
+        else {df[i,which(colnames(df)=="fOC" )]<-
+          OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
+          (OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
+          df[i,which(colnames(df)=="OM" )]}}}
 
   }
 
@@ -147,7 +144,9 @@ transform_om_oc <- function(df = NULL, num_sample = 10, r_squared = 0.5, p_value
       )
     )
 
-  return(df)
-  #return(OCEst)
+  resultados<-list(df,OCEst)
+  names(resultados) <- c("df", "Linear models")
+
+  return(resultados)
 
 }
