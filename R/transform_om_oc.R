@@ -4,6 +4,7 @@
 #'
 #' @param df A tibble or data.frame with, at least, columns CoreID, Ecosystem, Species, SiteID, OM, and OC.
 #' #### FRS: An alternative is to let the user specify the column names for each of these things
+#' @param num_sample
 #' @param Rsq
 #' @param Pval
 #'
@@ -13,7 +14,7 @@
 #' @examples transform_om_oc(A, r_squared = 0.8, p_value = 0.05)
 #' @examples transform_om_oc(A)
 
-transform_om_oc <- function(df = NULL, r_squared = 0.5, p_value = 0.05) {
+transform_om_oc <- function(df = NULL, num_sample = 10, r_squared = 0.5, p_value = 0.05) {
 
   #### Estimate df linear model to predict OC from OM for each ecosystem, species and station ###
   #skip those models with R2<0.5 or P value>0.05
@@ -62,7 +63,7 @@ transform_om_oc <- function(df = NULL, r_squared = 0.5, p_value = 0.05) {
 
 
     #we only model those ecosystem, species, and station with more than 10 samples where OC and LOI were measured
-    if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))<10) next
+    if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))< num_sample) next
 
 
     else{
