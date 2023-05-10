@@ -58,8 +58,8 @@ transform_om_oc <- function(df = NULL) {
     names(Data) <- names(df)
 
 
-    #we only model those ecosystem, species, and station with more than 5 samples where OC and LOI were measured
-    if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))<5) next
+    #we only model those ecosystem, species, and station with more than 10 samples where OC and LOI were measured
+    if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))<10) next
 
 
     else{
