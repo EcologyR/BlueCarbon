@@ -14,9 +14,9 @@ df = "exampledata"
 site = "SiteID"
 core = "CoreID"
 ecosystem = "Ecosystem"
-species = "Species"
+species = "Specie"
 om = "OM"
-oc = "OM"
+oc = "OC"
 
 transform_om_oc <- function(df = NULL,
                             site = NULL,
@@ -46,76 +46,72 @@ transform_om_oc <- function(df = NULL,
   if (!is.numeric(df$om)) {stop("Organic matter data must be class numeric")}
   if (!is.numeric(df$oc)) {stop("Organic carbon data must be class numeric")}
 
-  # ecosystem model --------------------------------------------------------------
 
   # create list of dataframes with data from each ecosystem, species, and station (site)
-  ecosystem_ls <- split(df, df[[ecosystem]])
+  ecosystem_ls <- split(DataInv, DataInv[[ecosystem]])
 
-  fit_ecosystem_model <- function(x) {
-    lm(log(x[["OC"]]) ~ log(x[["OM"]]))
+
+
+  #for each ecosystem
+
+  fit_ecosystem_models<- function (df) {
+
+    df<-df[!is.na(df[[oc]]),]
+    df<-df[!is.na(df[[om]]),]
+
+    if (nrow(df)>10){
+
+
+   # ecosystem model --------------------------------------------------------------
+  fit_full_model <- function(x) { # function to estimate a model with all samples from that ecosystem, the full model
+    lm(log(x[[oc]]) ~ log(x[[om]]))
   }
 
-  ecosystem_model_lapply <- lapply(X = ecosystem_ls, FUN = fit_ecosystem_model)
+  full_model <- fit_full_model (df)
 
-  ecosystem_model_purrr <- purrr::map(ecosystem_ls, \(x) fit_ecosystem_model(x))
+  plot(full_model)
 
-  plot(ecosystem_model_lapply[[1]])
+  # multispecies model -----------------------------------------------------------
 
-  # nested
-  ecosystem_mod <- df |>
-    dplyr::group_by(Ecosystem) |>
-    # genera listas columna con dataframes dentro
-    # en este caso para cada especie
-    tidyr::nest() |>
-    dplyr::mutate(
-      # \(dat) = function(dat)
-      lm = purrr::map(data, \(dat) lm(
-        log(OC) ~ log(OM), data = dat))
-    )
-
-# multispecies model -----------------------------------------------------------
-
-  fit_multispecies_model <- function(x) {
-    if (length(unique(x[["Specie"]])) > 1) {
-      lm(log(x[["OC"]]) ~ log(x[["OM"]]) *
-           x[["Specie"]])
+  fit_multispecies_model <- function(x) {# estimates a different model per specie withing the ecosystem
+    if (length(unique(x[[species]])) > 1) {
+      lm(log(x[[oc]]) ~ log(x[[om]]) *
+           x[[species]])
     }
   }
 
-  View(ecosystem_ls)
+  multispecies_model <- fit_multispecies_model(df)
 
-  multispecies_model_lapply <- lapply(X = ecosystem_ls, FUN = fit_species_model)
+  plot(multispecies_model)
 
 # site model --------------------------------------------------------------
 
-  split_species <- function(df) {
+  split_species <- function(df) {# divide the data.frame per specie
     species_ls <- split(df, df[[species]])
   }
+  species_ls <- split_species (df)
 
-  species_ls <- lapply(X = ecosystem_ls, FUN = split_species)
-
-  fit_site_model <- function(x) {
-    if (length(unique(x[["SiteID"]])) > 1) {
-      lm(log(x[["OC"]]) ~ log(x[["OM"]]) *
-           x[["SiteID"]])
+  fit_site_model <- function(x) {# model with data from each specie dependent on sampling site
+    if (length(unique(x[[site]])) > 1) {
+      lm(log(x[[oc]]) ~ log(x[[om]]) *
+           x[[site]])
     } else {
-      lm(log(x[["OC"]]) ~ log(x[["OM"]]))
+      lm(log(x[[oc]]) ~ log(x[[om]]))
     }
   }
 
-  fit_site_model(species_ls[["Seagrass"]][["Posidonia oceanica"]])
+  site_models <- lapply(X = species_ls, FUN = fit_site_model)
 
-  species_ls_rec <- unlist(species_ls, recursive = F)
+  output<-list(full_model, multispecies_model, site_models)
+  names(output)<-c("full_model", "multispecies_model", "site_models")
 
-  site_model_lapply <- lapply(X = species_ls_rec, FUN = fit_site_model)
+   return(output)}
 
-  output <- list(
-    ecosystem = ecosystem_model_lapply,
-    multispecies = multispecies_model_lapply,
-    site = site_model_lapply
-  )
+    }
 
-  return(output)
+  all_models<-lapply( X = ecosystem_ls, FUN = fit_ecosystem_models)
+
+
 
 }
 
