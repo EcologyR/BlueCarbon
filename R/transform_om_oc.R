@@ -3,10 +3,6 @@
 #' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
 #'
 #' @param df A tibble or data.frame with, at least, columns CoreID, Ecosystem, Species, SiteID, OM, and OC.
-#' #### FRS: An alternative is to let the user specify the column names for each of these things
-#' @param num_sample
-#' @param Rsq
-#' @param Pval
 #'
 #' @return the initial data.frame + one column with organic carbon values (fOC = final organic carbon)
 #' @export
@@ -14,139 +10,122 @@
 #' @examples transform_om_oc(A, r_squared = 0.8, p_value = 0.05)
 #' @examples transform_om_oc(A)
 
-transform_om_oc <- function(df = NULL, num_sample = 10, r_squared = 0.5, p_value = 0.05) {
+# function 1: split --------------------------------------------------------------
+# create list of dataframes with data from each ecosystem, species, and station (site)
+split_ecosystem <- function(df = NULL,
+                            site = NULL,
+                            ecosystem = NULL,
+                            species = NULL,
+                            om = NULL,
+                            oc = NULL) {
 
-  #### Estimate df linear model to predict OC from OM for each ecosystem, species and station ###
-  #skip those models with R2<0.5 or P value>0.05
-  #### FRS: Why?
-
-  # check if the class of the parameters objects, the names and class of the columns of df are correct
-
-  # Note df could be a tibble too
   if (!inherits(df, "data.frame")) {
     stop("The data provided must be a tibble or data.frame")
   }
 
-  # name of the columns
-  if (!"SiteID" %in% names(df)) {stop("There must be a column named 'SiteID'")}
-  if (!"CoreID" %in% names(df)) {stop("There must be a column named 'CoreID'")}
-  if (!"Ecosystem" %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
-  if (!"Specie" %in% names(df)) {stop("There must be a column named 'Specie'")}
-  if (!"OM" %in% names(df)) {stop("There must be a column named 'OM'")}
-  if (!"OC" %in% names(df)) {stop("There must be a column named 'OC'")}
+  # names of the columns
+  if (!site %in% names(df)) {stop("There must be a variable with 'site'")}
+  if (!ecosystem %in% names(df)) {stop("There must be a variable with 'ecosystem'")}
+  if (!species %in% names(df)) {stop("There must be a variable with 'species'")}
+  if (!om %in% names(df)) {stop("There must be a variable with 'om'")}
+  if (!oc %in% names(df)) {stop("There must be a variable with 'oc'")}
 
   # class of the columns
-  if (!is.numeric(df$OM)) {stop("Organic matter data is not class numeric, please check")}
-  if (!is.numeric(df$OC)) {stop("Organic carbon data is not class numeric, please check")}
+  if (!is.numeric(df[[om]])) {stop("Organic matter data must be class numeric")}
+  if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
 
+  # check there are no negative values
+  # if (min(df[[om]], na.rm = T) < 0) {stop("There are organic matter negative values")}
+  if (min(df[[oc]], na.rm = T) < 0) {stop("Organic carbon values must be positive")}
 
-  #create list of dataframes with data from each ecosystem, species, and station (site)
-  X <- split(df, df$Ecosystem)
-  X2 <- split(df, df$Specie)
-  X3 <- split(df, df$SiteID)
-  X <- c(X, X2, X3)
+  df_r <- df
+  df_r$site_r <- df_r[[site]]
+  df_r$species_r <- df_r[[species]]
+  df_r$core_r <- df_r[[core]]
+  df_r$ecosystem_r <- df_r[[ecosystem]]
+  df_r$om_r <- df_r[[om]]
+  df_r$oc_r <- df_r[[oc]]
 
-
-  #create empty table to log model data
-  OCEst <- data.frame(ID = character(),
-                      R2 = numeric(),
-                      P = numeric(),
-                      f = numeric(),
-                      int = numeric(),
-                      slope = numeric()
-                      )
-
-  for (i in seq_along(X)) {
-    OCEst[i,1] <- names(X[i])
-    Data <- as.data.frame(X[i])
-    names(Data) <- names(df)
-
-
-    #we only model those ecosystem, species, and station with more than 10 samples where OC and LOI were measured
-    if((nrow(Data |> dplyr::filter_at(dplyr::vars(OM,OC),dplyr::all_vars(!is.na(.)))))< num_sample) next
-
-
-    else{
-
-      model<-lm(OC ~ OM, data=Data)
-
-      if(summary(model)$r.squared<r_squared | broom::glance(model)$p.value>p_value ) next
-
-      else{
-
-        OCEst[i,2]<-summary(model)$r.squared
-        OCEst[i,3]<-broom::glance(model)$p.value
-        OCEst[i,4]<-summary(model)$fstatistic[1]
-        OCEst[i,5]<-model$coefficients[1]
-        OCEst[i,6]<-model$coefficients[2]
-
-      }}
-  }
-
-
-  ## Use the models estimated to predict OC from OM content for those samples with no OC data
-  #If there is OC data for that sample, keep original OC data,
-  #else use function estimated for that SiteID
-  #else function for specie
-  #else function for ecosystem
-
-  df$fOC <- NA
-
-  for(i in 1:nrow(df)) {
-
-    if (is.na(df[i,which( colnames(df)=="OC" )])==FALSE)
-    {df[i,which(colnames(df)=="fOC" )]<-df[i,which( colnames(df)=="OC" )]}
-
-    else { if (is.na(OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int")])==FALSE)
-
-    {df[i,which(colnames(df)=="fOC" )]<-
-      OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="int" )]+
-      (OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="SiteID" )])),which(colnames(OCEst)=="slope" )])*
-      df[i,which(colnames(df)=="OM" )] }
-
-      else{ if (is.na(OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int")])==FALSE)
-
-      {df[i,which(colnames(df)=="fOC" )]<-
-        OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="int" )]+
-        (OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Specie" )])),which(colnames(OCEst)=="slope" )])*
-        df[i,which(colnames(df)=="OM" )]}
-
-        else {df[i,which(colnames(df)=="fOC" )]<-
-          OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="int" )]+
-          (OCEst[which(OCEst$ID==(df[i,which( colnames(df)=="Ecosystem" )])),which(colnames(OCEst)=="slope" )])*
-          df[i,which(colnames(df)=="OM" )]}}}
-
-  }
-
-  ## when OM very low, the estimation can give negative values of OC. We change negative values for 0.
-
-  df$fOC[df$fOC < 0] <- 0
-
-
-  if (sum(is.na(df$fOC) & !is.na(df$OM))>=1) {
-  message(
-    paste("Howard et al (2014) applied to",
-          sum(is.na(df$fOC) & !is.na(df$OM) ), "observations")
-  )}
-
-  df <- df |>
-    dplyr::mutate(
-      fOC = dplyr::case_when(
-        is.na(fOC) & OM <= 0.2 & Ecosystem == "Seagrass" ~
-          0.4 * OM - 0.21,
-        is.na(fOC) & OM > 0.2 & Ecosystem == "Seagrass" ~
-          0.43 * OM - 0.33,
-        is.na(fOC) & Ecosystem == "Salt Marsh" ~
-          0.47 * OM + 0.0008 * OM^2,
-        is.na(fOC) & Ecosystem == "Mangrove" ~
-          0.415 * OM - 2.89,
-        T ~ fOC
-      )
-    )
-
-  resultados<-list(df,OCEst)
-  names(resultados) <- c("df", "Linear models")
-
-  return(resultados)
+  return(split(df_r, df_r$ecosystem_r))
 
 }
+
+ecosystem_ls <- split_ecosystem(
+  df = DataInv,
+  site = "SiteID",
+  ecosystem = "Ecosystem",
+  species = "Specie",
+  om = "OM",
+  oc = "OC"
+)
+
+# function 2: fit models --------------------------------------------------------------
+# estimate df linear model to predict OC from OM for each ecosystem, species and station
+fit_models <- function(df = NULL) {
+
+  df <- df[!is.na(df$oc_r), ]
+  df <- df[!is.na(df$om_r), ]
+
+  # if there are 0 in the data we add 0.00001 or the logarithm will not work
+  if (0 %in% df$om_r) {df$om_r <- df$om_r + 0.00001}
+  if (0 %in% df$oc_r) {df$oc_r <- df$oc_r + 0.00001}
+
+  if (nrow(df) > 10){
+
+    # ecosystem model --------------------------------------------------------------
+    # function to estimate a model with all samples from_r that ecosystem, the full model
+    fit_ecosystem_models <- function(x) {
+      lm(log(oc_r) ~ log(om_r), data = x)
+    }
+
+    ecosystem_model <- fit_ecosystem_models(x = df)
+
+    # multispecies model -----------------------------------------------------------
+    # estimates a different model per specie withing the ecosystem
+    fit_multispecies_model <- function(x) {
+      if (length(unique(df$species_r)) > 1) {
+        lm(log(oc_r) ~ log(om_r) *
+             species_r, data = x)
+      }
+    }
+
+    multispecies_model <- fit_multispecies_model(x = df)
+
+    # site model --------------------------------------------------------------
+
+    # divide the data.frame per specie
+    split_species <- function(x) {
+      species_ls <- split(x, x$species_r)
+    }
+
+    species_ls <- split_species(x = df)
+
+    # model with data from_r each specie dependent on sampling site
+    fit_site_model <- function(x) {
+      if (length(unique(site_r)) > 1) {
+        lm(log(oc_r) ~ log(om_r) *
+             site_r, data = x)
+      } else {
+        lm(log(oc_r) ~ log(om_r), data = x)
+      }
+    }
+
+    site_models <- lapply(X = species_ls, FUN = fit_site_model)
+
+    output <- list(ecosystem_model, multispecies_model, site_models)
+
+    names(output) <- c("ecosystem_model", "multispecies_model", "site_models")
+
+    return(output)
+
+  }
+
+}
+
+all_models <- lapply(
+    X = ecosystem_ls,
+    FUN = fit_models
+  )
+
+View(all_models)
+
