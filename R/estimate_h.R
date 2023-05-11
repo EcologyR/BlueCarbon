@@ -7,7 +7,8 @@
 #' @return the initial [data.frame] with three additional columns: EMin (estimated minimum depth of the sample), EMax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
 #' @export
 #'
-#' @examples
+#' @examples estimate_h(A)
+
 estimate_h <- function(df = NULL) {
 
   # class of the dataframe

@@ -8,7 +8,8 @@
 #' @return A [data.frame] with the observed and extrapolated stocks. A plot with comparisons.
 #' @export
 #'
-#' @examples
+#' @examples test_extrapolation(A, Depth = 50)
+#' @examples test_extrapolation(A)
 
 test_extrapolation <- function(df = NULL, Depth = 100) {
 

@@ -8,7 +8,8 @@
 #' @return [data.frame] with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 #' @export
 #'
-#' @examples
+#' @examples estimate_flux(A)
+#' @examples estimate_flux(A, ,TimeFrame = 500)
 
 
 estimate_flux<- function(df=NULL,TimeFrame=100) {
