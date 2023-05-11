@@ -35,8 +35,10 @@ split_ecosystem <- function(df = NULL,
   if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
 
   # check there are no negative values
-  # if (min(df[[om]], na.rm = T) < 0) {stop("There are organic matter negative values")}
   if (min(df[[oc]], na.rm = T) < 0) {stop("Organic carbon values must be positive")}
+
+  #check if om values are higher than oc values
+  if (!is.na(any(df[[om]]<df[[oc]]))==TRUE) {stop("There are organic carbon values higher than organic matter values")}
 
   df_r <- df
   df_r$site_r <- df_r[[site]]
@@ -46,11 +48,15 @@ split_ecosystem <- function(df = NULL,
   df_r$om_r <- df_r[[om]]
   df_r$oc_r <- df_r[[oc]]
 
-  return(split(df_r, df_r$ecosystem_r))
+  return(
+    list(
+      dr_r_split = split(df_r, df_r$ecosystem_r),
+      df_r)
+  )
 
 }
 
-ecosystem_ls <- split_ecosystem(
+split_ecosystem_result <- split_ecosystem(
   df = DataInv,
   site = "SiteID",
   ecosystem = "Ecosystem",
@@ -58,6 +64,12 @@ ecosystem_ls <- split_ecosystem(
   om = "OM",
   oc = "OC"
 )
+
+
+ecosystem_ls<-split_ecosystem_result[[1]]
+
+df_r<-split_ecosystem_result[[2]]
+
 
 # function 2: fit models --------------------------------------------------------------
 # estimate df linear model to predict OC from OM for each ecosystem, species and station
@@ -102,7 +114,7 @@ fit_models <- function(df = NULL) {
 
     # model with data from_r each specie dependent on sampling site
     fit_site_model <- function(x) {
-      if (length(unique(site_r)) > 1) {
+      if (length(unique(x$site_r)) > 1) {
         lm(log(oc_r) ~ log(om_r) *
              site_r, data = x)
       } else {
@@ -134,24 +146,35 @@ View(all_models)
 #quiero que choose_model especifique que modelo uso
 choose_model <- function (df, models= all_models) {
 
-  if (is.null(models[[df$Ecosystem]])) {mod<-NULL} else { #check if there are model for that ecosystem
+  if (is.null(models[[df$ecosystem_r]])) {
+    mod<-NULL
+    mod_tipe<-NULL} else { #check if there are model for that ecosystem
 
-  mod_site<-models[[df$Ecosystem]][["site_models"]][[df$Specie]]
+  mod_site<-models[[df$ecosystem_r]][["site_models"]][[df$species_r]]
 
-  if (!is.null(mod_site) & summary(mod_site)$r.squared > 0.5 & df$SiteID %in% mod_site$xlevels$`x[[site]]`) { # if there is a model for that specie AND it has that site AND rsqd > 0.5
+  if (!is.null(mod_site) && summary(mod_site)$r.squared > 0.5 && df$site_r %in% mod_site$xlevels$`site_r`) { # if there is a model for that specie AND it has that site AND rsqd > 0.5
 
-    mod<-mod_site} else {
+    mod<-mod_site
+    mod_tipe <-"Model by species and site" } else {
 
-      mod_specie<-models[[df$Ecosystem]][["multispecies_model"]]
+      mod_specie<-models[[df$ecosystem_r]][["multispecies_model"]]
 
-      if (summary(mod_specie)$r.squared > 0.5 & df$Specie %in% mod_specie$xlevels$`x[[species]]`) # check if the specie is in the species model and it has a rsqrd >0.5
+      if (summary(mod_specie)$r.squared > 0.5 && df$species_r %in% mod_specie$xlevels$`species_r`) # check if the specie is in the species model and it has a rsqrd >0.5
 
-      {mod<-mod_specie} else { mod<-models[[df$Ecosystem]][["multispecies_model"]]} # chose specie model, else chose the ecosystem one
+      {mod<-mod_specie
+        mod_tipe<-"Model by species"} else {
+        mod<-models[[df$ecosystem_r]][["ecosystem_model"]]
+        mod_tipe<-"Model by ecosystem"} # chose specie model, else chose the ecosystem one
 
-      return(mod)
-      }}}
 
-mod<-choose_model(df)
+    }}
+
+  results_choose_model<-list(mod, mod_tipe)
+
+  return(results_choose_model)
+  }
+
+results_choose_models<-choose_model(df_r[1,], models= all_models)
 
 #I want and extra column with the type of model or lab or howard
 predict_oc <- function (df, models= all_models) {
@@ -160,7 +183,7 @@ predict_oc <- function (df, models= all_models) {
                   eOC_SE=numeric(),
                   Origin=character())
 
-  for (i in 1:nrow(df)) {
+  for (j in 1:nrow(df)) {
 
   if (!is.na(df[j, oc])) {
     eOC[j,"eOC"]<-df[j,oc]
@@ -168,14 +191,18 @@ predict_oc <- function (df, models= all_models) {
 
     if (is.na(df[j, om])) {eOC[j,"eOC"]<-NA} else {
 
-      mod<-choose_model(df[j,], models)
-       if(!is.null(mod)) {
+      results_choose_models<-choose_model(df_r[j,], models)
+      mod<- results_choose_models[[1]]
+      model_tipe<- results_choose_models[[2]]
+
+      if(!is.null(mod)) {
 
 
       #predict sigue sin funcionar
 
-      eOC[j,"eOC"]<-predict(mod)
-      eOC[j,"eOC_SE"]<-predict(mod, se.fit = TRUE)$se.fit
+      eOC[j,"eOC"]<-exp(predict(mod, df[j, ]))
+      eOC[j,"eOC_SE"]<-predict(mod, df[j, ], se.fit = TRUE)$se.fit
+      eOC[j,"Origin"]<-model_tipe
 
 
       } else { # if there is no model use howard 2014
@@ -195,10 +222,15 @@ predict_oc <- function (df, models= all_models) {
 
       }
 
-   }}}}
+    }}}
+
+  df_f<-cbind(df_r,eOC)
+  return(df_f)
+
+  }
 
 
-
+df_f<-predict_oc(df_r, models= all_models)
 
 
 
@@ -206,3 +238,7 @@ predict_oc <- function (df, models= all_models) {
 
 }
 
+
+plot(df_f$OM,df_f$eOC)
+
+which(df_f$eOC>30)
