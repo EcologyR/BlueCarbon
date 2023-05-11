@@ -10,13 +10,47 @@
 #'
 #' @examples
 
-df = "exampledata"
-site = "SiteID"
-core = "CoreID"
-ecosystem = "Ecosystem"
-species = "Specie"
-om = "OM"
-oc = "OC"
+load("data/DataInv.rda")
+
+# create list of dataframes with data from each ecosystem, species, and station (site)
+split_ecosystem <- function(df = NULL,
+                            site = NULL,
+                            core = NULL,
+                            ecosystem = NULL,
+                            species = NULL,
+                            om = NULL,
+                            oc = NULL) {
+
+  if (!inherits(df, "data.frame")) {
+    stop("The data provided must be a tibble or data.frame")
+  }
+
+  # names of the columns
+  if (!site %in% names(df)) {stop("There must be a column named 'SiteID'")}
+  if (!core %in% names(df)) {stop("There must be a column named 'CoreID'")}
+  if (!ecosystem %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
+  if (!species %in% names(df)) {stop("There must be a column named 'Species'")}
+  if (!om %in% names(df)) {stop("There must be a column named 'OM'")}
+  if (!oc %in% names(df)) {stop("There must be a column named 'OC'")}
+
+  # class of the columns
+  if (!is.numeric(df[[om]])) {stop("Organic matter data must be class numeric")}
+  if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
+
+  return(split(df, df[[ecosystem]]))
+
+}
+
+ecosystem_ls <- split_ecosystem(
+  df = DataInv,
+  site = "SiteID",
+  core = "CoreID",
+  ecosystem = "Ecosystem",
+  species = "Specie",
+  om = "OM",
+  oc = "OC"
+)
+
 
 transform_om_oc <- function(df = NULL,
                             site = NULL,
@@ -30,46 +64,33 @@ transform_om_oc <- function(df = NULL,
 
   # check if the class of the parameters objects, the names and class of the columns of df are correct
 
-  if (!inherits(df, "data.frame") || !inherits(df, "tibble")) {
-    stop("The data provided must be a tibble or data.frame")
-  }
-
-  # name of the columns
-  if (!site %in% names(df)) {stop("There must be a column named 'SiteID'")}
-  if (!core %in% names(df)) {stop("There must be a column named 'CoreID'")}
-  if (!ecosystem %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
-  if (!species %in% names(df)) {stop("There must be a column named 'Species'")}
-  if (!om %in% names(df)) {stop("There must be a column named 'OM'")}
-  if (!oc %in% names(df)) {stop("There must be a column named 'OC'")}
-
-  # class of the columns
-  if (!is.numeric(df$om)) {stop("Organic matter data must be class numeric")}
-  if (!is.numeric(df$oc)) {stop("Organic carbon data must be class numeric")}
-
-
-  # create list of dataframes with data from each ecosystem, species, and station (site)
-  ecosystem_ls <- split(DataInv, DataInv[[ecosystem]])
-
-
 
   #for each ecosystem
+  df <- ecosystem_ls[["Seagrass"]]
+  View(df)
 
   fit_ecosystem_models<- function (df) {
 
     df<-df[!is.na(df[[oc]]),]
     df<-df[!is.na(df[[om]]),]
 
-    if (nrow(df)>10){
+    df <- df |>
+      mutate(
+        OM = if_else(OM != 0, OM, OM + 0.0001)
+      )
 
+    df<-df[!is.na(df[[om]]),]
+
+    if (nrow(df)>10){
 
    # ecosystem model --------------------------------------------------------------
   fit_full_model <- function(x) { # function to estimate a model with all samples from that ecosystem, the full model
     lm(log(x[[oc]]) ~ log(x[[om]]))
   }
 
-  full_model <- fit_full_model (df)
+  lm(log(df[[oc]]) ~ log(df[[om]]))
 
-  plot(full_model)
+  full_model <- fit_full_model(df)
 
   # multispecies model -----------------------------------------------------------
 
@@ -81,8 +102,6 @@ transform_om_oc <- function(df = NULL,
   }
 
   multispecies_model <- fit_multispecies_model(df)
-
-  plot(multispecies_model)
 
 # site model --------------------------------------------------------------
 
@@ -114,4 +133,4 @@ transform_om_oc <- function(df = NULL,
 
 
 }
-
+View(all_models)
