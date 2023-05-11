@@ -10,13 +10,50 @@
 #'
 #' @examples
 
-df = "exampledata"
-site = "SiteID"
-core = "CoreID"
-ecosystem = "Ecosystem"
-species = "Specie"
-om = "OM"
-oc = "OC"
+load("data/DataInv.rda")
+
+# create list of dataframes with data from each ecosystem, species, and station (site)
+split_ecosystem <- function(df = NULL,
+                            site = NULL,
+                            core = NULL,
+                            ecosystem = NULL,
+                            species = NULL,
+                            om = NULL,
+                            oc = NULL) {
+
+  if (!inherits(df, "data.frame")) {
+    stop("The data provided must be a tibble or data.frame")
+  }
+
+  # names of the columns
+  if (!site %in% names(df)) {stop("There must be a column named 'SiteID'")}
+  if (!core %in% names(df)) {stop("There must be a column named 'CoreID'")}
+  if (!ecosystem %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
+  if (!species %in% names(df)) {stop("There must be a column named 'Species'")}
+  if (!om %in% names(df)) {stop("There must be a column named 'OM'")}
+  if (!oc %in% names(df)) {stop("There must be a column named 'OC'")}
+
+  # class of the columns
+  if (!is.numeric(df[[om]])) {stop("Organic matter data must be class numeric")}
+  if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
+
+
+  # check there are no negative values
+
+  if (min(df$om)<0) {stop("There are organic matter negative values")}
+  if (min(df$oc)<0) {stop("There are organic carbon negative values")}
+
+
+ecosystem_ls <- split_ecosystem(
+  df = DataInv,
+  site = "SiteID",
+  core = "CoreID",
+  ecosystem = "Ecosystem",
+  species = "Specie",
+  om = "OM",
+  oc = "OC"
+)
+
 
 transform_om_oc <- function(df = NULL,
                             site = NULL,
@@ -30,39 +67,16 @@ transform_om_oc <- function(df = NULL,
 
   # check if the class of the parameters objects, the names and class of the columns of df are correct
 
-  if (!inherits(df, "data.frame") || !inherits(df, "tibble")) {
-    stop("The data provided must be a tibble or data.frame")
-  }
-
-  # name of the columns
-  if (!site %in% names(df)) {stop("There must be a column named 'SiteID'")}
-  if (!core %in% names(df)) {stop("There must be a column named 'CoreID'")}
-  if (!ecosystem %in% names(df)) {stop("There must be a column named 'Ecosystem'")}
-  if (!species %in% names(df)) {stop("There must be a column named 'Species'")}
-  if (!om %in% names(df)) {stop("There must be a column named 'OM'")}
-  if (!oc %in% names(df)) {stop("There must be a column named 'OC'")}
-
-  # class of the columns
-  if (!is.numeric(df$om)) {stop("Organic matter data must be class numeric")}
-  if (!is.numeric(df$oc)) {stop("Organic carbon data must be class numeric")}
-
-  # check there are no negative values
-
-  if (min(df$om)<0) {stop("There are organic matter negative values")}
-  if (min(df$oc)<0) {stop("There are organic carbon negative values")}
-
-
-  # create list of dataframes with data from each ecosystem, species, and station (site)
-  ecosystem_ls <- split(DataInv, DataInv[[ecosystem]])
-
-
 
   #for each ecosystem
+  df <- ecosystem_ls[["Seagrass"]]
+  View(df)
 
   fit_ecosystem_models<- function (df) {
 
     df<-df[!is.na(df[[oc]]),]
     df<-df[!is.na(df[[om]]),]
+
 
     # if there are 0 in the data we add 0.00001 or the logaritm will not work
     if (0 %in% df[[om]]) {df[[om]]<-df[[om]]+0.00001}
@@ -76,7 +90,9 @@ transform_om_oc <- function(df = NULL,
     lm(log(x[[oc]]) ~ log(x[[om]]))
   }
 
+
   ecosystem_model <- fit_full_model (df)
+
 
   # multispecies model -----------------------------------------------------------
 
@@ -120,6 +136,7 @@ transform_om_oc <- function(df = NULL,
 
 }
 
+<<<<<<< HEAD
 
 #quiero que choose_model especifique que modelo uso
 choose_model <- function (df, models= all_models) {
@@ -195,3 +212,5 @@ predict_oc <- function (df, models= all_models) {
 
 
 }
+=======
+>>>>>>> a7570f1a77642cb748ed94ea1c39699d2f111a72
