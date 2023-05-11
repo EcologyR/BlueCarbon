@@ -129,3 +129,80 @@ all_models <- lapply(
 
 View(all_models)
 
+
+
+#quiero que choose_model especifique que modelo uso
+choose_model <- function (df, models= all_models) {
+
+  if (is.null(models[[df$Ecosystem]])) {mod<-NULL} else { #check if there are model for that ecosystem
+
+  mod_site<-models[[df$Ecosystem]][["site_models"]][[df$Specie]]
+
+  if (!is.null(mod_site) & summary(mod_site)$r.squared > 0.5 & df$SiteID %in% mod_site$xlevels$`x[[site]]`) { # if there is a model for that specie AND it has that site AND rsqd > 0.5
+
+    mod<-mod_site} else {
+
+      mod_specie<-models[[df$Ecosystem]][["multispecies_model"]]
+
+      if (summary(mod_specie)$r.squared > 0.5 & df$Specie %in% mod_specie$xlevels$`x[[species]]`) # check if the specie is in the species model and it has a rsqrd >0.5
+
+      {mod<-mod_specie} else { mod<-models[[df$Ecosystem]][["multispecies_model"]]} # chose specie model, else chose the ecosystem one
+
+      return(mod)
+      }}}
+
+mod<-choose_model(df)
+
+#I want and extra column with the type of model or lab or howard
+predict_oc <- function (df, models= all_models) {
+
+  eOC<-data.frame(eOC=numeric(),
+                  eOC_SE=numeric(),
+                  Origin=character())
+
+  for (i in 1:nrow(df)) {
+
+  if (!is.na(df[j, oc])) {
+    eOC[j,"eOC"]<-df[j,oc]
+    eOC[j,"Origin"]<-"Laboratory Data"} else {
+
+    if (is.na(df[j, om])) {eOC[j,"eOC"]<-NA} else {
+
+      mod<-choose_model(df[j,], models)
+       if(!is.null(mod)) {
+
+
+      #predict sigue sin funcionar
+
+      eOC[j,"eOC"]<-predict(mod)
+      eOC[j,"eOC_SE"]<-predict(mod, se.fit = TRUE)$se.fit
+
+
+      } else { # if there is no model use howard 2014
+
+        if (df[j,ecosystem]=="Salt Marsh") {
+          eOC[j,"eOC"]<- 0.0025 * (df[j, om]^2) + 0.4 * df[j, om]
+          eOC[j,"Origin"]<-"Craft et al. 1991"}
+        if (df[j,ecosystem]=="Seagrass" & df[j, om]<20 ) {
+          eOC[j,"eOC"]<- -0.21 + 0.4 * df[j, om]
+          eOC[j,"Origin"]<-"Fourqurean et al. 2012"}
+        if (df[j,ecosystem]=="Seagrass" & df[j, om]>20 ) {
+          eOC[j,"eOC"]<- -0.33 + 0.43 * df[j, om]
+          eOC[j,"Origin"]<-"Fourqurean et al. 2012"}
+        if (df[j,ecosystem]=="Mangrove") {
+          eOC[j,"eOC"]<- 2.89 + 0.415 * df[j, om]
+          eOC[j,"Origin"]<-"Kaufmann et al. 2011"}
+
+      }
+
+   }}}}
+
+
+
+
+
+
+
+
+}
+
