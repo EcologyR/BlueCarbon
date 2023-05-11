@@ -59,6 +59,7 @@ estimate_h <- function(df = NULL) {
       Data <- cbind(Data, EMin=NA, EMax=NA)
       Data[1,"EMin"]<-0
       Data[nrow(Data),"EMax"]<-Data[nrow(Data),"DMax"]
+
       for (j in 1:(nrow(Data)-1)) {
         if(space[j]==TRUE) {
           Data[j,"EMax"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)
