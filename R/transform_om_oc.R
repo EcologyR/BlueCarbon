@@ -7,7 +7,8 @@
 #' @return the initial data.frame + one column with organic carbon values (fOC = final organic carbon)
 #' @export
 #'
-#' @examples
+#' @examples transform_om_oc(A, r_squared = 0.8, p_value = 0.05)
+#' @examples transform_om_oc(A)
 
 # function 1: split --------------------------------------------------------------
 # create list of dataframes with data from each ecosystem, species, and station (site)

@@ -9,7 +9,8 @@
 #' @return [data.frame] with columns CoreID, S.WC (organic carbon stock at the whole core), D.Max (maximum depth of the core), and Stock (organic carbon stock at the standardized depth)
 #' @export
 #'
-#' @examples
+#' @examples estimate_stock(A)
+#' @examples estimate_stock(A, Depth = 50)
 
 estimate_stock <- function(df = NULL, Depth = 100) {
 
