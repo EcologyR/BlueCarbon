@@ -46,6 +46,11 @@ transform_om_oc <- function(df = NULL,
   if (!is.numeric(df$om)) {stop("Organic matter data must be class numeric")}
   if (!is.numeric(df$oc)) {stop("Organic carbon data must be class numeric")}
 
+  # check there are no negative values
+
+  if (min(df$om)<0) {stop("There are organic matter negative values")}
+  if (min(df$oc)<0) {stop("There are organic carbon negative values")}
+
 
   # create list of dataframes with data from each ecosystem, species, and station (site)
   ecosystem_ls <- split(DataInv, DataInv[[ecosystem]])
@@ -59,6 +64,10 @@ transform_om_oc <- function(df = NULL,
     df<-df[!is.na(df[[oc]]),]
     df<-df[!is.na(df[[om]]),]
 
+    # if there are 0 in the data we add 0.00001 or the logaritm will not work
+    if (0 %in% df[[om]]) {df[[om]]<-df[[om]]+0.00001}
+    if (0 %in% df[[oc]]) {df[[oc]]<-df[[oc]]+0.00001}
+
     if (nrow(df)>10){
 
 
@@ -67,9 +76,7 @@ transform_om_oc <- function(df = NULL,
     lm(log(x[[oc]]) ~ log(x[[om]]))
   }
 
-  full_model <- fit_full_model (df)
-
-  plot(full_model)
+  ecosystem_model <- fit_full_model (df)
 
   # multispecies model -----------------------------------------------------------
 
@@ -81,8 +88,6 @@ transform_om_oc <- function(df = NULL,
   }
 
   multispecies_model <- fit_multispecies_model(df)
-
-  plot(multispecies_model)
 
 # site model --------------------------------------------------------------
 
@@ -102,8 +107,8 @@ transform_om_oc <- function(df = NULL,
 
   site_models <- lapply(X = species_ls, FUN = fit_site_model)
 
-  output<-list(full_model, multispecies_model, site_models)
-  names(output)<-c("full_model", "multispecies_model", "site_models")
+  output<-list(ecosystem_model, multispecies_model, site_models)
+  names(output)<-c("ecosystem_model", "multispecies_model", "site_models")
 
    return(output)}
 
@@ -115,3 +120,20 @@ transform_om_oc <- function(df = NULL,
 
 }
 
+
+
+predict_oc <- function (df, all_models= all_models) {
+
+  df<-  cbin(df,fOC)
+
+  if (is.na(df[j, om])) next
+
+  if (!is.na(df[j, oc])) {}
+
+
+
+
+
+
+
+}
