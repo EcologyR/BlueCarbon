@@ -37,9 +37,12 @@ split_ecosystem <- function(df = NULL,
   if (!is.numeric(df[[om]])) {stop("Organic matter data must be class numeric")}
   if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
 
-  return(split(df, df[[ecosystem]]))
 
-}
+  # check there are no negative values
+
+  if (min(df$om)<0) {stop("There are organic matter negative values")}
+  if (min(df$oc)<0) {stop("There are organic carbon negative values")}
+
 
 ecosystem_ls <- split_ecosystem(
   df = DataInv,
@@ -74,23 +77,22 @@ transform_om_oc <- function(df = NULL,
     df<-df[!is.na(df[[oc]]),]
     df<-df[!is.na(df[[om]]),]
 
-    df <- df |>
-      mutate(
-        OM = if_else(OM != 0, OM, OM + 0.0001)
-      )
 
-    df<-df[!is.na(df[[om]]),]
+    # if there are 0 in the data we add 0.00001 or the logaritm will not work
+    if (0 %in% df[[om]]) {df[[om]]<-df[[om]]+0.00001}
+    if (0 %in% df[[oc]]) {df[[oc]]<-df[[oc]]+0.00001}
 
     if (nrow(df)>10){
+
 
    # ecosystem model --------------------------------------------------------------
   fit_full_model <- function(x) { # function to estimate a model with all samples from that ecosystem, the full model
     lm(log(x[[oc]]) ~ log(x[[om]]))
   }
 
-  lm(log(df[[oc]]) ~ log(df[[om]]))
 
-  full_model <- fit_full_model(df)
+  ecosystem_model <- fit_full_model (df)
+
 
   # multispecies model -----------------------------------------------------------
 
@@ -121,8 +123,8 @@ transform_om_oc <- function(df = NULL,
 
   site_models <- lapply(X = species_ls, FUN = fit_site_model)
 
-  output<-list(full_model, multispecies_model, site_models)
-  names(output)<-c("full_model", "multispecies_model", "site_models")
+  output<-list(ecosystem_model, multispecies_model, site_models)
+  names(output)<-c("ecosystem_model", "multispecies_model", "site_models")
 
    return(output)}
 
@@ -133,4 +135,4 @@ transform_om_oc <- function(df = NULL,
 
 
 }
-View(all_models)
+
