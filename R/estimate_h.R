@@ -3,35 +3,50 @@
 #' @description checks for space between samples and, if any, divide this space between the previous and next sample to return sample thickness withouth gaps in the core
 #'
 #' @param df A [data.frame] with with, at least, columns CoreID, DMin (minimum depth of the sample)and DMax (maximum depth of the sample)
+#' @param core
+#' @param dmin
+#' @param dmax
 #'
 #' @return the initial [data.frame] with three additional columns: EMin (estimated minimum depth of the sample), EMax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
 #' @export
 #'
 #' @examples estimate_h(A)
 
-estimate_h <- function(df = NULL) {
+estimate_h <- function(df = NULL,
+                       core = "core",
+                       dmin= "dmin",
+                       dmax= "dmax") {
 
-  # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
+  # class of the dataframe or tibble
+  if (!inherits(df, "data.frame")) {
+    stop("The data provided must be a tibble or data.frame")
+  }
 
   # name of the columns
-  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named DMin. Please, check necessary columns in functions documentation")}
-  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named DMax. Please, check necessary columns in functions documentation")}
+  if (!core %in% colnames(df)) {stop("There must be a variable with 'core'")}
+  if (!dmin %in% colnames(df)) {stop("There must be a variable with 'dmin'")}
+  if (!dmax %in% colnames(df)) {stop("There must be a variable with 'dmax'")}
 
   # class of the columns
-  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
-  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
+  if (!is.numeric(df[[dmin]])) {stop("dmin data must be class numeric")}
+  if (!is.numeric(df[[dmax]])) {stop("dmax data must be class numeric")}
 
   #check for NAs in depth columns
-  if (sum(is.na(df$DMin))>0){stop("Samples minimun depth column has NAs, please check")}
-  if (sum(is.na(df$DMax))>0){stop("Samples maximun depth column has NAs, please check")}
+  if (sum(is.na(df[[dmin]]))>0){stop("Samples minimun depth column has NAs, please check")}
+  if (sum(is.na(df[[dmin]]))>0){stop("Samples maximun depth column has NAs, please check")}
+
+
+  # create variables with working names with the data in the columns specified by the user
+  df_r <- df
+  df_r$core_r <- df_r[[core]]
+  df_r$dmin_r <- df_r[[dmin]]
+  df_r$dmax_r <- df_r[[dmax]]
 
 
   # create individual data frames per each core
 
-  df$CoreID <- factor(df$CoreID, levels=unique(df$CoreID))
-  X<-split(df, df$CoreID)
+  df_r$core_r <- factor(df_r$core_r, levels=unique(df_r$core_r))
+  x<-split(df_r, df_r$core_r)
 
 
   columns<-c("EMin","EMax","h")
@@ -39,10 +54,10 @@ estimate_h <- function(df = NULL) {
   colnames(Fdf2) = columns
 
 
-  for(i in 1:length(X)) {
+  for(i in 1:length(x)) {
 
-    Data<-as.data.frame(X[i])
-    colnames(Data)<-colnames(df)
+    Data<-as.data.frame(x[i])
+    colnames(Data)<-colnames(df_r)
 
     #check if there is spaces between samples (e.g, first sample ends at 5 cm and next starts at 7)
     space<- c()
