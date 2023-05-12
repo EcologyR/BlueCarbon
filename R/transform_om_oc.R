@@ -259,17 +259,17 @@ transform_om_oc<- function(df = NULL,
 
   df_f <- predict_oc(df_r)
 
-  df_p<-df_f[!is.na(df_f$origin),]
+  df_p <- df_f[!is.na(df_f$origin), ]
 
-  plot<-ggplot(df_p, aes(om_r, eoc)) + ggtitle("Estimated organic carbon values")+
-    labs(x= "Organic mater data(%)", y= "Estimated organic carbon data (%)")+
-    geom_point(aes(color= origin)) +
+  plot <- ggplot(df_p, aes(om_r, eoc)) +
+    geom_point(aes(color = origin)) +
     coord_cartesian(
-      xlim = c(0,max(na.omit(df_p$om_r))),
-      ylim = c(0,max(na.omit(df_p$om_r))),
-      clip = "on")+
-    scale_color_discrete(name="")+
-    geom_abline()+
+      xlim = c(0, max(na.omit(df_p$om_r))),
+      ylim = c(0, max(na.omit(df_p$om_r))),
+      clip = "on") +
+    scale_color_discrete(name="") +
+    geom_abline() +
+    labs(x = "Organic matter (%)", y = "Estimated organic carbon (%)") +
     theme(plot.title = element_text(hjust = 0.5))
 
   print(plot)
@@ -277,10 +277,6 @@ transform_om_oc<- function(df = NULL,
   return(df_f)
 
 }
-
-
-
-
 
 df_f <- transform_om_oc(
   df = DataInv,
@@ -291,15 +287,4 @@ df_f <- transform_om_oc(
   oc = "OC"
 )
 
-df_f<-transform_om_oc(bluecarbon_data)
-
-library(ggplot2)
-
-
-plot(df_f$om_r, df_f$eoc)
-
-
-
-
-
-
+df_f <- transform_om_oc(bluecarbon_data)
