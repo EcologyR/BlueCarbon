@@ -14,8 +14,8 @@
 
 estimate_h <- function(df = NULL,
                        core = "core",
-                       dmin= "dmin",
-                       dmax= "dmax") {
+                       mind = "mind",
+                       maxd = "maxd") {
 
   # class of the dataframe or tibble
   if (!inherits(df, "data.frame")) {
@@ -24,84 +24,49 @@ estimate_h <- function(df = NULL,
 
   # name of the columns
   if (!core %in% colnames(df)) {stop("There must be a variable with 'core'")}
-  if (!dmin %in% colnames(df)) {stop("There must be a variable with 'dmin'")}
-  if (!dmax %in% colnames(df)) {stop("There must be a variable with 'dmax'")}
+  if (!dmin %in% colnames(df)) {stop("There must be a variable with 'mind'")}
+  if (!dmax %in% colnames(df)) {stop("There must be a variable with 'maxd'")}
 
   # class of the columns
-  if (!is.numeric(df[[dmin]])) {stop("dmin data must be class numeric")}
-  if (!is.numeric(df[[dmax]])) {stop("dmax data must be class numeric")}
+  if (!is.numeric(df[[mind]])) {stop("'mind' data must be class numeric")}
+  if (!is.numeric(df[[maxd]])) {stop("'maxd' data must be class numeric")}
 
   #check for NAs in depth columns
-  if (sum(is.na(df[[dmin]]))>0){stop("Samples minimun depth column has NAs, please check")}
-  if (sum(is.na(df[[dmin]]))>0){stop("Samples maximun depth column has NAs, please check")}
-
+  if (sum(is.na(df[[mind]])) > 0) {stop("Samples minimun depth column has NAs, please check")}
+  if (sum(is.na(df[[maxd]])) > 0) {stop("Samples maximun depth column has NAs, please check")}
 
   # create variables with working names with the data in the columns specified by the user
   df_r <- df
   df_r$core_r <- df_r[[core]]
-  df_r$dmin_r <- df_r[[dmin]]
-  df_r$dmax_r <- df_r[[dmax]]
-
+  df_r$mind_r <- df_r[[mind]]
+  df_r$maxd_r <- df_r[[maxd]]
 
   # create individual data frames per each core
+  df_r$core_r <- factor(df_r$core_r, levels = unique(df_r$core_r))
+  x <- split(df_r, df_r$core_r)
 
-  df_r$core_r <- factor(df_r$core_r, levels=unique(df_r$core_r))
-  x<-split(df_r, df_r$core_r)
-
-
-  columns<-c("EMin","EMax","h")
-  Fdf2 = data.frame(matrix(nrow = 0, ncol = length(columns)))
-  colnames(Fdf2) = columns
-
-
-  for(i in 1:length(x)) {
-
-    Data<-as.data.frame(x[i])
-    colnames(Data)<-colnames(df_r)
-
-    #check if there is spaces between samples (e.g, first sample ends at 5 cm and next starts at 7)
-    space<- c()
-
-    for (j in 1:(nrow(Data)-1)) {
-
-      # if there are no spaces between samples min and maximun depth of samples remain the same
-      if (Data[j,which(colnames(Data)=="DMax")] == Data[j+1,which(colnames(Data)=="DMin")]) {
-        space[j]<-FALSE} else {space[j]<-TRUE}}
-
-    if (any(space==TRUE)) {
-      # if there are spaces between samples it estimate the medium point between the maximum depth of the sample and the minimun depth of the next sample
-      # and divide that distance between both samples
-      Data <- cbind(Data, EMin=NA, EMax=NA)
-      Data[1,"EMin"]<-0
-      Data[nrow(Data),"EMax"]<-Data[nrow(Data),"DMax"]
-
-      for (j in 1:(nrow(Data)-1)) {
-        if(space[j]==TRUE) {
-          Data[j,"EMax"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)
-          Data[j+1,"EMin"]<-Data[j,"DMax"]+((Data[j+1,"DMin"]-Data[j,"DMax"])/2)} else {
-            Data[j,"EMax"]<-Data[j,"DMax"]
-            Data[j+1,"EMin"]<-Data[j+1,"DMin"]}}
-
-    }  else{
-      Data <- cbind(Data, EMin=NA, EMax=NA)
-      Data$EMin<-Data$DMin
-      Data$EMax<-Data$DMax
-
-    }
-
-    Data <- cbind(Data, h=NA)
-
-    #estimation of the thickness of the sample (h) from the new minimun and max depth of the sample
-
-    Data<- Data |> dplyr::mutate (h = EMax-EMin)
-
-    temp<-cbind(Data$EMin, Data$EMax, Data$h)
-    colnames(temp)<-colnames(Fdf2)
-    Fdf2<-rbind(Fdf2, temp)
-
+  estimate_depth <- function(df, j) {
+    df[j + 1, "emin"] <- df[j, "maxd_r"] + ((df[j + 1, "mind_r"] - df[j, "maxd_r"]) / 2)
+    df[j, "emax"] <- df[j, "maxd_r"] + ((df[j + 1, "mind_r"] - df[j, "maxd_r"]) / 2)
+    df[1, "emin"] <- 0
+    df[nrow(df), "emax"] <- df[nrow(df), "maxd_r"]
+    return(df)
   }
-  Fdf<-cbind(df, Fdf2)
 
-  return(Fdf)
+  estimate_height <- function(df) {
+    data <- as.data.frame(df)
+    colnames(data) <- colnames(df_r)
+    data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
+    data$h <- data$emax - data$emin
+    return(data)
+  }
+
+  list_h <- lapply(X = x, FUN = estimate_height)
+
+  df_h <- do.call(rbind, list_h)
+
+  rownames(df_h) <- NULL
+
+  return(df_h)
+
 }
-
