@@ -1,34 +1,34 @@
-#' Organic carbon estimation
+#' Estimate organic carbon
 #'
-#' @description Model linear relation between organic matter and organic carbon and estimate organic carbon values from organic matter data
+#' Estimate organic carbon from organic matter values
 #'
-#' @param df A tibble or data.frame with the data as columns
-#' @param site name of the column with the information of sample site
+#' @details
+#' Estimation of organic Carbon is done by means of linear regressions on
+#' log(organic carbon) ~ log(organic matter)
+#' # TODO
+#'
+#'
+#' @param df A tibble or data.frame containing all the data
 #' @param ecosystem name of the column with ecosystem of the sample
+#' @param site name of the column with the information of sample site
 #' @param species name of the column with main species of the sample
 #' @param om name of the column with organic matter data
 #' @param oc name of the column with organic carbon data
 #'
-#' @return the initial data.frame + one column with organic carbon values (eOC), the standard error of the prediction (eoc_se) and the tipe of model (origin)
-#' @return print organic matter-estimated organic carbon plot
+#' @return The initial tibble or data.frame with three new columns:
+#' - one column with estimated organic carbon values (eOC)
+#' - the standard error of the prediction (eOC_se)
+#' - the type of model used for estimation (origin)
+#' In addition, a plot with the relationship between organic matter and estimated
+#' organic carbon
 #'
 #' @export
 #'
 #'
-#' @examples transform_om_oc(bluecarbon_data)
-#' @examples transform_om_oc(df = A, site = "SiteID", ecosystem = "Ecosystem", species = "Specie", om = "OM", oc = "OC")
+#' @examples
+#' transform_om_oc(bluecarbon_data)
 
-
-# load("data/DataInv.rda")
-#
-# df = DataInv
-# site = "SiteID"
-# ecosystem = "Ecosystem"
-# species = "Specie"
-# om = "OM"
-# oc = "OC"
-
-transform_om_oc<- function(df = NULL,
+transform_om_oc <- function(df = NULL,
                            site = "site",
                            ecosystem = "ecosystem",
                            species = "species",
@@ -39,12 +39,13 @@ transform_om_oc<- function(df = NULL,
     stop("The data provided must be a tibble or data.frame")
   }
 
-  # names of the columns
-  if (!site %in% names(df)) {stop("There must be a variable with 'site'")}
-  if (!ecosystem %in% names(df)) {stop("There must be a variable with 'ecosystem'")}
-  if (!species %in% names(df)) {stop("There must be a variable with 'species'")}
-  if (!om %in% names(df)) {stop("There must be a variable with 'om'")}
-  if (!oc %in% names(df)) {stop("There must be a variable with 'oc'")}
+  # Check provided column names exist in df
+  check_column_in_df(df, site)
+  check_column_in_df(df, ecosystem)
+  check_column_in_df(df, species)
+  check_column_in_df(df, om)
+  check_column_in_df(df, oc)
+
 
   # class of the columns
   if (!is.numeric(df[[om]])) {stop("Organic matter data must be class numeric")}
@@ -54,19 +55,20 @@ transform_om_oc<- function(df = NULL,
   if (min(df[[oc]], na.rm = T) < 0) {stop("Organic carbon values must be positive")}
 
   #check if om values are higher than oc values (can not estimate logarithms)
-  if (!is.na(any(df[[om]] < df[[oc]])) == TRUE) {stop("There are organic carbon values higher than organic matter values")}
+  if (any(df[[om]] < df[[oc]])) {
+    stop("Some organic carbon values are higher than organic matter values. Please check your data.")
+  }
 
 
-  # create variables with working names with the data in the columns especified by the user
-  df_r <- df
-  df_r$site_r <- df_r[[site]]
-  df_r$species_r <- df_r[[species]]
-  df_r$ecosystem_r <- df_r[[ecosystem]]
-  df_r$om_r <- df_r[[om]]
-  df_r$oc_r <- df_r[[oc]]
+  # create variables to be used internally
+  df$ecosystem_r <- df[[ecosystem]]
+  df$species_r <- df[[species]]
+  df$site_r <- df[[site]]
+  df$om_r <- df[[om]]
+  df$oc_r <- df[[oc]]
 
 
-  ecosystem_ls <- split(df_r, df_r$ecosystem_r)
+  ecosystem_ls <- split(df, df$ecosystem_r)
 
 
   # part 1: fit models --------------------------------------------------------------
@@ -278,13 +280,3 @@ transform_om_oc<- function(df = NULL,
 
 }
 
-df_f <- transform_om_oc(
-  df = DataInv,
-  site = "SiteID",
-  ecosystem = "Ecosystem",
-  species = "Specie",
-  om = "OM",
-  oc = "OC"
-)
-
-df_f <- transform_om_oc(bluecarbon_data)
