@@ -11,106 +11,151 @@
 #' @examples test_extrapolation(A, Depth = 50)
 #' @examples test_extrapolation(A)
 
-test_extrapolation <- function(df = NULL, Depth = 100) {
+test_extrapolation <- function(df = NULL,
+                               depth = 100,
+                               min_samples = 3,
+                               core = "core",
+                               dmin = "dmin",
+                               dmax = "dmax",
+                               dbd = "dbd",
+                               oc = "eoc") {
 
-  # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please chaeck data and transforme")}
-  if (is.numeric(Depth)==FALSE) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
+  # class of the dataframe or tibble
+  if (!inherits(df, "data.frame")) {
+    stop("The data provided must be a tibble or data.frame")
+  }
+  if (!is.numeric(depth)) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
   # name of the columns
-  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named DMin. Please, check necessary columns in functions documentation")}
-  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named DMax. Please, check necessary columns in functions documentation")}
-  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
-  if ("fOC" %in% colnames(df)==FALSE) {stop("There is not column named fOC. Please, check necessary columns in functions documentation")}
+  if (!core %in% colnames(df)) {stop("There must be a variable with 'core'")}
+  if (!dmin %in% colnames(df)) {stop("There must be a variable with 'dmin'")}
+  if (!dmax %in% colnames(df)) {stop("There must be a variable with 'dmax'")}
+  if (!dbd %in% colnames(df)) {stop("There must be a variable with 'dbd'")}
+  if (!oc %in% colnames(df)) {stop("There must be a variable with 'oc'")}
 
   # class of the columns
-  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
-  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
-  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please check")}
-  if (is.numeric(df$fOC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
+  if (!is.numeric(df[[dmin]])) {stop("Minimum depth data is not class numeric, please check")}
+  if (!is.numeric(df[[dmax]])) {stop("Maximum depth data is not class numeric, please check")}
+  if (!is.numeric(df[[dbd]])) {stop("Dry Bulk Density data is not class numeric, please check")}
+  if (!is.numeric(df[[oc]])) {stop("Organic carbon data is not class numeric, please check")}
 
+
+  # create variables with working names with the data in the columns specified by the user
+  df_r <- df
+  df_r$core_r <- df_r[[core]]
+  df_r$dmin_r <- df_r[[dmin]]
+  df_r$dmax_r <- df_r[[dmax]]
+  df_r$dbd_r <- df_r[[dbd]]
+  df_r$oc_r <- df_r[[oc]]
 
   # we select those cores larger than the standard depth
 
-  columns<-colnames(df)
-  DataE = data.frame(matrix(nrow = 0, ncol = length(columns)))
-  colnames(DataE) = columns
+  columns<-colnames(df_r)
+  x <- split(df_r, df_r$core_r)
+
+
+   select_cores<-function (df, depth) {
+
+     data <- as.data.frame(df)
+     colnames(data) <- columns
+     if (max(data$dmax_r) > depth) { core<-data
+     } else {core<-NULL}
+
+     return (core)
+   }
+
+   cores_e<- lapply( X = x,  select_cores, depth = depth) # return a list
+   cores_e<-cores_e[!vapply(cores_e, is.null, logical(1))]
+   cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
+
+
+   # estimate obserbed stock
+
+   observed_stock<-estimate_stock(df = cores_e,
+                    Depth = depth,
+                    core = "core_r",
+                    dmin = "dmin_r",
+                    dmax = "dmax_r",
+                    dbd = "dbd_r",
+                    oc = "eoc_r")
 
 
 
-   X <- split(df, df$CoreID)
+   # estimate corrected sample depth, h and organic carbon density and carbon mass per sample
 
-  for (i in 1:length(X)) {
-    Data <- as.data.frame(X[i])
-    colnames(Data) <- colnames(df)
+   cores_e<-cores_e[!is.na(cores_e$oc_r),]
+   cores_e<-estimate_h(cores_e)
 
-    if (max(Data$DMax) < Depth) next
+   #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
+   cores_e <-cores_e |> dplyr::mutate (ocgcm2 = dbd_r*(oc_r/100)*h)
 
-    DataE<-rbind(DataE,Data)}
+   # create data frames with same cores different lengths
 
+   x <- split(cores_e, cores_e$core_r)
+   columns<-colnames(cores_e)
 
-   # estimate the stock at the standar depth
+   cut_cores<- function (df, depth) {
 
-  ExtS <- data.frame(
-    CoreID = character(),
-    EXT.100 = numeric(),
-    EXT.90 = numeric(),
-    EXT.75 = numeric(),
-    EXT.50 = numeric(),
-    EXT.25 = numeric()
-  )
+     data <- as.data.frame(df)
+     colnames(data) <- columns
 
-
-    hundreth<- Depth #100% of the extrapolation length
-    ninety <- Depth * 0.9 #90% of the extrapolation length
-    seventy <- Depth * 0.75 #90% of the extrapolation length
-    fifhty <- Depth * 0.50 #90% of the extrapolation length
-    twentififty <- Depth * 0.25 #90% of the extrapolation length
+     cores90<-subset(df,df$emax<= depth * 0.9)
+     cores75<-subset(df,df$emax<= depth * 0.75)
+     cores50<-subset(df,df$emax<= depth * 0.5)
+     cores25<-subset(df,df$emax<= depth * 0.25)
 
 
-    #estimate observed stock
-    temp100<-estimate_stock (DataE, Depth=hundreth)
-    ExtS[c(1:nrow(temp100)),"CoreID"]<-temp100$CoreID
-    ExtS$EXT.100<-temp100$Stock
+    dfs<-list(cores90, cores75, cores50, cores25)
 
-   # estimate stock with a 90, 75, 50 and 25 percentage of the standard depth
+   }
 
-    X <- split(DataE, DataE$CoreID)
+   cores_c<- lapply( X = x,  cut_cores, depth = depth)
 
-    for (i in 1:length(X)) {
-      Data <- as.data.frame(X[i])
-      colnames(Data) <- colnames(DataE)
+  extract<- function (lst, position) {
+    return(lst[[position]])
+  }
 
-    Data<-Data[!is.na(Data$fOC),]
-    Data<-estimate_h(Data)
+  df90<-lapply(X= cores_c, extract, position=1)
+  df75<-lapply(X= cores_c, extract, position=2)
+  df50<-lapply(X= cores_c, extract, position=3)
+  df25<-lapply(X= cores_c, extract, position=4)
 
-    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-    Data <-Data |> dplyr::mutate (OCgcm2 = DBD*(fOC/100)*h)
 
-    #estimate organic carbon accumulated mass
-    Data <-Data |> dplyr::mutate (OCM = cumsum(OCgcm2))
+ # modeling stock
 
-    Data<- subset(Data,Data$DMax<=ninety)
+  model_stock<- function (df, depth = depth) {
+
+    df <-df |> dplyr::mutate (ocM = cumsum(ocgcm2))
 
     if (nrow(Data)>3){
-      model90<-lm(OCM ~ DMax, data=Data)
-      ExtS[i,3]<-coef(model90)[1] + 100*coef(model90)[2]}
+      model<-lm(ocM ~ emax, data=df)
+      mStock<-predict(model, newdata = data.frame(emax=depth))
+      mStock_se
+      } else {
+        mStock<-NA
+        mStock_se<-NA
+      }
 
-    Data<- subset(Data,Data$DMax<=seventy)
-    if (nrow(Data)>3){
-      model75<-lm(OCM ~ DMax, data=Data)
-      ExtS[i,4]<-coef(model75)[1] + 100*coef(model75)[2]}
+    stocks<-data.frame(mStock = mStock, mStock_se = mStock_se)
 
-    Data<- subset(Data,Data$DMax<=fifhty)
-    if (nrow(Data)>3){
-      model50<-lm(OCM ~ DMax, data=Data)
-      ExtS[i,5]<-coef(model50)[1] + 100*coef(model50)[2]}
+    return(stocks)
+  }
 
-    Data<- subset(Data,Data$DMax<=twentififty)
-    if (nrow(Data)>3){
-      model25<-lm(OCM ~ DMax, data=Data)
-      ExtS[i,6]<-coef(model25)[1] + 100*coef(model25)[2]}}
+  stocks90<-lapply(X = df90, model_stock, depth = depth)
+  stocks90 <- as.data.frame(do.call(rbind, stocks90))
+  stocks75<-lapply(X = df75, model_stock, depth = depth)
+  stocks75 <- as.data.frame(do.call(rbind, stocks75))
+  stocks50<-lapply(X = df50, model_stock, depth = depth)
+  stocks50 <- as.data.frame(do.call(rbind, stocks50))
+  stocks25<-lapply(X = df25, model_stock, depth = depth)
+  stocks25 <- as.data.frame(do.call(rbind, stocks25))
+
+predictions<-cbind(stocks90, stocks75, stocks50, stocks25)
+
+
+  stocks_f<-cbind(stocks_r, predictions)
+
+
 
 
   #############
@@ -173,3 +218,13 @@ return(ExtS)
 return(Extrapolation_plot)
 
 }
+
+
+
+df = df_f
+depth = 100
+core = "core"
+dmin = "mind"
+dmax = "maxd"
+dbd = "dbd"
+oc = "eoc"

@@ -12,47 +12,82 @@
 #' @examples estimate_flux(A, ,TimeFrame = 500)
 
 
-estimate_flux<- function(df=NULL,TimeFrame=100) {
+estimate_flux<- function(df=NULL,
+                         TimeFrame=100,
+                         core = "core",
+                         dmin = "dmin",
+                         dmax = "dmax",
+                         dbd = "dbd",
+                         oc = "eoc",
+                         age = "age") {
 
-  # class of the dataframe
-  if (is.data.frame(df)==FALSE) {stop("The data provided is not class data.frame, please check data and transforme")}
-  if (is.numeric(TimeFrame)==FALSE) {stop("The TimeFrame provided is not class numeric, please check data and transforme")}
+  # class of the dataframe or tibble
+  if (!inherits(df, "data.frame")) {
+    stop("The data provided must be a tibble or data.frame")
+  }
+  if (!is.numeric(Depth)) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
   # name of the columns
-  if ("CoreID" %in% colnames(df)==FALSE) {stop("There is not column named CoreID. Please, check necessary columns in functions documentation")}
-  if ("DMin" %in% colnames(df)==FALSE) {stop("There is not column named DMin. Please, check necessary columns in functions documentation")}
-  if ("DMax" %in% colnames(df)==FALSE) {stop("There is not column named DMax. Please, check necessary columns in functions documentation")}
-  if ("DBD" %in% colnames(df)==FALSE) {stop("There is not column named DBD. Please, check necessary columns in functions documentation")}
-  if ("fOC" %in% colnames(df)==FALSE) {stop("There is not column named fOC. Please, check necessary columns in functions documentation")}
-  if ("Age" %in% colnames(df)==FALSE) {stop("There is not column named Age. Please, check necessary columns in functions documentation")}
+  if (!core %in% colnames(df)) {stop("There must be a variable with 'core'")}
+  if (!dmin %in% colnames(df)) {stop("There must be a variable with 'dmin'")}
+  if (!dmax %in% colnames(df)) {stop("There must be a variable with 'dmax'")}
+  if (!dbd %in% colnames(df)) {stop("There must be a variable with 'dbd'")}
+  if (!oc %in% colnames(df)) {stop("There must be a variable with 'oc'")}
+  if (!age %in% colnames(df)) {stop("There must be a variable with 'age'")}
 
   # class of the columns
-  if (is.numeric(df$DMin)==FALSE) {stop("Minimum depth data is not class numeric, please check")}
-  if (is.numeric(df$DMax)==FALSE) {stop("Maximum depth data is not class numeric, please check")}
-  if (is.numeric(df$DBD)==FALSE) {stop("Dry Bulk Density data is not class numeric, please check")}
-  if (is.numeric(df$fOC)==FALSE) {stop("Organic carbon data is not class numeric, please check")}
-  if (is.numeric(df$Age)==FALSE) {stop("Age data is not class numeric, please check")}
+  if (!is.numeric(df[[dmin]])) {stop("Minimum depth data is not class numeric, please check")}
+  if (!is.numeric(df[[dmax]])) {stop("Maximum depth data is not class numeric, please check")}
+  if (!is.numeric(df[[dbd]])) {stop("Dry Bulk Density data is not class numeric, please check")}
+  if (!is.numeric(df[[oc]])) {stop("Organic carbon data is not class numeric, please check")}
+  if (!is.numeric(df[[age]])) {stop("Age data is not class numeric, please check")}
 
+  # create variables with working names with the data in the columns specified by the user
+  df_r <- df
+  df_r$core_r <- df_r[[core]]
+  df_r$dmin_r <- df_r[[dmin]]
+  df_r$dmax_r <- df_r[[dmax]]
+  df_r$dbd_r <- df_r[[dbd]]
+  df_r$oc_r <- df_r[[oc]]
+  df_r$age_r <- df_r[[age]]
 
 
   #select those cores with chronological models
-  df<-df[!is.na(df$Age),]
-  df<-df[!is.na(df$fOC),]
+  df_r<-df_r[!is.na(df_r$Age_r),]
+  df_r<-df_r[!is.na(df_r$oc_r),]
 
-  df<-estimate_h (df)
+  df_h<-estimate_h (df_r)
 
-  X<-split(df, df$CoreID)
+  x<-split(df_h, df_h$core_r)
 
-  BCF <- data.frame(CoreID=character(),
-                    F.WC=numeric(),
-                    A.Max=numeric(),
-                    Flux=numeric())
+  #BCF <- data.frame(CoreID=character(),
+   #                 F.WC=numeric(),
+    #                A.Max=numeric(),
+     #               Flux=numeric())
 
 
   for(i in 1:length(X)) {
     BCF[i,1]<-names(X[i])
     Data<-as.data.frame(X[i])
     colnames(Data)<-colnames(df)
+
+    estimate_core_f<- function (df, timeframe) {
+
+      CoreID <- as.character(unique(df[1,"core_r"]))
+      df<-as.data.frame(df)
+      colnames(df)<-colnames(df_h)
+
+
+
+
+
+
+
+      }
+
+
+
+
 
     if(nrow(Data)<3) next
 

@@ -130,7 +130,7 @@ estimate_stock <- function(df = NULL,
 
     x<-split(df_h, df_h$core_r)
 
-    BCS_l<- lapply( X = x,  estimate_core, Depth = 100) # return a list
+    BCS_l<- lapply( X = x,  estimate_core, Depth = Depth) # return a list
     BCS <- as.data.frame(do.call(rbind, BCS_l)) # from list to dataframe
 
     return(BCS)
