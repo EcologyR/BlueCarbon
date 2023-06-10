@@ -30,6 +30,7 @@
 #'
 #' @examples
 #' estimate_oc(bluecarbon_data)
+#' estimate_oc(df = A,site = "SiteID", ecosystem = "Ecosystem", species = "Specie", om = "OM", oc = "OC")
 
 estimate_oc <- function(df = NULL,
                         site = "site",
@@ -173,9 +174,9 @@ fit_models <- function(df = NULL) {
 
           # check if there is any specie with less than 10 samples to adjust model, if so, we delete that specie from the model fitting
 
-          if (length(which(table(df$species_r)<10))>=1) {to_delet_sp<-rownames(as.data.frame(which(table(df$species_r)<10)))
+          if (length(which(table(df$species_r)<10))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=10)))
 
-                      df<-subset(df, !species_r==to_delet_sp)}
+                      df<-subset(df, df$species_r %in% to_keep_sp)}
 
           multispecies_model <- fit_multispecies_model(df)
 
@@ -183,9 +184,9 @@ fit_models <- function(df = NULL) {
 
           if (length(which(table(df$site_r)>10))<2) { site_models <- NULL } else {
 
-          if (length(which(table(df$site_r)<10))>=1) {to_delet_st<-rownames(as.data.frame(which(table(df$site_r)<10)))
+          if (length(which(table(df$site_r)<10))>=1) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=10)))
 
-          df<-subset(df, !site_r==to_delet_st)}
+          df<-subset(df, df$site_r %in% to_keep_st)}
 
             # divide the data.frame per species and fit one model per species
             species_ls <- split(df, df$species_r)
@@ -376,12 +377,13 @@ plot_eoc_om <- function(df = NULL) {
 
 
 
+estimate_oc(df = bluecarbon_data)
 
-estimate_oc(df = bluecarbon_data,
-         site = "site",
-         ecosystem = "ecosystem",
-         species = "species",
-         om = "om",
-         oc = "oc")
+prueba<-estimate_oc(df = DataInv,
+         site = "SiteID",
+         ecosystem = "Ecosystem",
+         species = "Specie",
+         om = "OM",
+         oc = "OC")
 
 
