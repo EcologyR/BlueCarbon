@@ -5,8 +5,7 @@
 #'
 #' @param df A [data.frame] with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample),
 #' dbd (dry bulk density), oc (organic carbon %)
-#' @param depth standardization soil depth, by default 100 cm.
-#' @param min.sample
+#' @param depth mas depth to estimate the stock, by default 100.
 #' @param core Character Name of the column reporting core ID.
 #' @param mind Character Name of the column reporting the minimum depth of each sample.
 #' @param maxd Character Name of the column reporting the maximum depth of each sample.
@@ -16,12 +15,11 @@
 #' @return [data.frame] with columns core, swc (organic carbon stock at the whole core), maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
 #' @export
 #'
-#' @examples estimate_stock(A)
-#' @examples estimate_stock(A, depth = 50)
+#' @examples estimate_oc_stock(A)
+#' @examples estimate_oc_stock(A, depth = 50)
 
-estimate_stock <- function(df = NULL,
+estimate_oc_stock <- function(df = NULL,
                            depth = 100,
-                           min_samples = 3,
                            core = "core",
                            mind = "mind",
                            maxd = "maxd",
@@ -34,11 +32,12 @@ estimate_stock <- function(df = NULL,
   }
 
   # name of the columns
-  if (!core %in% colnames(df)) {stop("There must be a variable with 'core'")}
-  if (!mind %in% colnames(df)) {stop("There must be a variable with 'mind'")}
-  if (!maxd %in% colnames(df)) {stop("There must be a variable with 'maxd'")}
-  if (!dbd %in% colnames(df)) {stop("There must be a variable with 'dbd'")}
-  if (!oc %in% colnames(df)) {stop("There must be a variable with 'oc'")}
+  check_column_in_df(df, core)
+  check_column_in_df(df, mind)
+  check_column_in_df(df, maxd)
+  check_column_in_df(df, dbd)
+  check_column_in_df(df, oc)
+
 
   # class of the columns
   if (!is.numeric(depth)) {stop("'depth' must be class numeric")}
@@ -72,22 +71,17 @@ estimate_stock <- function(df = NULL,
   return(BCS)
 }
 
-estimate_core <- function(df, depth, min_samples = 3) {
+estimate_core <- function(df, depth) {
 
+  core <- as.character(df$core_r[[1]])
 
-  #checkear que las muestras estan por orden!!
-
-  # esto lo he anadido pero no estoy seguro
-  # revisalo porfa
-  core <- df$core_r
-
-  if(!nrow(df) < min_samples) {
+  if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
 
     #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
     df$ocgcm2 <- df$dbd_r * (df$oc_r / 100) * df$h
 
     #estimation of the OC stock in the whole core
-    swc <- sum(df$ocgcm2)
+    stockwc <- sum(df$ocgcm2)
     maxd <- max(df$emax)
 
     #if core exactly the standarization depth, we keep the stock of the whole core
@@ -103,14 +97,11 @@ estimate_core <- function(df, depth, min_samples = 3) {
 
         df <- df[c(1:(length(which(df$emax <= depth)) + 1)), ]
 
-        if(!nrow(df) < min_samples) {
-
           stock <- (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])) +
             ((df[nrow(df), "ocgcm2"] / (max(df$emax) - df[(nrow(df) - 1), "emax"]))
              * (depth - df[(nrow(df) - 1), "emax"]))
           stock_se <- NA
 
-        }
 
       } else { #if core shorter than than the standardization depth we model the OC acumulated mass with depth and predict the stock at that depth
 
@@ -119,31 +110,27 @@ estimate_core <- function(df, depth, min_samples = 3) {
         stock <- predict(model, newdata = data.frame(emax = depth))
         stock_se <- predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
 
-      }}}
+      }}
 
-  BCS <- data.frame(core = core, swc = swc, maxd = maxd, stock = stock, stock_se = stock_se)
+  BCS <- data.frame(core = core, stockwc = stockwc, maxd = maxd, stock = stock, stock_se = stock_se)
 
   return(BCS)
 }
 
-kk <- estimate_stock (df = df_f,
+
+
+kk <- estimate_oc_stock (df = df_f,
                       depth = 100,
-                      min_samples = 3,
                       core = "core",
                       mind = "mind",
                       maxd = "maxd",
                       dbd = "dbd",
                       oc = "eoc")
 
-# el warning que da de los rownames no es importante creo
-# entiendo que no estas interesada en la variable
-# que figura en los rownames
-# si asi podriamos eliminar el warning o modificar un poco
-# el codigo para que no pase eso
+
 
 df = df_f
-depth = 100
-min_samples = 3
+depth = 100,
 core = "core"
 mind = "mind"
 maxd = "maxd"
