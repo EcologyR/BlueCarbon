@@ -4,7 +4,7 @@
 #'
 #' @details
 #' Estimation of organic Carbon is done by means of linear regressions on
-#' log(organic carbon) ~ log(organic matter)
+#' log(organic carbon) ~ log(organic matter). It gives back a organic carbon value for each organic matter value provided. If there is a organic carbon value for that sample it return the same value => if there are more than
 #' # TODO: Please expand on what this function does
 #'
 #'
@@ -153,15 +153,46 @@ fit_models <- function(df = NULL) {
   }
 
 
-  if (nrow(df) > 10) {
+  #if any ecosystem has less than 10 samples with both OM and OC we do not adjust a model for it, nor for species or site
+  if (nrow(df) < 10) {
 
-    ecosystem_model <- fit_ecosystem_model(df)
+    ecosystem_model <- NULL
+    multispecies_model <- NULL
+    site_models <- NULL
 
-    multispecies_model <- fit_multispecies_model(df)
+     } else {
 
-    # divide the data.frame per species and fit one model per species
-    species_ls <- split(df, df$species_r)
-    site_models <- lapply(species_ls, fit_site_model)
+      ecosystem_model <- fit_ecosystem_model(df)
+
+      # check if there is 2 or more specie with more than 10 samples (if not we dont adjust model per species or sites)
+
+      if (length(which(table(df$species_r)>10))<2) {
+
+        multispecies_model <- NULL
+        site_models <- NULL } else {
+
+          # check if there is any specie with less than 10 samples to adjust model, if so, we delete that specie from the model fitting
+
+          if (length(which(table(df$species_r)<10))>=1) {to_delet_sp<-rownames(as.data.frame(which(table(df$species_r)<10)))
+
+                      df<-subset(df, !species_r==to_delet_sp)}
+
+          multispecies_model <- fit_multispecies_model(df)
+
+          # check if there is 2 or more sites with more than 10 samples (if not we dont adjust model per species or sites)
+
+          if (length(which(table(df$site_r)>10))<2) { site_models <- NULL } else {
+
+          if (length(which(table(df$site_r)<10))>=1) {to_delet_st<-rownames(as.data.frame(which(table(df$site_r)<10)))
+
+          df<-subset(df, !site_r==to_delet_st)}
+
+            # divide the data.frame per species and fit one model per species
+            species_ls <- split(df, df$species_r)
+            site_models <- lapply(species_ls, fit_site_model)
+
+          }
+        }
 
     # assemble output list
     output <- list(ecosystem_model, multispecies_model, site_models)
