@@ -1,13 +1,14 @@
 #' Estimation of the thickness of the sample
 #'
-#' @description checks for space between samples and, if any, divide this space between the previous and next sample to return sample thickness withouth gaps in the core
+#' @description checks for space between samples and, if any, divide this space between the previous and
+#' next sample to return sample thickness withouth gaps in the core
 #'
 #' @param df A [data.frame] with with columns core, mind (minimum depth of the sample)and maxd (maximum depth of the sample)
-#' @param core
-#' @param mind
-#' @param maxd
+#' @param core Character Name of the column reporting core ID.
+#' @param mind Character Name of the column reporting the minimum depth of each sample.
+#' @param maxd Character Name of the column reporting the maximum depth of each sample.
 #'
-#' @return the initial [data.frame] with three additional columns: EMin (estimated minimum depth of the sample), EMax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
+#' @return the initial [data.frame] with three additional columns: emin (estimated minimum depth of the sample), emax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
 #' @export
 #'
 #' @examples estimate_h(A)
@@ -23,9 +24,10 @@ estimate_h <- function(df = NULL,
   }
 
   # name of the columns
-  if (!core %in% colnames(df)) {stop("There must be a variable with 'core'")}
-  if (!mind %in% colnames(df)) {stop("There must be a variable with 'mind'")}
-  if (!maxd %in% colnames(df)) {stop("There must be a variable with 'maxd'")}
+  check_column_in_df(df, core)
+  check_column_in_df(df, mind)
+  check_column_in_df(df, maxd)
+
 
   # class of the columns
   if (!is.numeric(df[[mind]])) {stop("'mind' data must be class numeric")}

@@ -4,6 +4,12 @@
 #'
 #' @param df A [data.frame] with, at least, columns: Core.ID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
 #' @param TimeFrame standardization time frame, by default 100 years
+#' @param core Character Name of the column reporting core ID.
+#' @param mind Character Name of the column reporting the minimum depth of each sample.
+#' @param maxd Character Name of the column reporting the maximum depth of each sample.
+#' @param dbd Character Name of the column reporting dry bulk density.
+#' @param oc Character Name of the column reporting organic carbon concentrations.
+#' @param age Character Name of the column reporting the age of each sample.
 #'
 #' @return [data.frame] with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 #' @export

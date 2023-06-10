@@ -7,11 +7,11 @@
 #' dbd (dry bulk density), oc (organic carbon %)
 #' @param depth standardization soil depth, by default 100 cm.
 #' @param min.sample
-#' @param core
-#' @param mind
-#' @param maxd
-#' @param dbd
-#' @param oc
+#' @param core Character Name of the column reporting core ID.
+#' @param mind Character Name of the column reporting the minimum depth of each sample.
+#' @param maxd Character Name of the column reporting the maximum depth of each sample.
+#' @param dbd Character Name of the column reporting dry bulk density.
+#' @param oc Character Name of the column reporting organic carbon concentrations.
 #'
 #' @return [data.frame] with columns core, swc (organic carbon stock at the whole core), maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
 #' @export
@@ -73,6 +73,9 @@ estimate_stock <- function(df = NULL,
 }
 
 estimate_core <- function(df, depth, min_samples = 3) {
+
+
+  #checkear que las muestras estan por orden!!
 
   # esto lo he anadido pero no estoy seguro
   # revisalo porfa
