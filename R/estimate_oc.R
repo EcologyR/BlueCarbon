@@ -192,7 +192,7 @@ fit_models <- function(df = NULL) {
             site_models <- lapply(species_ls, fit_site_model)
 
           }
-        }
+        }}
 
     # assemble output list
     output <- list(ecosystem_model, multispecies_model, site_models)
@@ -201,8 +201,6 @@ fit_models <- function(df = NULL) {
     output
 
   }
-
-}
 
 
 
@@ -218,16 +216,16 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
   # all_models = list containing ecosystem, multispecies, and site models
   # as produced by fit_models
 
-  if (is.null(all_models[[df_row$ecosystem_r]])) {
+  if (is.null(model_list[[df_row$ecosystem_r]][[1]])) {
 
     mod <- NULL
     mod_type <- NULL
 
   }
 
-  if (!is.null(all_models[[df_row$ecosystem_r]])) { #check if there are models for that ecosystem
+  if (!is.null(model_list[[df_row$ecosystem_r]][[1]])) { #check if there are models for that ecosystem
 
-    mod_site <- all_models[[df_row$ecosystem_r]][["site_models"]][[df_row$species_r]]
+    mod_site <- model_list[[df_row$ecosystem_r]][["site_models"]][[df_row$species_r]]
 
     # if there is a model for that species AND it has that site AND r2 > 0.5
     if (!is.null(mod_site) &&
@@ -239,7 +237,7 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
 
     } else {
 
-      mod_species <- all_models[[df_row$ecosystem_r]][["multispecies_model"]]
+      mod_species <- model_list[[df_row$ecosystem_r]][["multispecies_model"]]
 
       # check if the species is in the species model and it has a r2 >0.5
       if (summary(mod_species)$r.squared > 0.5 &&
@@ -250,7 +248,7 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
 
       } else {
 
-        mod <- all_models[[df_row$ecosystem_r]][["ecosystem_model"]]
+        mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
         mod_type <- "Model by ecosystem"
 
       }
@@ -375,3 +373,15 @@ plot_eoc_om <- function(df = NULL) {
 
   suppressWarnings(print(gg))
 }
+
+
+
+
+estimate_oc(df = bluecarbon_data,
+         site = "site",
+         ecosystem = "ecosystem",
+         species = "species",
+         om = "om",
+         oc = "oc")
+
+
