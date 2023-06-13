@@ -116,26 +116,3 @@ estimate_core <- function(df, depth) {
 
   return(BCS)
 }
-
-
-
-kk <- estimate_oc_stock (df = df_f,
-                      depth = 100,
-                      core = "core",
-                      mind = "mind",
-                      maxd = "maxd",
-                      dbd = "dbd",
-                      oc = "eoc")
-
-
-
-df = df_f
-depth = 100,
-core = "core"
-mind = "mind"
-maxd = "maxd"
-dbd = "dbd"
-oc = "eoc"
-
-estimate_stock(df)
-
