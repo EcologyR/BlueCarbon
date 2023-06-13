@@ -47,25 +47,6 @@ estimate_h <- function(df = NULL,
   df_r$core_r <- factor(df_r$core_r, levels = unique(df_r$core_r))
   x <- split(df_r, df_r$core_r)
 
-  estimate_depth <- function(df, j) {
-    df[j + 1, "emin"] <- df[j, "maxd_r"] + ((df[j + 1, "mind_r"] - df[j, "maxd_r"]) / 2)
-    df[j, "emax"] <- df[j, "maxd_r"] + ((df[j + 1, "mind_r"] - df[j, "maxd_r"]) / 2)
-    df[1, "emin"] <- 0
-    df[nrow(df), "emax"] <- df[nrow(df), "maxd_r"]
-    return(df)
-  }
-
-  estimate_height <- function(df) {
-    data <- as.data.frame(df)
-    colnames(data) <- colnames(df_r)
-
-    if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
-
-    data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
-    data$h <- data$emax - data$emin
-    return(data)
-  }
-
   list_h <- lapply(X = x, FUN = estimate_height)
 
   df_h <- do.call(rbind, list_h)
@@ -74,4 +55,28 @@ estimate_h <- function(df = NULL,
 
   return(df_h)
 
+}
+
+
+# estimate depth --------------------------------------------------------------
+
+estimate_depth <- function(df, j) {
+  df[j + 1, "emin"] <- df[j, "maxd_r"] + ((df[j + 1, "mind_r"] - df[j, "maxd_r"]) / 2)
+  df[j, "emax"] <- df[j, "maxd_r"] + ((df[j + 1, "mind_r"] - df[j, "maxd_r"]) / 2)
+  df[1, "emin"] <- 0
+  df[nrow(df), "emax"] <- df[nrow(df), "maxd_r"]
+  return(df)
+}
+
+# estimate height --------------------------------------------------------------
+
+estimate_height <- function(df) {
+  data <- as.data.frame(df)
+  colnames(data) <- colnames(df_r)
+
+  if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
+
+  data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
+  data$h <- data$emax - data$emin
+  return(data)
 }

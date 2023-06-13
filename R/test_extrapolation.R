@@ -59,17 +59,6 @@ test_extrapolation <- function(df = NULL,
   columns<-colnames(df_r)
   x <- split(df_r, df_r$core_r)
 
-
-   select_cores<-function (df, depth) {
-
-     data <- as.data.frame(df)
-     colnames(data) <- columns
-     if (max(data$maxd_r) > depth) { core<-data
-     } else {core<-NULL}
-
-     return (core)
-   }
-
    cores_e<- lapply( X = x,  select_cores, depth = depth) # return a list
    cores_e<-cores_e[!vapply(cores_e, is.null, logical(1))]
    cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
@@ -100,53 +89,15 @@ test_extrapolation <- function(df = NULL,
    x <- split(cores_e, cores_e$core_r)
    columns<-colnames(cores_e)
 
-   cut_cores<- function (df, depth) {
-
-     data <- as.data.frame(df)
-     colnames(data) <- columns
-
-     cores90<-subset(df,df$emax<= depth * 0.9)
-     cores75<-subset(df,df$emax<= depth * 0.75)
-     cores50<-subset(df,df$emax<= depth * 0.5)
-     cores25<-subset(df,df$emax<= depth * 0.25)
-
-
-    dfs<-list(cores90, cores75, cores50, cores25)
-
-   }
-
    cores_c<- lapply( X = x,  cut_cores, depth = depth)
 
-  extract<- function (lst, position) {
-    return(lst[[position]])
-  }
-
-  df90<-lapply(X= cores_c, extract, position=1)
-  df75<-lapply(X= cores_c, extract, position=2)
-  df50<-lapply(X= cores_c, extract, position=3)
-  df25<-lapply(X= cores_c, extract, position=4)
+  df90<-lapply(X= cores_c, extract_cores, position=1)
+  df75<-lapply(X= cores_c, extract_cores, position=2)
+  df50<-lapply(X= cores_c, extract_cores, position=3)
+  df25<-lapply(X= cores_c, extract_cores, position=4)
 
 
  # modeling stock
-
-  model_stock<- function (df, depth = depth) {
-
-    df <-df |> dplyr::mutate (ocM = cumsum(ocgcm2))
-
-    if (nrow(df)>3){
-      model<-lm(ocM ~ emax, data=df)
-      mStock<-predict(model, newdata = data.frame(emax=depth))
-      mStock_se<-predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
-      } else {
-        mStock<-NA
-        mStock_se<-NA
-      }
-
-    stocks<-data.frame(mStock = mStock, mStock_se = mStock_se)
-
-    return(stocks)
-  }
-
   stocks90<-lapply(X = df90, model_stock, depth = depth)
   stocks90 <- as.data.frame(do.call(rbind, stocks90))
   stocks75<-lapply(X = df75, model_stock, depth = depth)
@@ -163,16 +114,13 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
 
   stocks_f<-cbind(observed_stock[,c( 1, 4)], predictions)
 
-  #############
+
   # estimate the error % of extrapolations and observed stock
-  ##############
 
   stocks_f <- stocks_f |> dplyr::mutate (error_90 = (abs(stock - stock_90) * 100) / stock)
   stocks_f <- stocks_f |> dplyr::mutate (error_75 = (abs(stock - stock_75) * 100) / stock)
   stocks_f <- stocks_f |> dplyr::mutate (error_50 = (abs(stock - stock_50) * 100) / stock)
   stocks_f <- stocks_f |> dplyr::mutate (error_25 = (abs(stock - stock_25) * 100) / stock)
-
-
 
   #Global Error
   m_stocks_f <- stocks_f[, c(1, 11:14)]
@@ -210,13 +158,69 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
 }
 
 
+# core procesing ------------------------------------------------------
+
+#### SELEC CORES ####
+select_cores<-function (df, depth) {
+
+  data <- as.data.frame(df)
+  colnames(data) <- columns
+  if (max(data$maxd_r) > depth) { core<-data
+  } else {core<-NULL}
+
+  return (core)
+}
+
+#### CUT CORES ####
+cut_cores<- function (df, depth) {
+
+  data <- as.data.frame(df)
+  colnames(data) <- columns
+
+  cores90<-subset(df,df$emax<= depth * 0.9)
+  cores75<-subset(df,df$emax<= depth * 0.75)
+  cores50<-subset(df,df$emax<= depth * 0.5)
+  cores25<-subset(df,df$emax<= depth * 0.25)
+
+
+  dfs<-list(cores90, cores75, cores50, cores25)
+
+}
+
+#### EXTRACT CORES ####
+extract_cores<- function (lst, position) {
+  return(lst[[position]])
+}
+
+
+# stock modelisation ------------------------------------------------------
+
+
+model_stock<- function (df, depth = depth) {
+
+  df <-df |> dplyr::mutate (ocM = cumsum(ocgcm2))
+
+  if (nrow(df)>3){
+    model<-lm(ocM ~ emax, data=df)
+    mStock<-predict(model, newdata = data.frame(emax=depth))
+    mStock_se<-predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
+  } else {
+    mStock<-NA
+    mStock_se<-NA
+  }
+
+  stocks<-data.frame(mStock = mStock, mStock_se = mStock_se)
+
+  return(stocks)
+}
+
+
+
 
 test_extrapolation (df_f,
-                               depth = 100,
-                               core = "core",
-                               mind = "mind",
-                               maxd = "maxd",
-                               dbd = "dbd",
-                               oc = "eoc")
-
-
+                    depth = 100,
+                    core = "core",
+                    mind = "mind",
+                    maxd = "maxd",
+                    dbd = "dbd",
+                    oc = "eoc")
