@@ -58,6 +58,9 @@ estimate_h <- function(df = NULL,
   estimate_height <- function(df) {
     data <- as.data.frame(df)
     colnames(data) <- colnames(df_r)
+
+    if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
+
     data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
     data$h <- data$emax - data$emin
     return(data)
