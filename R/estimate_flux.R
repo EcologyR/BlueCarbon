@@ -94,20 +94,27 @@ estimate_core_f<- function (df, timeframe) {
   fluxwc <- sum(df$ocgcm2)/max(df$age_r)
   maxage <- max(df$age_r)
 
-  #estimation of the average carbon flux for the selected TimeFrame (OC stock / TimeFrame)
+  # if max age is lower than the time frame by a 25% of the time frame do not estimate
+  if ((max(df$age_r) + (max(df$age_r) * 0.25)) < timeframe) {
+    message (paste("Core", core, "is younger than the time frame provided"))
+    flux <- NA } else {
 
-  if (max(df$age_r)==timeframe) {
 
-    flux<-sum(df$ocgcm2)/max(df$age_r)
 
-  } else {
-    df<-df[c(1:(length(which(df$age_r <=timeframe))+1)),]
+      #estimation of the average carbon flux for the selected TimeFrame (OC stock / TimeFrame)
 
-    flux<-(
-      (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])+
-         ((df[nrow(df),"ocgcm2"]/((max(df$age_r)-df[(nrow(df)-1),"age_r"])))
-          *(timeframe-df[(nrow(df)-1),"age_r"])))/timeframe)
-  }
+      if (max(df$age_r)==timeframe) {
+
+        flux<-sum(df$ocgcm2)/max(df$age_r)
+
+      } else {
+        df<-df[c(1:(length(which(df$age_r <=timeframe))+1)),]
+
+        flux<-(
+          (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])+
+             ((df[nrow(df),"ocgcm2"]/((max(df$age_r)-df[(nrow(df)-1),"age_r"])))
+              *(timeframe-df[(nrow(df)-1),"age_r"])))/timeframe)
+  }}
 
   BCF <- data.frame(core = core, fluxwc = fluxwc, maxage = maxage, flux = flux)
 
@@ -117,7 +124,7 @@ estimate_core_f<- function (df, timeframe) {
 
 
 estimate_flux(df_f,
-                         timeframe=100,
+                         timeframe=500,
                          core = "core",
                          mind = "mind",
                          maxd = "maxd",
@@ -125,4 +132,11 @@ estimate_flux(df_f,
                          oc = "eoc",
                          age = "age")
 
-
+prueba<-estimate_flux(df_f,
+                      timeframe=500,
+                      core = "core",
+                      mind = "mind",
+                      maxd = "maxd",
+                      dbd = "dbd",
+                      oc = "eoc",
+                      age = "age")
