@@ -381,14 +381,3 @@ plot_eoc_om <- function(df = NULL) {
 }
 
 
-
-estimate_oc(df = bluecarbon_data)
-
-prueba<-estimate_oc(df = DataInv,
-         site = "SiteID",
-         ecosystem = "Ecosystem",
-         species = "Specie",
-         om = "OM",
-         oc = "OC")
-
-

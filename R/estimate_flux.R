@@ -123,20 +123,3 @@ estimate_core_f<- function (df, timeframe) {
 }
 
 
-estimate_flux(df_f,
-                         timeframe=500,
-                         core = "core",
-                         mind = "mind",
-                         maxd = "maxd",
-                         dbd = "dbd",
-                         oc = "eoc",
-                         age = "age")
-
-prueba<-estimate_flux(df_f,
-                      timeframe=500,
-                      core = "core",
-                      mind = "mind",
-                      maxd = "maxd",
-                      dbd = "dbd",
-                      oc = "eoc",
-                      age = "age")

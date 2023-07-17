@@ -47,17 +47,16 @@ test_extrapolation <- function(df = NULL,
 
 
   # create variables with working names with the data in the columns specified by the user
-  df_r <- df
-  df_r$core_r <- df_r[[core]]
-  df_r$mind_r <- df_r[[mind]]
-  df_r$maxd_r <- df_r[[maxd]]
-  df_r$dbd_r <- df_r[[dbd]]
-  df_r$oc_r <- df_r[[oc]]
+  df$core_r <- df[[core]]
+  df$mind_r <- df[[mind]]
+  df$maxd_r <- df[[maxd]]
+  df$dbd_r <- df[[dbd]]
+  df$oc_r <- df[[oc]]
 
   # we select those cores larger than the standard depth
 
-  columns<-colnames(df_r)
-  x <- split(df_r, df_r$core_r)
+  columns<-colnames(df)
+  x <- split(df, df_r$core)
 
    cores_e<- lapply( X = x,  select_cores, depth = depth) # return a list
    cores_e<-cores_e[!vapply(cores_e, is.null, logical(1))]
@@ -215,12 +214,3 @@ model_stock<- function (df, depth = depth) {
 }
 
 
-
-
-test_extrapolation (df_f,
-                    depth = 100,
-                    core = "core",
-                    mind = "mind",
-                    maxd = "maxd",
-                    dbd = "dbd",
-                    oc = "eoc")
