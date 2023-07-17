@@ -38,14 +38,13 @@ estimate_h <- function(df = NULL,
   if (sum(is.na(df[[maxd]])) > 0) {stop("Samples maximun depth column has NAs, please check")}
 
   # create variables with working names with the data in the columns specified by the user
-  df_r <- df
-  df_r$core_r <- df_r[[core]]
-  df_r$mind_r <- df_r[[mind]]
-  df_r$maxd_r <- df_r[[maxd]]
+  df$core_r <- df[[core]]
+  df$mind_r <- df[[mind]]
+  df$maxd_r <- df[[maxd]]
 
   # create individual data frames per each core
-  df_r$core_r <- factor(df_r$core_r, levels = unique(df_r$core_r))
-  x <- split(df_r, df_r$core_r)
+  df$core_r <- factor(df$core_r, levels = unique(df$core_r))
+  x <- split(df, df$core_r)
 
   list_h <- lapply(X = x, FUN = estimate_height)
 
@@ -72,7 +71,7 @@ estimate_depth <- function(df, j) {
 
 estimate_height <- function(df) {
   data <- as.data.frame(df)
-  colnames(data) <- colnames(df_r)
+  colnames(data) <- colnames(df)
 
   if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
 

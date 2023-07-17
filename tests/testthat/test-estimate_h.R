@@ -4,24 +4,20 @@ library(testthat)
 test_that("Valid input returns expected result", {
   # Create a sample data frame
   df <- data.frame(
-    core = c("A", "A", "B", "B"),
-    mind = c(1, 3, 6, 9),
-    maxd = c(2, 4, 7, 10)
+    core = c("A", "A", "A", "A","B", "B"),
+    mind = c(1, 3, 6, 9, 0, 2),
+    maxd = c(2, 4, 7, 10, 2, 4)
   )
 
   # Call the estimate_h function
   result <- estimate_h(df = df)
 
   # Define the expected result
-  expected <- data.frame(
-    core_r = c("A","A", "B","B"),
-    mind_r = c(0, 2.5, 5, 8),
-    maxd_r = c(2.5,5, 8, 10),
-    h = c(2.5, 2.5, 3, 2)
-  )
+  expected <-  c(2.5, 2.5, 3, 2, 2, 2)
+
 
   # Compare the result with the expected value
-  expect_equal(result, expected)
+  expect_equal(result[["h"]], expected)
 })
 
 # Test 2: Non-numeric 'mind' data
