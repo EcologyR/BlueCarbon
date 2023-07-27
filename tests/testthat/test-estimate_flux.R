@@ -1,8 +1,5 @@
 
 
-
-
-
 # Test 1: Valid input
 test_that("Valid input returns expected result", {
   # Create a sample data frame

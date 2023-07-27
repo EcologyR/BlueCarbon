@@ -102,5 +102,5 @@ test_that("Non-numeric 'oc' data throws an error", {
   expect_error(estimate_oc_stock(df = df,oc="oc", depth = 10), "'oc' must be class numeric")
 })
 
-# Add more test cases if needed
+
 
