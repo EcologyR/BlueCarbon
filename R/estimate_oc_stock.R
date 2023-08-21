@@ -1,7 +1,7 @@
 #' Organic Carbon Stock estimation
 #'
 #' @description Estimates carbon stocks from soil core data down to a specified depth, 100 cm by default.
-#' If the core does not reach the standardised depth, it extrapolates the stock from a linear model between accumulated mass of organic carbon and depth.
+#' If the core does not reach the standardized depth, it extrapolates the stock from a linear model between accumulated mass of organic carbon and depth.
 #'
 #' @param df A [data.frame] with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample),
 #' dbd (dry bulk density), oc (organic carbon %)
