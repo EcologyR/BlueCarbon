@@ -4,8 +4,9 @@ Version: 0.0.0.9000
 Authors@R: 
   c(
     person("Nerea", "Piñeiro-Juncal", , "npineiro@ua.pt", role = c("aut", "cre"),
-           comment = c(ORCID = "xxxx")),
-    person("Julen", "Astigarraga", role = "aut")
+           comment = c(ORCID = "0000-0003-3767-1812")),
+    person("Julen", "Astigarraga", role = "aut", comment = c(ORCID = "0000-0001-9520-3713")), 
+    person("Francisco", "Rodriguez-Sanchez", role = "aut", comment = c(ORCID = "0000-0002-7981-1599"))
   )
 Description: BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in 
     blue carbon ecosystemses. 
