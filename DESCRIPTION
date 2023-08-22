@@ -7,10 +7,11 @@ Authors@R:
            comment = c(ORCID = "xxxx")),
     person("Julen", "Astigarraga", role = "aut")
   )
-Description: BLueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in 
-blue carbon ecosystemses. It contains seven main functions to estimate the compresion of cores, matematially correct 
-core comprasion, estimate sample tchikness, estimate organic carbon content from organic matter content, 
-estimate organic carbon stocks fluxes and visualize the error of stock extrapolation. 
+Description: BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in 
+    blue carbon ecosystemses. 
+    It contains seven main functions to estimate the compresion of cores, matematially correct 
+    core comprasion, estimate sample tchikness, estimate organic carbon content from organic matter content, 
+    estimate organic carbon stocks fluxes and visualize the error of stock extrapolation. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
