@@ -107,18 +107,18 @@ and ages obtained from a age-depth or age-accumulated mass models
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("EcologyR/templateRpackage")
+devtools::install_github("EcologyR/BlueCarbon")
 ```
 
 The code to create this package is available
-[here](https://gist.github.com/Pakillo/999e34301c56011138ef164363502465).
+[here](https://github.com/EcologyR/BlueCarbon).
 
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-# library(templateRpackage)
+# library(BlueCarbon)
 ## basic example code
 ```
 
