@@ -4,16 +4,38 @@
 \alias{test_extrapolation}
 \title{Test differences between observed and extrapolated stocks}
 \usage{
-test_extrapolation(df = NULL, Depth = 100)
+test_extrapolation(
+  df = NULL,
+  depth = 100,
+  core = "core",
+  mind = "mind",
+  maxd = "maxd",
+  dbd = "dbd",
+  oc = "eoc"
+)
 }
 \arguments{
-\item{df}{A \link{data.frame} with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon \%)}
+\item{df}{A \link{data.frame} with, at least, columns: CoreID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon \%)}
 
-\item{Depth}{standardization soil depth, by default 100 cm.}
+\item{depth}{standardization soil depth, by default 100 cm.}
+
+\item{core}{Character Name of the column reporting core ID.}
+
+\item{mind}{Character Name of the column reporting the minimum depth of each sample.}
+
+\item{maxd}{Character Name of the column reporting the maximum depth of each sample.}
+
+\item{dbd}{Character Name of the column reporting dry bulk density.}
+
+\item{oc}{Character Name of the column reporting organic carbon concentrations.}
 }
 \value{
 A \link{data.frame} with the observed and extrapolated stocks. A plot with comparisons.
 }
 \description{
 subset those cores that reach the standardization depth and estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25\% top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
+}
+\examples{
+test_extrapolation(A, Depth = 50)
+test_extrapolation(A)
 }

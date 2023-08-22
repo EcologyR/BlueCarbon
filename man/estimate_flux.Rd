@@ -4,16 +4,41 @@
 \alias{estimate_flux}
 \title{Estimate the average organic carbon flux}
 \usage{
-estimate_flux(df = NULL, TimeFrame = 100)
+estimate_flux(
+  df = NULL,
+  timeframe = 100,
+  core = "core",
+  mind = "mind",
+  maxd = "maxd",
+  dbd = "dbd",
+  oc = "eoc",
+  age = "age"
+)
 }
 \arguments{
-\item{df}{A \link{data.frame} with, at least, columns: Core.ID, Min.D (minimum depth of the sample), Max.D (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon \%), Age (age of the sample obtained from a age-depth or age-accumulated mass model)}
+\item{df}{A \link{data.frame} with, at least, columns: Core.ID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon \%), Age (age of the sample obtained from a age-depth or age-accumulated mass model)}
 
-\item{TimeFrame}{standardization time frame, by default 100 years}
+\item{timeframe}{standardization time frame, by default 100 years}
+
+\item{core}{Character Name of the column reporting core ID.}
+
+\item{mind}{Character Name of the column reporting the minimum depth of each sample.}
+
+\item{maxd}{Character Name of the column reporting the maximum depth of each sample.}
+
+\item{dbd}{Character Name of the column reporting dry bulk density.}
+
+\item{oc}{Character Name of the column reporting organic carbon concentrations.}
+
+\item{age}{Character Name of the column reporting the age of each sample.}
 }
 \value{
 \link{data.frame} with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 }
 \description{
 estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
+}
+\examples{
+estimate_flux(A)
+estimate_flux(A, ,TimeFrame = 500)
 }
