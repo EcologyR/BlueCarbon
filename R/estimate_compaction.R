@@ -18,6 +18,7 @@
 
 estimate_compaction <-
   function(df,
+           core_id= "core_id",
            sampler_length = "sampler_length",
            internal_distance = "internal_distance",
            external_distance = "external_distance") {
@@ -26,10 +27,10 @@ estimate_compaction <-
     if (!inherits(df, "data.frame")) {
       stop("The data provided must be a tibble or data.frame")
     }
-    if (!is.numeric(timeframe)) {stop("The time frame must be class numeric")}
 
 
     # name of the columns
+    check_column_in_df(df, core_id)
     check_column_in_df(df, sampler_length)
     check_column_in_df(df, internal_distance)
     check_column_in_df(df, external_distance)
@@ -40,15 +41,25 @@ estimate_compaction <-
     if (!is.numeric(df[[internal_distance]])) {stop("'internal_distance' data must be class numeric")}
     if (!is.numeric(df[[external_distance]])) {stop("'external_distance' data must be class numeric")}
 
+    # check that the internal distance is always larger than the external distance
+
+    if (any(df[[internal_distance]]<df[[external_distance]])) {stop("internal_distance is smaller than the external_distance, this is not posible, please check")}
+
+    # create variables with working names with the data in the columns specified by the user
+    df_r <- df
+    df_r$core_id_r <- df_r[[core_id]]
+    df_r$sampler_length_r <- df_r[[sampler_length]]
+    df_r$internal_distance_r <- df_r[[internal_distance]]
+    df_r$external_distance_r <- df_r[[external_distance]]
 
 
     # estimate compaction correction factor
     compaction_correction_factor <-
-      (df[, sampler_length] - df[, internal_distance]) /
-      (df[, sampler_length] - df[, external_distance])
+      (df_r[, "sampler_length_r"] - df_r[, "internal_distance_r"]) /
+      (df_r[, "sampler_length_r"] - df_r[, "external_distance_r"])
 
     # compaction rate as percentage
-    df$compression_rate <-
+    df$compression <-
       (1 - compaction_correction_factor) * 100
 
     return(df)
