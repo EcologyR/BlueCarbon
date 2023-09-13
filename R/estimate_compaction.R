@@ -2,10 +2,11 @@
 #' Estimate core compaction
 #'
 #' @description Calculates Percentage of core compression for cores
-#' Accepts a data.frame with core properties and returns a modified version
+#' Accepts a data.frame with core field measurements and returns a modified version
 #' of it, with the addition of the estimated parameters
 #'
 #' @param df data.frame with core properties
+#' @param core_id core identification
 #' @param sampler_length name of the column with the total length of the sampler tube
 #' @param internal_distance name of the column with distance between sampler top and core surface
 #' @param external_distance name of the column with distance between sampler top and sediment surface
@@ -16,9 +17,8 @@
 #' @examples
 #'
 
-estimate_compaction <-
-  function(df,
-           core_id= "core_id",
+estimate_compaction <-  function(df,
+           core= "core",
            sampler_length = "sampler_length",
            internal_distance = "internal_distance",
            external_distance = "external_distance") {
@@ -30,7 +30,7 @@ estimate_compaction <-
 
 
     # name of the columns
-    check_column_in_df(df, core_id)
+    check_column_in_df(df, core)
     check_column_in_df(df, sampler_length)
     check_column_in_df(df, internal_distance)
     check_column_in_df(df, external_distance)
@@ -47,7 +47,7 @@ estimate_compaction <-
 
     # create variables with working names with the data in the columns specified by the user
     df_r <- df
-    df_r$core_id_r <- df_r[[core_id]]
+    df_r$core_r <- df_r[[core]]
     df_r$sampler_length_r <- df_r[[sampler_length]]
     df_r$internal_distance_r <- df_r[[internal_distance]]
     df_r$external_distance_r <- df_r[[external_distance]]
