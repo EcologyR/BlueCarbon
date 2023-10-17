@@ -31,9 +31,7 @@ It contains seven main functions to estimate the compression of cores, mathemati
 
 ![Diagram of BlueCarbon main functions](images/esquemaBC.png)
 
-
-
-Organic carbon content estimation from organic carbon data: estimate_oc
+#### **Organic carbon content estimation from organic carbon data: estimate_oc**
 
 There is linear correlation between organic carbon and organic matter content.
 This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors.
@@ -66,24 +64,24 @@ Kauffman, J. B., Heider, C., Cole, T. G., Dwire, K. A.
 & Donato, D. C. Ecosystem carbon stocks of micronesian mangrove forests.
 Wetlands 31, 343--352 (2011).
 
-Sample thickness estimation: estimate_h
+#### **Sample thickness estimation: estimate_h**
 
 For those cores were only selected samples were measured it is necessary to assign a carbon density to the empty spaces before the estimation the total stock.
 This function checks for gaps between samples and, if any, divide this space between the previous and next sample to return sample thickness without gaps in the core.
 The stock and flux estimation functions (estimate_oc_stock and estimate_flux) have this function incorporated and it is not necessary to run it before.
 
-Organic carbon stock estimation: estimate_oc_stock
+#### **Organic carbon stock estimation: estimate_oc_stock**
 
 Estimates carbon stocks from soil core data down to a specified depth, 100 cm by default.
 If the core does not reach the desired depth, it extrapolates the stock from a linear model between accumulated mass of organic carbon and depth.
 
-Visualize the error of stock extrapolation: test_extrapolation
+#### **Visualize the error of stock extrapolation: test_extrapolation**
 
 This function subset those cores that reach the desired depth, estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated desired depth.
 Compares the observed stock with the estimated stocks by extrapolation.
 This function requieres that some of you core do reach the desired depth.
 
-Organic carbon flux estimation: estimate_flux
+#### **Organic carbon flux estimation: estimate_flux**
 
 Estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass models (provided by the user).
 
@@ -95,7 +93,6 @@ devtools::install_github("EcologyR/BlueCarbon")
 ```
 
 The code to create this package is available [here](https://github.com/EcologyR/BlueCarbon).
-
 
 ## Citation
 
