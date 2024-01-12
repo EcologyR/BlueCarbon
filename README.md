@@ -27,7 +27,7 @@ organic carbon stocks fluxes and visualize the error of stock
 extrapolation.
 
 <figure>
-<img src="images/esquemaBC.png"
+<img src="man/figures/esquemaBC.png"
 alt="Diagram of BlueCarbon main functions" />
 <figcaption aria-hidden="true">Diagram of BlueCarbon main
 functions</figcaption>
