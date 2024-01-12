@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and fluxes from soil/sediment cores from blue carbon ecosystems.
 It contains seven main functions to estimate the compression of cores, mathematically correct core compression, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks fluxes and visualize the error of stock extrapolation.
 
-![Diagram of BlueCarbon main functions](images/esquemaBC.png)
+![Diagram of BlueCarbon main functions](man/figures/esquemaBC.png)
 
 #### ***estimate_oc*** **- Organic carbon content estimation from organic carbon data**
 
