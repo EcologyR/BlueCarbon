@@ -100,7 +100,10 @@ estimate_oc <- function(df = NULL,
   df_out <- subset(df_pred,
                     select = c(-ecosystem_r, -species_r, -site_r, -om_r, -oc_r))
 
-  invisible(df_out)
+  out<-list (df_out, all_models)
+  names(out)<-c("data","models")
+
+  invisible(out)
 
 }
 
