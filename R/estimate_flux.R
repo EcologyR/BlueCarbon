@@ -1,6 +1,7 @@
 #' Estimate the average organic carbon flux
 #'
-#' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
+#' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years)
+#' from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 #'
 #' @param df A [data.frame] with, at least, columns: Core.ID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
 #' @param timeframe standardization time frame, by default 100 years
@@ -87,6 +88,7 @@ estimate_core_f<- function (df, timeframe) {
 
   if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
 
+
   #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
   df$ocgcm2 <- df$dbd_r * (df$oc_r / 100) * df$h
 
@@ -99,7 +101,10 @@ estimate_core_f<- function (df, timeframe) {
     message (paste("Core", core, "is younger than the time frame provided"))
     flux <- NA } else {
 
-
+      # if first sampole is older than timeframe do not stimate
+      if ((df[1, "age_r"])>timeframe) {
+        message (paste("Core", core, "resolution is to low estimate the flux in the last", tmieframe))
+        flux <- NA } else {
 
       #estimation of the average carbon flux for the selected TimeFrame (OC stock / TimeFrame)
 
@@ -114,7 +119,7 @@ estimate_core_f<- function (df, timeframe) {
           (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])+
              ((df[nrow(df),"ocgcm2"]/((max(df$age_r)-df[(nrow(df)-1),"age_r"])))
               *(timeframe-df[(nrow(df)-1),"age_r"])))/timeframe)
-  }}
+  }}}
 
   BCF <- data.frame(core = core, fluxwc = fluxwc, maxage = maxage, flux = flux)
 
