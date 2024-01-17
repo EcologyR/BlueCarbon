@@ -318,9 +318,9 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
       if (is.null(mod)) {
 
         if (df_row$ecosystem_r == "Salt Marsh") {
-          eoc <- 0.0025 * (df_row$om_r^2) + 0.4 * df_row$om_r
+          eoc <- 0.000683 * (df_row$om_r^2) + 0.41 * df_row$om_r
           eoc_se <- NA
-          origin <- "Craft et al. 1991"
+          origin <- "Maxwell et al. 2023"
         }
 
         if (df_row$ecosystem_r == "Seagrass" && df_row$om_r < 20) {
