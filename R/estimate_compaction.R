@@ -43,7 +43,7 @@ estimate_compaction <-  function(df,
 
     # check that the internal distance is always larger than the external distance
 
-    if (any(df[[internal_distance]]<df[[external_distance]])) {stop("internal_distance is smaller than the external_distance, this is not posible, please check")}
+    if (any(df[[internal_distance]] < df[[external_distance]], na.rm = T)) {stop("internal_distance is smaller than the external_distance, this is not posible, please check")}
 
     # create variables with working names with the data in the columns specified by the user
     df_r <- df
@@ -54,13 +54,16 @@ estimate_compaction <-  function(df,
 
 
     # estimate compaction correction factor
+
+    if (any(!is.na(df_r[, c("sampler_length_r", "internal_distance_r", "external_distance_r")]))) {
+
     compaction_correction_factor <-
       (df_r[, "sampler_length_r"] - df_r[, "internal_distance_r"]) /
       (df_r[, "sampler_length_r"] - df_r[, "external_distance_r"])
 
     # compaction rate as percentage
     df$compression <-
-      (1 - compaction_correction_factor) * 100
+      (1 - compaction_correction_factor) * 100 }
 
     return(df)
   }
