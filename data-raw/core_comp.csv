@@ -1,4 +1,4 @@
-core_id;sampler_length;internal_distance;external_distance
+core;sampler_length;internal_distance;external_distance
 Sg_01_01;200;35;25
 Sg_01_02;200;45;35
 Sg_01_03;200;86;76
@@ -75,5 +75,6 @@ Sm_04_01;100;33;28
 Sm_04_02;100;39.33333333;34.33333333
 Sm_04_03;100;63;58
 Sm_04_04;100;48;43
+Sm_05_01;;;
 Sm_06_01;100;3;1
 Sm_06_01;100;2;1
