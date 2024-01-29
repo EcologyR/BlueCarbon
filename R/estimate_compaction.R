@@ -12,10 +12,11 @@
 #' @param external_distance name of the column with distance between sampler top and sediment surface
 #'
 #' @return the initial data.frame with the addition of Percentage of core compression
-#' @export
 #'
 #' @examples
+#' TODO
 #'
+#' @export
 
 estimate_compaction <-  function(df,
            core= "core",
