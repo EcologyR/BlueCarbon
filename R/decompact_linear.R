@@ -19,12 +19,13 @@
 #'
 #' @export
 
-decompact_linear <- function(df = NULL,
-                     df_fm = NULL,
-                     core = "core",
-                     compression = "compression",
-                     mind = "mind",
-                     maxd = "maxd") {
+decompact_linear <- function(df   = NULL,
+                     df_fm        = NULL,
+                     core         = "core",
+                     compression  = "compression",
+                     mind         = "mind",
+                     maxd         = "maxd",
+                     dbd          = NULL) {
 
 
   # class of the dataframe or tibble
@@ -39,11 +40,11 @@ decompact_linear <- function(df = NULL,
   check_column_in_df(df, maxd)
 
 
-
   # class of the columns
   if (!is.numeric(df[[compression]])) {stop("Compression data is not class numeric, please check")}
   if (!is.numeric(df[[mind]])) {stop("Minimum depth data is not class numeric, please check")}
   if (!is.numeric(df[[maxd]])) {stop("Maximum depth data is not class numeric, please check")}
+  if (!is.null(dbd)) {stopifnot("Dry bulk density data is not class numeric, please check" = is.numeric(df[[dbd]]))}
 
   # create variables with working names with the data in the columns specified by the user
   df_r <- df
@@ -51,40 +52,54 @@ decompact_linear <- function(df = NULL,
   df_r$compression_r <- df_r[[compression]]
   df_r$mind_r <- df_r[[mind]]
   df_r$maxd_r <- df_r[[maxd]]
+  if (!is.null(dbd)) df_r$dbd_r <- df_r[[dbd]]
 
-  #warning in compression is lower than 1 that it must be in percentage not tanto por 1
-
-  if (min(df_r$compression_r, na.rm=T)<1) {warning("Compresion values should be provided in %")}
-
+  # check if compression values are in percentage - largest compression value
+  # should be bigger than 1, but we should also have non-zero values (all zeros means no compaction)
+  if (max(df_r$compression_r, na.rm = T) <= 1 & any(na.omit(df_r$compression_r) != 0)) {
+    warning("Compresion values should be provided in %")
+  }
 
   # check if a compression % is provided. If not estimate from field measurements
   if (any(is.na(df_r$compression_r))) {
+    if(is.null(df_fm)) stop("Missing compression values found, please complete them or provide field measurements")
 
-    df_r<-fill_compression(df_r, df_fm)}
+    df_r <- fill_compression(df_r, df_fm)
+  }
 
-  #check again if there are NAs in compression and stop if there are cores that con not be decompress
-
+  #check again if there are NAs in compression and stop if there are cores that can not be decompress
   if (any(is.na(df_r$compression_r))) {
-
     cores_na_list<-unique(df_r[which(is.na(df_r$compression_r)), "core_r"])
+    stop(
+      paste0(
+        "There are cores without estimated compresion data or field mesurements: ",
+        paste(cores_na_list, collapse = ", "),
+        "\n",
+        "Please, provide compression data of field measurements for all cores"
+      )
 
-    for (i in 1:length(cores_na_list)) {
-    warning("There are cores without estimated compresion data or field mesurements: ", cores_na_list[i])}
+    )
+  }
 
-    stop("Please, provide compression data of field measurements for all cores")}
+  # apply decompression
+  df_r<- df_r %>% mutate (
+    mind_corrected = mind_r/(1-(compression_r/100)),
+    maxd_corrected = maxd_r/(1-(compression_r/100)))
+
+  if (!is.null(dbd)){
+    df_r<- df_r %>% mutate (dbd_corrected = dbd_r * (1-(compression_r/100)))
+  }
+
+  # add corrected data to original data.frame to return to user
+  df$mind_corrected <- df_r$mind_corrected
+  df$maxd_corrected <- df_r$maxd_corrected
+  if (!is.null(dbd)){
+    df$dbd_corrected <- df_r$dbd_corrected
+  }
 
 
-  # check there are compression values in all rows. If not give warning (one warning per core, not per row)
-
-
-    df_r<- df_r %>% mutate (dmin = mind_r/(1-(compression_r/100)))
-    df_r<- df_r %>% mutate (dmax = maxd_r/(1-(compression_r/100)))
-
-
-    # dry bulk density too if there are dry bulk density data
-
-
-    return(df_r)}
+  return(df)
+  }
 
 
 
