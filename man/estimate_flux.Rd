@@ -36,7 +36,8 @@ estimate_flux(
 \link{data.frame} with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 }
 \description{
-estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
+estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years)
+from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 }
 \examples{
 estimate_flux(A)
