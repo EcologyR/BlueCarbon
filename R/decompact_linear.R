@@ -11,6 +11,7 @@
 #' @param compression name of the column with core compression IN PERCENTAGE
 #' @param mind name of the column with minimum depth
 #' @param maxd name of the column with maximum depth
+#' @param dbd name of the column with dry bulk density
 #'
 #' @return None
 #'
@@ -35,7 +36,11 @@ decompact_linear <- function(df   = NULL,
 
   # name of the columns
   check_column_in_df(df, core)
-  check_column_in_df(df, compression)
+  # If compression is not in data.frame, create empty column
+  if(!compression %in% names(df)) {
+    if(is.null(df_fm)) stop("No compression values or field measurements were provided.")
+    df$compression <- as.vector(rep(NA, nrow(df)), mode = "numeric")
+  }
   check_column_in_df(df, mind)
   check_column_in_df(df, maxd)
 
@@ -56,8 +61,10 @@ decompact_linear <- function(df   = NULL,
 
   # check if compression values are in percentage - largest compression value
   # should be bigger than 1, but we should also have non-zero values (all zeros means no compaction)
-  if (max(df_r$compression_r, na.rm = T) <= 1 & any(na.omit(df_r$compression_r) != 0)) {
-    warning("Compresion values should be provided in %")
+  if(!all(is.na(df_r$compression_r))){
+    if (max(df_r$compression_r, na.rm = T) <= 1 & any(na.omit(df_r$compression_r) != 0)) {
+      warning("Compresion values should be provided in %")
+    }
   }
 
   # check if a compression % is provided. If not estimate from field measurements
@@ -82,17 +89,18 @@ decompact_linear <- function(df   = NULL,
   }
 
   # apply decompression
-  df_r<- df_r %>% mutate (
+  df_r<- df_r %>% dplyr::mutate (
     mind_corrected = mind_r/(1-(compression_r/100)),
     maxd_corrected = maxd_r/(1-(compression_r/100)))
 
   if (!is.null(dbd)){
-    df_r<- df_r %>% mutate (dbd_corrected = dbd_r * (1-(compression_r/100)))
+    df_r<- df_r %>% dplyr::mutate (dbd_corrected = dbd_r * (1-(compression_r/100)))
   }
 
   # add corrected data to original data.frame to return to user
   df$mind_corrected <- df_r$mind_corrected
   df$maxd_corrected <- df_r$maxd_corrected
+  df$compression    <- df_r$compression_r
   if (!is.null(dbd)){
     df$dbd_corrected <- df_r$dbd_corrected
   }
@@ -118,17 +126,19 @@ fill_compression<- function (df_r = df_r, df_fm = df_fm) {
   # extract as data.frame the row with the data of the core for which the compression must be estimated
   for (i in 1:length(core_list)) {
 
-    core_id<-core_list[i]
+    core_id <- core_list[i]
 
-    data<-df_fm[df_fm == core_id,]
-    data<-data[1,]
+    data <- df_fm[df_fm == core_id,]
+    data <- data[1,]
 
-    temp<-estimate_compaction (data)
+    temp <- estimate_compaction(data)
 
     # fill compression data
 
     if ("compression" %in% names(temp)) {
-    df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]}}
+      df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]
+    }
+  }
 
   return (df_r)
 
