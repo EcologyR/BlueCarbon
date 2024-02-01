@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #' Estimate decompresses depth of soil samples
 #'
 #' @param df
@@ -19,6 +20,37 @@ decompact_linear <- function(df = NULL,
                      compression = "compression",
                      mind = "mind",
                      maxd = "maxd") {
+=======
+#' Calculate sediment properties after decompression
+#'
+#' @description
+#' Accepts a data.frame with sample properties and returns a modified version
+#' with sample properties after corrected for compression
+#'
+#'
+#' @param df data.frame with core properties
+#' @param df_fm data.frame with field measurements, used to calculate compression
+#' if not provided
+#' @param compression name of the column with core compression IN PERCENTAGE
+#' @param mind name of the column with minimum depth
+#' @param maxd name of the column with maximum depth
+#' @param dbd name of the column with dry bulk density
+#'
+#' @return None
+#'
+#' @examples
+#' plot_crayons()
+#'
+#' @export
+
+decompact_linear <- function(df   = NULL,
+                     df_fm        = NULL,
+                     core         = "core",
+                     compression  = "compression",
+                     mind         = "mind",
+                     maxd         = "maxd",
+                     dbd          = NULL) {
+>>>>>>> 8cfde433aac92a7e27f4f5669a184d391d19d459
 
 
   # class of the dataframe or tibble
@@ -28,16 +60,20 @@ decompact_linear <- function(df = NULL,
 
   # name of the columns
   check_column_in_df(df, core)
-  check_column_in_df(df, compression)
+  # If compression is not in data.frame, create empty column
+  if(!compression %in% names(df)) {
+    if(is.null(df_fm)) stop("No compression values or field measurements were provided.")
+    df$compression <- as.vector(rep(NA, nrow(df)), mode = "numeric")
+  }
   check_column_in_df(df, mind)
   check_column_in_df(df, maxd)
-
 
 
   # class of the columns
   if (!is.numeric(df[[compression]])) {stop("Compression data is not class numeric, please check")}
   if (!is.numeric(df[[mind]])) {stop("Minimum depth data is not class numeric, please check")}
   if (!is.numeric(df[[maxd]])) {stop("Maximum depth data is not class numeric, please check")}
+  if (!is.null(dbd)) {stopifnot("Dry bulk density data is not class numeric, please check" = is.numeric(df[[dbd]]))}
 
   # create variables with working names with the data in the columns specified by the user
   df_r <- df
@@ -45,40 +81,62 @@ decompact_linear <- function(df = NULL,
   df_r$compression_r <- df_r[[compression]]
   df_r$mind_r <- df_r[[mind]]
   df_r$maxd_r <- df_r[[maxd]]
+  if (!is.null(dbd)) df_r$dbd_r <- df_r[[dbd]]
 
-  #warning in compression is lower than 1 that it must be in percentage not tanto por 1
-
-  if (min(df_r$compression_r, na.rm=T)<1) {warning("Compresion values should be provided in %")}
-
+  # check if compression values are in percentage - largest compression value
+  # should be bigger than 1, but we should also have non-zero values (all zeros means no compaction)
+  if(!all(is.na(df_r$compression_r))){
+    if (max(df_r$compression_r, na.rm = T) <= 1 & any(na.omit(df_r$compression_r) != 0)) {
+      warning("Compresion values should be provided in %")
+    }
+  }
 
   # check if a compression % is provided. If not estimate from field measurements
   if (any(is.na(df_r$compression_r))) {
+    if(is.null(df_fm)) stop("Missing compression values found, please complete them or provide field measurements")
 
-    df_r<-fill_compression(df_r, df_fm)}
+    df_r <- fill_compression(df_r, df_fm)
+  }
 
-  #check again if there are NAs in compression and stop if there are cores that con not be decompress
-
+  #check again if there are NAs in compression and stop if there are cores that can not be decompress
   if (any(is.na(df_r$compression_r))) {
-
     cores_na_list<-unique(df_r[which(is.na(df_r$compression_r)), "core_r"])
+    stop(
+      paste0(
+        "There are cores without estimated compresion data or field mesurements: ",
+        paste(cores_na_list, collapse = ", "),
+        "\n",
+        "Please, provide compression data of field measurements for all cores"
+      )
 
+<<<<<<< HEAD
     for (i in 1:length(cores_na_list)) {
     warning("There are cores without estimated compresion data or field measurements: ", cores_na_list[i])}
+=======
+    )
+  }
+>>>>>>> 8cfde433aac92a7e27f4f5669a184d391d19d459
 
-    stop("Please, provide compression data of field measurements for all cores")}
+  # apply decompression
+  df_r<- df_r %>% dplyr::mutate (
+    mind_corrected = mind_r/(1-(compression_r/100)),
+    maxd_corrected = maxd_r/(1-(compression_r/100)))
+
+  if (!is.null(dbd)){
+    df_r<- df_r %>% dplyr::mutate (dbd_corrected = dbd_r * (1-(compression_r/100)))
+  }
+
+  # add corrected data to original data.frame to return to user
+  df$mind_corrected <- df_r$mind_corrected
+  df$maxd_corrected <- df_r$maxd_corrected
+  df$compression    <- df_r$compression_r
+  if (!is.null(dbd)){
+    df$dbd_corrected <- df_r$dbd_corrected
+  }
 
 
-  # check there are compression values in all rows. If not give warning (one warning per core, not per row)
-
-
-    df_r<- df_r %>% mutate (dmin = mind_r/(1-(compression_r/100)))
-    df_r<- df_r %>% mutate (dmax = maxd_r/(1-(compression_r/100)))
-
-
-    # dry bulk density too if there are dry bulk density data
-
-
-    return(df_r)}
+  return(df)
+  }
 
 
 
@@ -94,24 +152,26 @@ fill_compression<- function (df_r = df_r, df_fm = df_fm) {
                   [unique(df_r[which(is.na(df_r$compression_r)), "core_r"]) %in% df_fm$core])
 
 
-
-  #extraer como datas.frame la fila con los datos del core para el que se debe calcular la compresion
-
+  # extract as data.frame the row with the data of the core for which the compression must be estimated
   for (i in 1:length(core_list)) {
 
-  core_id<-core_list[i]
+    core_id <- core_list[i]
 
-  data<-df_fm[df_fm == core_id,]
-  data<-data[1,]
+    data <- df_fm[df_fm == core_id,]
+    data <- data[1,]
 
-  temp<-estimate_compaction (data)
+    temp <- estimate_compaction(data)
 
-  # fill compression data
+    # fill compression data
 
-  if ("compression" %in% names(temp)) {
-  df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]}}
+<<<<<<< HEAD
+=======
+    if ("compression" %in% names(temp)) {
+      df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]
+    }
+  }
 
-
+>>>>>>> 8cfde433aac92a7e27f4f5669a184d391d19d459
   return (df_r)
 
   }
