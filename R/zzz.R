@@ -1,3 +1,5 @@
+#' Check if a column is in a data frame and stop if not
+#' @noRd
 check_column_in_df <- function(df = NULL, colname = NULL) {
 
   if (!inherits(df, "data.frame")) {

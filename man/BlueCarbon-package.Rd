@@ -6,7 +6,7 @@
 \alias{BlueCarbon-package}
 \title{BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data}
 \description{
-BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in blue carbon ecosystemses. It contains seven main functions to estimate the compresion of cores, matematially correct core comprasion, estimate sample tchikness, estimate organic carbon content from organic matter content, estimate organic carbon stocks fluxes and visualize the error of stock extrapolation.
+BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in blue carbon ecosystems. It contains seven main functions to estimate the compresion of cores, matematially correct core comprasion, estimate sample tchikness, estimate organic carbon content from organic matter content, estimate organic carbon stocks fluxes and visualize the error of stock extrapolation.
 }
 \seealso{
 Useful links:
@@ -17,11 +17,14 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Nerea Piñeiro-Juncal \email{npineiro@ua.pt} (\href{https://orcid.org/xxxx}{ORCID})
+\strong{Maintainer}: Nerea Piñeiro-Juncal \email{npineiro@ua.pt} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID})
 
 Authors:
 \itemize{
-  \item Julen Astigarraga
+  \item Julen Astigarraga (\href{https://orcid.org/0000-0001-9520-3713}{ORCID})
+  \item Valentina Costa (\href{https://orcid.org/0000-0002-1513-0284}{ORCID})
+  \item Marcio Martins (\href{https://orcid.org/0000-0002-6969-2215}{ORCID})
+  \item Francisco Rodriguez-Sanchez (\href{https://orcid.org/0000-0002-7981-1599}{ORCID})
 }
 
 }
