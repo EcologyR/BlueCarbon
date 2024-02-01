@@ -1,3 +1,18 @@
+#' Estimate decompresses depth of soil samples
+#'
+#' @param df
+#' @param df_fm
+#' @param core
+#' @param compression
+#' @param mind
+#' @param maxd
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+#'
 decompact_linear <- function(df = NULL,
                       df_fm = NULL,
                      core = "core",
@@ -48,7 +63,7 @@ decompact_linear <- function(df = NULL,
     cores_na_list<-unique(df_r[which(is.na(df_r$compression_r)), "core_r"])
 
     for (i in 1:length(cores_na_list)) {
-    warning("There are cores without estimated compresion data or field mesurements: ", cores_na_list[i])}
+    warning("There are cores without estimated compresion data or field measurements: ", cores_na_list[i])}
 
     stop("Please, provide compression data of field measurements for all cores")}
 
@@ -72,7 +87,7 @@ decompact_linear <- function(df = NULL,
 
 fill_compression<- function (df_r = df_r, df_fm = df_fm) {
 
-  # check for which core that have no compresion data are in the field mesurements dataframe
+  # check for which core that have no compression data are in the field measurements dataframe
 
   #list of cores without compression data and that are in field measurements data frame
   core_list<-unique(unique(df_r[which(is.na(df_r$compression_r)), "core_r"])
@@ -97,12 +112,6 @@ fill_compression<- function (df_r = df_r, df_fm = df_fm) {
   df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]}}
 
 
-
   return (df_r)
 
   }
-
-
-
-
-

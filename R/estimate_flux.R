@@ -103,7 +103,7 @@ estimate_core_f<- function (df, timeframe) {
 
       # if first sampole is older than timeframe do not stimate
       if ((df[1, "age_r"])>timeframe) {
-        message (paste("Core", core, "resolution is to low estimate the flux in the last", tmieframe))
+        message (paste("Core", core, "resolution is to low estimate the flux in the last", timeframe))
         flux <- NA } else {
 
       #estimation of the average carbon flux for the selected TimeFrame (OC stock / TimeFrame)
