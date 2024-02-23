@@ -38,6 +38,7 @@
 #' estimate_oc(df = A,site = "SiteID", ecosystem = "Ecosystem", species = "Specie", om = "OM", oc = "OC")
 
 estimate_oc <- function(df = NULL,
+                        core = "core",
                         site = "site",
                         ecosystem = "ecosystem",
                         species = "species",
@@ -50,6 +51,7 @@ estimate_oc <- function(df = NULL,
 
   # Check provided column names exist in df
   check_column_in_df(df, site)
+  check_column_in_df(df, core)
   check_column_in_df(df, ecosystem)
   check_column_in_df(df, species)
   check_column_in_df(df, om)
@@ -77,6 +79,7 @@ estimate_oc <- function(df = NULL,
 
 
   # create variables to be used internally
+  df$core_r <- df[[core]]
   df$ecosystem_r <- df[[ecosystem]]
   df$species_r <- df[[species]]
   df$site_r <- df[[site]]
@@ -91,14 +94,48 @@ estimate_oc <- function(df = NULL,
   # fit models & predict --------------------------------------------------------
   all_models <- lapply(ecosystem_ls, fit_models)
 
+
+
+  #predict
+
   df_rows <- split(df, 1:nrow(df))
   df_pred <- lapply(df_rows, predict_oc, model_list = all_models)
   df_pred <- do.call(rbind.data.frame, df_pred)
 
   plot_eoc_om(df_pred)
 
+  #warnings
+
+  #less than 10 samples
+
+  if (any(min(df_pred$n, na.rm=T)<10)) {
+    cores_list<-unique(subset(df_pred, n<10)[,"core_r"])
+    warning(
+      paste0(
+        "The following cores were estimated from models with less than 10 initial samples: ",
+        paste(cores_list, collapse = ", ")))}
+
+  #out of range
+
+  if (any(df_pred$eoc<df_pred$min_oc)) {
+    cores_list<-unique(subset(df_pred, df_pred$eoc<df_pred$min_oc)[,"core_r"])
+    warning(
+      paste0(
+        "The following cores had samples with organic carbon values below the organic carbo range used to built the model: ",
+        paste(cores_list, collapse = ", ")))}
+
+  if (any(df_pred$eoc>df_pred$max_oc)) {
+    cores_list<-unique(subset(df_pred, df_pred$eoc>df_pred$max_oc)[,"core_r"])
+    warning(
+      paste0(
+        "The following cores had samples with organic carbon values above the organic carbo range used to built the model: ",
+        paste(cores_list, collapse = ", ")))}
+
+  #outputs
+
   df_out <- subset(df_pred,
-                    select = c(-ecosystem_r, -species_r, -site_r, -om_r, -oc_r))
+                    select = c(-ecosystem_r, -species_r, -site_r, -om_r, -oc_r, -n, -min_oc, -max_oc))
+
 
   out<-list (df_out, all_models)
   names(out)<-c("data","models")
@@ -162,8 +199,8 @@ fit_models <- function(df = NULL) {
   }
 
 
-  #if any ecosystem has less than 10 samples with both OM and OC we do not adjust a model for it, nor for species or site
-  if (nrow(df) < 10) {
+  #if any ecosystem has less than 3 samples with both OM and OC we do not adjust a model for it, nor for species or site
+  if (nrow(df) < 3) {
 
     ecosystem_model <- NULL
     multispecies_model <- NULL
@@ -173,26 +210,26 @@ fit_models <- function(df = NULL) {
 
       ecosystem_model <- fit_ecosystem_model(df)
 
-      # check if there is 2 or more specie with more than 10 samples (if not we dont adjust model per species or sites)
+      # check if there is 2 or more specie with more than 3 samples (if not we don't adjust model per species or sites)
 
-      if (length(which(table(df$species_r)>10))<2) {
+      if (length(which(table(df$species_r)>3))<2) {
 
         multispecies_model <- NULL
         site_models <- NULL } else {
 
-          # check if there is any specie with less than 10 samples to adjust model, if so, we delete that specie from the model fitting
+          # check if there is any specie with less than 3 samples to adjust model, if so, we delete that specie from the model fitting
 
-          if (length(which(table(df$species_r)<10))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=10)))
+          if (length(which(table(df$species_r)<3))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=10)))
 
                       df<-subset(df, df$species_r %in% to_keep_sp)}
 
           multispecies_model <- fit_multispecies_model(df)
 
-          # check if there is 2 or more sites with more than 10 samples (if not we dont adjust model per species or sites)
+          # check if there is 2 or more sites with more than 3 samples (if not we dont adjust model per species or sites)
 
-          if (length(which(table(df$site_r)>10))<2) { site_models <- NULL } else {
+          if (length(which(table(df$site_r)>3))<2) { site_models <- NULL } else {
 
-          if (length(which(table(df$site_r)<10))>=1) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=10)))
+          if (length(which(table(df$site_r)<3))>=1) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=10)))
 
           df<-subset(df, df$site_r %in% to_keep_st)}
 
@@ -202,6 +239,8 @@ fit_models <- function(df = NULL) {
 
           }
         }}
+
+
 
     # assemble output list
     output <- list(ecosystem_model, multispecies_model, site_models)
@@ -281,9 +320,12 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
   # Set default values (NA)
   # If OM is NA, OC also NA
 
-  eoc <- NA
-  eoc_se <- NA
-  origin <- NA
+  eoc <- NA # estimated organic carbon
+  eoc_se <- NA # standard error of estimated organic carbon
+  origin <- NA # model used for the estimation
+  n <- NA # number of samples used to built the model (used in the warnings)
+  min_oc <- NA # minimum value of oc used to built the model (used in the warnings)
+  max_oc <- NA # maximum value of organic carbon used to built the model (used in the warnings)
 
 
   ## If OC has been measured, use that value
@@ -292,6 +334,9 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
     eoc <- df_row$oc_r
     eoc_se <- NA
     origin <- "Measured"
+    n <- NA
+    min_oc <- NA
+    max_oc <- NA
 
   }
 
@@ -313,6 +358,9 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
         eoc <- exp(predict(mod, df_row))
         eoc_se <- predict(mod, df_row, se.fit = TRUE)$se.fit
         origin <- model_type
+        n <- nrow(mod$model)
+        min_oc <- exp(min(mod$model[,1]))
+        max_oc <- exp(max(mod$model[,1]))
 
       }
 
@@ -350,7 +398,7 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
     }
   }
 
-  df_row_p <- data.frame(df_row, eoc = eoc, eoc_se = eoc_se, origin = origin)
+  df_row_p <- data.frame(df_row, eoc = eoc, eoc_se = eoc_se, n = n, min_oc = min_oc, max_oc = max_oc, origin = origin)
 
   df_row_p
 
