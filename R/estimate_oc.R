@@ -131,6 +131,18 @@ estimate_oc <- function(df = NULL,
         "The following cores had samples with organic carbon values above the organic carbo range used to built the model: ",
         paste(cores_list, collapse = ", ")))}
 
+
+  # Kaufmann et al. function used with less than 5% of organic matter
+
+  if (any(subset(df_pred, origin == "Kaufmann et al. 2011")[,"om_r"]<5)){
+
+    cores_list<-unique(subset(df_pred, origin == "Kaufmann et al. 2011" & om_r<5)[,"core_r"])
+    warning(
+      paste0(
+        "Kaufmann et al. overstimate organic carbon when organic matter concentrations are below 5%, please check your data from cores:",
+        paste(cores_list, collapse = ", ")))}
+
+
   #outputs
 
   df_out <- subset(df_pred,
@@ -391,8 +403,6 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
           eoc_se <- NA
           origin <- "Kaufmann et al. 2011"
 
-          if (df_row$om_r<5) {warning("Kaufmann et al. overstimate organic carbon when organic matter concentrations are below 5%, please check your data")}
-
         }
       }
     }
@@ -403,8 +413,6 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
   df_row_p
 
 }
-
-
 
 
 #### PLOT ####
