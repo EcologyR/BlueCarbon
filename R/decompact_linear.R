@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-#' Estimate decompresses depth of soil samples
-#'
-#' @param df
-#' @param df_fm
-#' @param core
-#' @param compression
-#' @param mind
-#' @param maxd
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-#'
-decompact_linear <- function(df = NULL,
-                      df_fm = NULL,
-                     core = "core",
-                     compression = "compression",
-                     mind = "mind",
-                     maxd = "maxd") {
-=======
 #' Calculate sediment properties after decompression
 #'
 #' @description
@@ -43,14 +20,21 @@ decompact_linear <- function(df = NULL,
 #'
 #' @export
 
+
+
+
+
 decompact_linear <- function(df   = NULL,
                      df_fm        = NULL,
                      core         = "core",
                      compression  = "compression",
                      mind         = "mind",
                      maxd         = "maxd",
-                     dbd          = NULL) {
->>>>>>> 8cfde433aac92a7e27f4f5669a184d391d19d459
+                     dbd          = NULL,
+                     sampler_length = "sampler_length",
+                     internal_distance = "internal_distance",
+                     external_distance = "external_distance") {
+
 
 
   # class of the dataframe or tibble
@@ -95,27 +79,25 @@ decompact_linear <- function(df   = NULL,
   if (any(is.na(df_r$compression_r))) {
     if(is.null(df_fm)) stop("Missing compression values found, please complete them or provide field measurements")
 
-    df_r <- fill_compression(df_r, df_fm)
+    df_r <- fill_compression(df_r, df_fm, core = core,
+                             sampler_length = sampler_length,
+                             internal_distance = internal_distance,
+                             external_distance = external_distance)
   }
 
   #check again if there are NAs in compression and stop if there are cores that can not be decompress
   if (any(is.na(df_r$compression_r))) {
+
     cores_na_list<-unique(df_r[which(is.na(df_r$compression_r)), "core_r"])
+
     stop(
       paste0(
         "There are cores without estimated compresion data or field mesurements: ",
         paste(cores_na_list, collapse = ", "),
         "\n",
         "Please, provide compression data of field measurements for all cores"
-      )
+      ))}
 
-<<<<<<< HEAD
-    for (i in 1:length(cores_na_list)) {
-    warning("There are cores without estimated compresion data or field measurements: ", cores_na_list[i])}
-=======
-    )
-  }
->>>>>>> 8cfde433aac92a7e27f4f5669a184d391d19d459
 
   # apply decompression
   df_r<- df_r %>% dplyr::mutate (
@@ -143,7 +125,12 @@ decompact_linear <- function(df   = NULL,
 
 #### compression estimation ####
 
-fill_compression<- function (df_r = df_r, df_fm = df_fm) {
+fill_compression<- function (df_r = df_r,
+                             df_fm = df_fm,
+                             core = core,
+                             sampler_length = sampler_length,
+                             internal_distance = internal_distance,
+                             external_distance = external_distance) {
 
   # check for which core that have no compression data are in the field measurements dataframe
 
@@ -157,21 +144,24 @@ fill_compression<- function (df_r = df_r, df_fm = df_fm) {
 
     core_id <- core_list[i]
 
-    data <- df_fm[df_fm == core_id,]
+    data <- df_fm[df_fm == core,]
     data <- data[1,]
 
-    temp <- estimate_compaction(data)
+    temp <- estimate_compaction(data,
+                                core = core,
+                                sampler_length = sampler_length,
+                                internal_distance = internal_distance,
+                                external_distance = external_distance)
 
     # fill compression data
 
-<<<<<<< HEAD
-=======
+
     if ("compression" %in% names(temp)) {
       df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]
     }
   }
 
->>>>>>> 8cfde433aac92a7e27f4f5669a184d391d19d459
+
   return (df_r)
 
   }

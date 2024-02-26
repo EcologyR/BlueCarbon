@@ -14,7 +14,7 @@
 #' @return the initial data.frame with the addition of Percentage of core compression
 #'
 #' @examples
-#' TODO
+#' TO DO
 #'
 #' @export
 
