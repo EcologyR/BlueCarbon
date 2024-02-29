@@ -86,9 +86,13 @@ estimate_oc <- function(df = NULL,
   df$om_r <- df[[om]]
   df$oc_r <- df[[oc]]
 
+  # generate working df
+
+  df_r<-df[,c("core_r", "ecosystem_r", "species_r", "site_r", "om_r", "oc_r")]
+
 
   ## Split df per ecosystem
-  ecosystem_ls <- split(df, df$ecosystem_r)
+  ecosystem_ls <- split(df_r, df$ecosystem_r)
 
 
   # fit models & predict --------------------------------------------------------
@@ -98,7 +102,7 @@ estimate_oc <- function(df = NULL,
 
   #predict
 
-  df_rows <- split(df, 1:nrow(df))
+  df_rows <- split(df_r, 1:nrow(df_r))
   df_pred <- lapply(df_rows, predict_oc, model_list = all_models)
   df_pred <- do.call(rbind.data.frame, df_pred)
 
@@ -145,8 +149,9 @@ estimate_oc <- function(df = NULL,
 
   #outputs
 
-  df_out <- subset(df_pred,
-                    select = c(-ecosystem_r, -species_r, -site_r, -om_r, -oc_r, -n, -min_oc, -max_oc))
+  df_out <- cbind(subset(df,
+                    select = c(-core_r, -ecosystem_r, -species_r, -site_r, -om_r, -oc_r)),
+                  df_pred[,c("eoc", "eoc_se", "origin")])
 
 
   out<-list (df_out, all_models)
