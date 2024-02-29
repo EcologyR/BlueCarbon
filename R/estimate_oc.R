@@ -222,35 +222,33 @@ fit_models <- function(df = NULL) {
 
       ecosystem_model <- fit_ecosystem_model(df)
 
-      # check if there is 2 or more specie with more than 3 samples (if not we don't adjust model per species or sites)
+      # check if there is 2 or more specie with more than 3 samples (if not we don't adjust model per species)
 
       if (length(which(table(df$species_r)>3))<2) {
 
-        multispecies_model <- NULL
-        site_models <- NULL } else {
+        multispecies_model <- NULL} else {
 
           # check if there is any specie with less than 3 samples to adjust model, if so, we delete that specie from the model fitting
 
-          if (length(which(table(df$species_r)<3))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=10)))
+          if (length(which(table(df$species_r)<3))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=3)))
 
                       df<-subset(df, df$species_r %in% to_keep_sp)}
 
-          multispecies_model <- fit_multispecies_model(df)
+          multispecies_model <- fit_multispecies_model(df)}
 
-          # check if there is 2 or more sites with more than 3 samples (if not we dont adjust model per species or sites)
+      # check if there is 2 or more sites with more than 3 samples (if not we dont adjust model per sites)
 
-          if (length(which(table(df$site_r)>3))<2) { site_models <- NULL } else {
+      if (length(which(table(df$site_r)>3))<2) { site_models <- NULL } else {
 
-          if (length(which(table(df$site_r)<3))>=1) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=10)))
+        if (length(which(table(df$site_r)>3))>=2) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=3)))
 
-          df<-subset(df, df$site_r %in% to_keep_st)}
+        df<-subset(df, df$site_r %in% to_keep_st)}
 
-            # divide the data.frame per species and fit one model per species
-            species_ls <- split(df, df$species_r)
-            site_models <- lapply(species_ls, fit_site_model)
+        # divide the data.frame per species and fit one model per species
+        site_ls <- split(df, df$site_r)
+        site_models <- lapply(site_ls, fit_site_model)
 
-          }
-        }}
+      }}
 
 
 
