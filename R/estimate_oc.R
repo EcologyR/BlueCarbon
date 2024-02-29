@@ -283,17 +283,19 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
 
   if (!is.null(model_list[[df_row$ecosystem_r]][[1]])) { #check if there are models for that ecosystem
 
-    mod_site <- model_list[[df_row$ecosystem_r]][["site_models"]][[df_row$species_r]]
+    mod_site <- model_list[[df_row$ecosystem_r]][["site_models"]][[df_row$site_r]]
 
-    # if there is a model for that species AND it has that site AND r2 > 0.5
+    # if there is a model for that site AND it has that site AND r2 > 0.5
     if (!is.null(mod_site) &&
         summary(mod_site)$r.squared > 0.5 &&
         df_row$site_r %in% mod_site$xlevels$`site_r`) {
 
       mod <- mod_site
-      mod_type <- "Model by species and site"
+      mod_type <- "Model by site"
 
     } else {
+
+      if (!is.null(model_list[[df_row$ecosystem_r]][["multispecies_model"]])) {
 
       mod_species <- model_list[[df_row$ecosystem_r]][["multispecies_model"]]
 
@@ -302,7 +304,7 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
           df_row$species_r %in% mod_species$xlevels$`species_r`) {
 
         mod <- mod_species
-        mod_type <- "Model by species"
+        mod_type <- "Model by species"}
 
       } else {
 
