@@ -58,6 +58,7 @@ estimate_oc_stock <- function(df = NULL,
 
   # estimate the thickness of the sample
   df_h <- estimate_h(df = df_r,
+                     core = "core_r",
                      mind = "mind_r",
                      maxd = "maxd_r")
 
