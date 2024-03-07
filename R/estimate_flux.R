@@ -63,7 +63,10 @@ estimate_flux<- function(df=NULL,
   df_r<-df_r[!is.na(df_r$age_r),]
   df_r<-df_r[!is.na(df_r$oc_r),]
 
-  df_h<-estimate_h (df_r)
+  df_h<-estimate_h (df = df_r,
+                    core = "core_r",
+                    mind = "mind_r",
+                    maxd = "maxd_r")
 
 
   # estimate fluxes
