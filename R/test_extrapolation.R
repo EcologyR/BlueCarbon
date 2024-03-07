@@ -32,6 +32,7 @@ test_extrapolation <- function(df = NULL,
   if (!inherits(df, "data.frame")) {
     stop("The data provided must be a tibble or data.frame")
   }
+
   if (!is.numeric(depth)) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
 
   # name of the columns
@@ -49,23 +50,24 @@ test_extrapolation <- function(df = NULL,
 
 
   # create variables with working names with the data in the columns specified by the user
-  df$core_r <- df[[core]]
-  df$mind_r <- df[[mind]]
-  df$maxd_r <- df[[maxd]]
-  df$dbd_r <- df[[dbd]]
-  df$oc_r <- df[[oc]]
+  df_r <- df
+  df_r$core_r <- df_r[[core]]
+  df_r$mind_r <- df_r[[mind]]
+  df_r$maxd_r <- df_r[[maxd]]
+  df_r$dbd_r <- df_r[[dbd]]
+  df_r$oc_r <- df_r[[oc]]
 
   # we select those cores larger than the standard depth
 
-  columns<-colnames(df)
-  x <- split(df, df_r$core)
+  columns<-colnames(df_r)
+  x <- split(df_r, df_r$core_r)
 
-   cores_e<- lapply( X = x,  select_cores, depth = depth) # return a list
+   cores_e<- lapply( X = x,  select_cores, depth = depth, columns ) # return a list
    cores_e<-cores_e[!vapply(cores_e, is.null, logical(1))]
    cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
 
 
-   # estimate obserbed stock
+   # estimate observed stock
 
    observed_stock<-estimate_oc_stock(df = cores_e,
                     depth = depth,
@@ -80,7 +82,10 @@ test_extrapolation <- function(df = NULL,
    # estimate corrected sample depth, h and organic carbon density and carbon mass per sample
 
    cores_e<-cores_e[!is.na(cores_e$oc_r),]
-   cores_e<-estimate_h(cores_e)
+   cores_e<-estimate_h(cores_e,
+                       core = "core_r",
+                       mind = "mind_r",
+                       maxd = "maxd_r")
 
    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
    cores_e <-cores_e |> dplyr::mutate (ocgcm2 = dbd_r*(oc_r/100)*h)
@@ -162,7 +167,9 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
 # core procesing ------------------------------------------------------
 
 #### SELEC CORES ####
-select_cores<-function (df, depth) {
+select_cores<-function (df,
+                        depth,
+                        columns="columns") {
 
   data <- as.data.frame(df)
   colnames(data) <- columns
@@ -173,7 +180,9 @@ select_cores<-function (df, depth) {
 }
 
 #### CUT CORES ####
-cut_cores<- function (df, depth) {
+cut_cores<- function (df,
+                      depth,
+                      columns= "columns") {
 
   data <- as.data.frame(df)
   colnames(data) <- columns
