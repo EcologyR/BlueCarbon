@@ -6,8 +6,6 @@
 #'
 #'
 #' @param df data.frame with core properties
-#' @param df_fm data.frame with field measurements, used to calculate compression
-#' if not provided
 #' @param compression name of the column with core compression IN PERCENTAGE
 #' @param mind name of the column with minimum depth
 #' @param maxd name of the column with maximum depth
@@ -25,15 +23,11 @@
 
 
 decompact_linear <- function(df   = NULL,
-                     df_fm        = NULL,
                      core         = "core",
                      compression  = "compression",
                      mind         = "mind",
                      maxd         = "maxd",
-                     dbd          = NULL,
-                     sampler_length = "sampler_length",
-                     internal_distance = "internal_distance",
-                     external_distance = "external_distance") {
+                     dbd          = NULL) {
 
 
 
@@ -75,16 +69,6 @@ decompact_linear <- function(df   = NULL,
     }
   }
 
-  # check if a compression % is provided. If not estimate from field measurements
-  if (any(is.na(df_r$compression_r))) {
-    if(is.null(df_fm)) stop("Missing compression values found, please complete them or provide field measurements")
-
-    df_r <- fill_compression(df_r, df_fm, core = core,
-                             sampler_length = sampler_length,
-                             internal_distance = internal_distance,
-                             external_distance = external_distance)
-  }
-
   #check again if there are NAs in compression and stop if there are cores that can not be decompress
   if (any(is.na(df_r$compression_r))) {
 
@@ -92,10 +76,10 @@ decompact_linear <- function(df   = NULL,
 
     stop(
       paste0(
-        "There are cores without estimated compresion data or field mesurements: ",
+        "There are cores without estimated compresion: ",
         paste(cores_na_list, collapse = ", "),
         "\n",
-        "Please, provide compression data of field measurements for all cores"
+        "Please, provide compression data of field measurements for all cores. If the core is not compressed compression should be 0 "
       ))}
 
 
@@ -118,50 +102,4 @@ decompact_linear <- function(df   = NULL,
 
 
   return(df)
-  }
-
-
-
-
-#### compression estimation ####
-
-fill_compression<- function (df_r = df_r,
-                             df_fm = df_fm,
-                             core = core,
-                             sampler_length = sampler_length,
-                             internal_distance = internal_distance,
-                             external_distance = external_distance) {
-
-  # check for which core that have no compression data are in the field measurements dataframe
-
-  #list of cores without compression data and that are in field measurements data frame
-  core_list<-unique(unique(df_r[which(is.na(df_r$compression_r)), "core_r"])
-                  [unique(df_r[which(is.na(df_r$compression_r)), "core_r"]) %in% df_fm$core])
-
-
-  # extract as data.frame the row with the data of the core for which the compression must be estimated
-  for (i in 1:length(core_list)) {
-
-    core_id <- core_list[i]
-
-    data <- df_fm[df_fm == core,]
-    data <- data[1,]
-
-    temp <- estimate_compaction(data,
-                                core = core,
-                                sampler_length = sampler_length,
-                                internal_distance = internal_distance,
-                                external_distance = external_distance)
-
-    # fill compression data
-
-
-    if ("compression" %in% names(temp)) {
-      df_r[which(df_r$core_r == core_id), "compression_r"] <- temp[1,"compression"]
-    }
-  }
-
-
-  return (df_r)
-
   }
