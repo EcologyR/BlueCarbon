@@ -84,12 +84,12 @@ decompact_linear <- function(df   = NULL,
 
 
   # apply decompression
-  df_r<- df_r %>% dplyr::mutate (
+  df_r<- df_r |> dplyr::mutate (
     mind_corrected = mind_r/(1-(compression_r/100)),
     maxd_corrected = maxd_r/(1-(compression_r/100)))
 
   if (!is.null(dbd)){
-    df_r<- df_r %>% dplyr::mutate (dbd_corrected = dbd_r * (1-(compression_r/100)))
+    df_r<- df_r |> dplyr::mutate (dbd_corrected = dbd_r * (1-(compression_r/100)))
   }
 
   # add corrected data to original data.frame to return to user
