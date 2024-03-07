@@ -121,14 +121,14 @@ estimate_oc <- function(df = NULL,
 
   #out of range
 
-  if (any(df_pred$eoc<df_pred$min_oc)) {
+  if (!is.na(any(df_pred$eoc<df_pred$min_oc))) {
     cores_list<-unique(subset(df_pred, df_pred$eoc<df_pred$min_oc)[,"core_r"])
     warning(
       paste0(
         "The following cores had samples with organic carbon values below the organic carbo range used to built the model: ",
         paste(cores_list, collapse = ", ")))}
 
-  if (any(df_pred$eoc>df_pred$max_oc)) {
+  if (!is.na(any(df_pred$eoc>df_pred$max_oc))) {
     cores_list<-unique(subset(df_pred, df_pred$eoc>df_pred$max_oc)[,"core_r"])
     warning(
       paste0(
