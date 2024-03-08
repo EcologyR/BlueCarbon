@@ -155,7 +155,7 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
     geom_point(aes(stock, stock_25, color = "25%"), size = 2) +
     theme(text = element_text(size = 15)) +
     labs(color=NULL) +
-    xlim(0, limits) + ylim(0, limitis) +
+    xlim(0, limits) + ylim(0, limits) +
     geom_abline()
 
   extrapolation_plot<-gridExtra::grid.arrange(p1,p2, ncol=2)
@@ -168,7 +168,7 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
 }
 
 
-# core procesing ------------------------------------------------------
+# core processing ------------------------------------------------------
 
 #### SELEC CORES ####
 select_cores<-function (df,
