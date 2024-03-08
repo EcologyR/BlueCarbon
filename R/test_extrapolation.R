@@ -62,9 +62,11 @@ test_extrapolation <- function(df = NULL,
   columns<-colnames(df_r)
   x <- split(df_r, df_r$core_r)
 
-   cores_e<- lapply( X = x,  select_cores, depth = depth, columns ) # return a list
+   cores_e<- lapply( X = x,  select_cores, depth = depth, columns) # return a list
    cores_e<-cores_e[!vapply(cores_e, is.null, logical(1))]
    cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
+
+   if (nrow(cores_e)==0) {stop("None of the cores provided reach the standar depth")}
 
 
    # estimate observed stock
@@ -144,6 +146,8 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
       axis.ticks.x = element_blank()
     )
 
+  limits<-max(stocks_f[,c(2,3,5,7,9)], na.rm=T)+(max(stocks_f[,c(2,3,5,7,9)], na.rm=T)*20/100)
+
   p2<-ggplot2::ggplot(stocks_f, aes(stock, stock_90)) + xlab("Observed Stock") + ylab("Extrapolated stock") +
     geom_point(aes(color = "90%"), size = 2) +
     geom_point(aes(stock, stock_75, color = "75%"), size = 2) +
@@ -151,7 +155,7 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
     geom_point(aes(stock, stock_25, color = "25%"), size = 2) +
     theme(text = element_text(size = 15)) +
     labs(color=NULL) +
-    xlim(0, 5) + ylim(0, 5) +
+    xlim(0, limits) + ylim(0, limitis) +
     geom_abline()
 
   extrapolation_plot<-gridExtra::grid.arrange(p1,p2, ncol=2)
