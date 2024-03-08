@@ -15,8 +15,8 @@
 
 estimate_h <- function(df = NULL,
                        core = "core",
-                       mind = "mind",
-                       maxd = "maxd") {
+                       mind = "mind_corrected",
+                       maxd = "maxd_corrected") {
 
   # class of the dataframe or tibble
   if (!inherits(df, "data.frame")) {

@@ -22,8 +22,8 @@
 estimate_flux<- function(df=NULL,
                          timeframe=100,
                          core = "core",
-                         mind = "mind",
-                         maxd = "maxd",
+                         mind = "mind_corrected",
+                         maxd = "mand_corrected",
                          dbd = "dbd",
                          oc = "eoc",
                          age = "age") {

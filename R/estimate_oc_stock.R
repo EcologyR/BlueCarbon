@@ -21,8 +21,8 @@
 estimate_oc_stock <- function(df = NULL,
                            depth = 100,
                            core = "core",
-                           mind = "mind",
-                           maxd = "maxd",
+                           mind = "mind_corrected",
+                           maxd = "mand_corrected",
                            dbd = "dbd",
                            oc = "eoc") {
 
