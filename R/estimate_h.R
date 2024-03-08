@@ -79,3 +79,4 @@ estimate_height <- function(df) {
   data$h <- data$emax - data$emin
   return(data)
 }
+

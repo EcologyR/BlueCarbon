@@ -103,3 +103,4 @@ decompact_linear <- function(df   = NULL,
 
   return(df)
   }
+
