@@ -1,80 +1,76 @@
-samples <- data.frame(
-  core        = c("Core1", "Core1", "Core1", "Core1", "Core2", "Core2", "Core2", "Core2"),
-  mind        = c(  1,        20,     45,      102,     0,       15,      20,      53),
-  maxd        = c(  5,        26,     47,      108,     7,       20,      23,      56),
-  dbd         = c(  1.2,      1.3,    1.4,     1.5,     1.2,     1.3,     1.4,     1.5),
-  oc          = c(  2,        4,      6,       8,       2,       4,       6,       8),
-  compression = c(  17.2,     17.2,   17.2,    17.2,    25,      25,      25,      25)
-)
 
-samples_out <- data.frame(
-  core = c("Core1", "Core1", "Core1", "Core1", "Core2", "Core2", "Core2", "Core2"),
-  mind = c(1, 20, 45, 102, 0, 15, 20, 53),
-  maxd = c(5, 26, 47, 108, 7, 20, 23, 56),
-  dbd = c(1.2, 1.3, 1.4, 1.5, 1.2, 1.3, 1.4, 1.5),
-  oc = c(2, 4, 6, 8, 2, 4, 6, 8),
-  compression = c(17.2, 17.2, 17.2, 17.2, 25, 25, 25, 25),
-  mind_corrected = c(1.20772946859903, 24.1545893719807, 54.3478260869565, 123.188405797101,
-                     0, 20, 26.6666666666667, 70.6666666666667),
-  maxd_corrected = c(6.03864734299517, 31.4009661835749, 56.7632850241546, 130.434782608696,
-                     9.33333333333333, 26.6666666666667, 30.6666666666667, 74.6666666666667),
-  dbd_corrected = c(0.9936, 1.0764, 1.1592, 1.242, 0.9, 0.975, 1.05, 1.125)
-)
 
-cores <- data.frame(
-  core              = c("Core1", "Core2"),
-  sampler_length    = c(70, 120),
-  internal_distance = c(20.32, 63.75),
-  external_distance = c(10, 45)
-)
-
-test_that("valid input with compaction values works", {
-
-  ## With DBD
-  # And compression data
-  expect_equal(decompact_linear(samples, dbd = "dbd"), samples_out)
-
-  ## Custom names
-  # With Compression data
-  samples_mod <- samples
-  names(samples_mod) <- c(
-    "core_id", "min_depth", "max_depth", "bulk_density", "organic_carbon", "compression"
-  )
-  samples_out_mod <- samples_out
-  names(samples_out_mod) <- c(
-    "core_id", "min_depth", "max_depth", "bulk_density", "organic_carbon",
-    "compression", "mind_corrected", "maxd_corrected", "dbd_corrected"
+test_that("decompact_linear works correctly with valid inputs", {
+  df <- data.frame(
+    core = c("core1", "core2", "core3"),
+    compression = c(10, 20, 30),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6)
   )
 
-  expect_equal(
-    decompact_linear(df = samples_mod, core = "core_id", mind = "min_depth", maxd = "max_depth",
-                     dbd = "bulk_density", compression = "compression"),
-    samples_out_mod
-  )
+  result <- decompact_linear(df)
+  expect_true("mind_corrected" %in% names(result))
+  expect_true("maxd_corrected" %in% names(result))
+  expect_equal(result$mind_corrected, c(1.11, 2.50, 4.29), tolerance = 0.01)
+  expect_equal(result$maxd_corrected, c(4.44, 6.25, 8.57), tolerance = 0.01)
 })
 
-test_that("valid input with no compaction values works", {
-  ## With DBD
-  samples_mod <- samples
-  samples_mod$compression <- NULL
-  expect_equal(decompact_linear(df = samples_mod, df_fm = cores, dbd = "dbd"), samples_out)
+test_that("decompact_linear stops with invalid dataframe input", {
+  expect_error(decompact_linear(list(a = 1, b = 2)), "The data provided must be a tibble or data.frame")
+})
 
-  ## Custom names
-  names(samples_mod) <- c(
-    "core_id", "min_depth", "max_depth", "bulk_density", "organic_carbon")
-  samples_out_mod <- samples_out_mod
-  names(samples_out_mod) <- c(
-    "core_id", "min_depth", "max_depth", "bulk_density", "organic_carbon",
-    "compression",  "mind_corrected", "maxd_corrected", "dbd_corrected"
+
+test_that("decompact_linear stops if columns are not numeric", {
+  df <- data.frame(
+    core = c("core1", "core2", "core3"),
+    compression = c("10", "20", "30"),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6)
   )
 
-  expect_equal(
-    decompact_linear(df = samples_mod, df_fm = cores, core = "core_id",
-                     mind = "min_depth", maxd = "max_depth", dbd = "bulk_density"),
-    samples_out_mod)
+  expect_error(decompact_linear(df), "Compression data is not class numeric, please check")
 })
 
-test_that("input has numeric column set to character", {
-  expect_equal(2 * 2, 4)
+
+
+test_that("decompact_linear handles missing compression values", {
+  df <- data.frame(
+    core = c("core1", "core2", "core3"),
+    compression = c(10, NA, 30),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6)
+  )
+
+  expect_error(decompact_linear(df), "There are cores without estimated compresion: core2
+Please, provide compression data of field measurements for all cores. If the core is not compressed compression should be 0")
 })
+
+
+
+test_that("decompact_linear works correctly with dry bulk density", {
+  df <- data.frame(
+    core = c("core1", "core2", "core3"),
+    compression = c(10, 20, 30),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6),
+    dbd = c(1.2, 1.5, 1.8)
+  )
+
+  result <- decompact_linear(df, dbd = "dbd")
+  expect_true("dbd_corrected" %in% names(result))
+  expect_equal(result$dbd_corrected, c(1.08, 1.20, 1.26), tolerance = 0.01)
+})
+
+
+test_that("decompact_linear check if compresion is provided in %", {
+  df <- data.frame(
+    core = c("core1", "core2", "core3"),
+    compression = c(0.2, 0.1, 0.3),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6)
+  )
+
+  expect_warning(decompact_linear(df), "Compresion values should be provided in %")
+})
+
 
