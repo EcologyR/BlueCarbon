@@ -1,5 +1,5 @@
 
-
+#Test 1: the function estimates final depths
 test_that("decompact_linear works correctly with valid inputs", {
   df <- data.frame(
     core = c("core1", "core2", "core3"),
@@ -15,11 +15,12 @@ test_that("decompact_linear works correctly with valid inputs", {
   expect_equal(result$maxd_corrected, c(4.44, 6.25, 8.57), tolerance = 0.01)
 })
 
+#Test 2: the function only work with dataframes
 test_that("decompact_linear stops with invalid dataframe input", {
   expect_error(decompact_linear(list(a = 1, b = 2)), "The data provided must be a tibble or data.frame")
 })
 
-
+#Test 3: the function check for numeric data
 test_that("decompact_linear stops if columns are not numeric", {
   df <- data.frame(
     core = c("core1", "core2", "core3"),
@@ -32,7 +33,7 @@ test_that("decompact_linear stops if columns are not numeric", {
 })
 
 
-
+#Test 4: the function detect missing compresion values
 test_that("decompact_linear handles missing compression values", {
   df <- data.frame(
     core = c("core1", "core2", "core3"),
@@ -46,7 +47,7 @@ Please, provide compression data of field measurements for all cores. If the cor
 })
 
 
-
+#Test 5: the function estimates corrected dbd if a dbd column is provided
 test_that("decompact_linear works correctly with dry bulk density", {
   df <- data.frame(
     core = c("core1", "core2", "core3"),
@@ -61,7 +62,7 @@ test_that("decompact_linear works correctly with dry bulk density", {
   expect_equal(result$dbd_corrected, c(1.08, 1.20, 1.26), tolerance = 0.01)
 })
 
-
+#Test 6: the function stops if compresion is not provided in %
 test_that("decompact_linear check if compresion is provided in %", {
   df <- data.frame(
     core = c("core1", "core2", "core3"),
