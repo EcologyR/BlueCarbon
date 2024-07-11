@@ -11,10 +11,12 @@
 #' @param maxd name of the column with maximum depth
 #' @param dbd name of the column with dry bulk density
 #'
-#' @return None
+#' @return the initial data.frame with the addition of two columns with the corrected minimum and maximum depth of the samples
+#' (additionally, if a dry bulk density column is specified, it will return another column with corrected dry bulk density)
 #'
 #' @examples
-#' plot_crayons()
+#' decompact_linear(bluecarbon_data)
+#' decompact_linear(df= A, core= "id", compression= "comp", mind= "min", maxd= "max", dbd = "dbd")
 #'
 #' @export
 
