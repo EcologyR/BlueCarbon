@@ -112,12 +112,14 @@ estimate_oc <- function(df = NULL,
 
   #less than 10 samples
 
+  if (any(!is.na(df_pred$n)==T)) {
+
   if (any(min(df_pred$n, na.rm=T)<10)) {
     cores_list<-unique(subset(df_pred, n<10)[,"core_r"])
     warning(
       paste0(
         "The following cores were estimated from models with less than 10 initial samples: ",
-        paste(cores_list, collapse = ", ")))}
+        paste(cores_list, collapse = ", ")))}}
 
   #out of range
 
