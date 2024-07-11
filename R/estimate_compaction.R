@@ -3,18 +3,19 @@
 #'
 #' @description Calculates Percentage of core compression for cores
 #' Accepts a data.frame with core field measurements and returns a modified version
-#' of it, with the addition of the estimated parameters
+#' of it, with the addition of the estimated compression
 #'
 #' @param df data.frame with core properties
 #' @param core_id core identification
 #' @param sampler_length name of the column with the total length of the sampler tube
-#' @param internal_distance name of the column with distance between sampler top and core surface
-#' @param external_distance name of the column with distance between sampler top and sediment surface
+#' @param internal_distance name of the column with distance between sampler top and core surface (inside the tube)
+#' @param external_distance name of the column with distance between sampler top and sediment surface (outside the tube)
 #'
 #' @return the initial data.frame with the addition of Percentage of core compression
 #'
 #' @examples
-#' TO DO
+#' estimate_compaction(core_comp)
+#' estimate_oc(df = A, core = "id",sampler_length = "total", internal_distance = "in", external_distance = "out")
 #'
 #' @export
 
