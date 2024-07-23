@@ -6,6 +6,7 @@ library(testthat)
 test_that("Valid input returns expected result", {
   # Create a sample data frame
   df <- data.frame(
+    core = c("core1", "core1", "core2", "core2"),
     site = c("Site1", "Site1", "Site2", "Site2"),
     ecosystem = c("Eco1", "Eco1", "Eco2", "Eco2"),
     species = c("Sp1", "Sp1", "Sp2", "Sp2"),
@@ -14,10 +15,11 @@ test_that("Valid input returns expected result", {
   )
 
   # Call the estimate_oc function
-  result <- estimate_oc(df = df)
+  result <- estimate_oc(df = df)[[1]]
 
   # Define the expected result
   expected <- data.frame(
+    core = c("core1", "core1", "core2", "core2"),
     site = c("Site1", "Site1", "Site2", "Site2"),
     ecosystem = c("Eco1", "Eco1", "Eco2", "Eco2"),
     species = c("Sp1", "Sp1", "Sp2", "Sp2"),
@@ -36,6 +38,7 @@ test_that("Valid input returns expected result", {
 test_that("Non-numeric 'om' data throws an error", {
   # Create a sample data frame with non-numeric 'om' column
   df <- data.frame(
+    core = c("Core1", "Core2"),
     site = c("Site1", "Site2"),
     ecosystem = c("Eco1", "Eco2"),
     species = c("Sp1", "Sp2"),
@@ -51,6 +54,7 @@ test_that("Non-numeric 'om' data throws an error", {
 test_that("Non-numeric 'oc' data throws an error", {
   # Create a sample data frame with non-numeric 'oc' column
   df <- data.frame(
+    core = c("Core1", "Core2"),
     site = c("Site1", "Site2"),
     ecosystem = c("Eco1", "Eco2"),
     species = c("Sp1", "Sp2"),
@@ -67,6 +71,7 @@ test_that("Non-numeric 'oc' data throws an error", {
 test_that("'om' value greater than 'oc' value throws an error", {
   # Create a sample data frame with 'om' value greater than 'oc' value
   df <- data.frame(
+    core = c("Core1"),
     site = c("Site1"),
     ecosystem = c("Eco1"),
     species = c("Sp1"),

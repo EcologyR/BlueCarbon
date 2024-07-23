@@ -26,9 +26,12 @@ Depends:
 LazyData: true
 Suggests: 
     covr,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
     dplyr,
     ggplot2,
     tibble
+VignetteBuilder: knitr

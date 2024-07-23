@@ -1,0 +1,42 @@
+---
+title: "from_raw_data_to_stocks_and_fluxes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{from_raw_data_to_stocks_and_fluxes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(BlueCarbon)
+```
+
+In this vignette we will use the example data from the BLueCarbon library to estimate the organic carbon stocks in the first 1 meter of blue carbon soils and the average OC fluxes to this soils in the last 100 years.
+
+## load example data
+
+we load and stored them as dataframe. The first dataframe (core_comp) has field measurement data that we will use to estimate soil compaction at core collection. The second dataframe has (bluecarbon_data) laboratory data that we will use to correct core compaction, modelize and estimate organic carbon content in each sample from organic matter content, estimate the stock in the first meter of the core and estimate the average carbon fluxes in the last 100 years.
+
+## core compaction estimations
+
+many field methods to extract soil cores can lead to the compaction in the material retrieved (e.g. manual percussion). The compaction percentage can be estimated knowing the diference between the original surface level of the soil and the surface level of the soil withing the sampler after core insertion and before retrieval.
+
+
+```{r}
+estimate_compaction (core_comp,
+                                 core= "core",
+                                 sampler_length = "sampler_length",
+                                 internal_distance = "internal_distance",
+                                 external_distance = "external_distance")
+
+```
+
+
+

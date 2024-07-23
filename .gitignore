@@ -5,3 +5,4 @@
 .DS_Store
 DataInv.csv
 DataInv.rda
+inst/doc
