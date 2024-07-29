@@ -6,6 +6,7 @@
 #'
 #'
 #' @param df data.frame with core properties
+#' @param core TODO
 #' @param compaction name of the column with core compaction IN PERCENTAGE,
 #' as calculated with [estimate_compaction()].
 #' @param mind name of the column with minimum depth
@@ -21,11 +22,11 @@
 #' @export
 
 decompact <- function(df   = NULL,
-                             core         = "core",
-                             compaction  = "compaction",
-                             mind         = "mind",
-                             maxd         = "maxd",
-                             dbd          = NULL) {
+                      core         = "core",
+                      compaction  = "compaction",
+                      mind         = "mind",
+                      maxd         = "maxd",
+                      dbd          = NULL) {
 
 
 

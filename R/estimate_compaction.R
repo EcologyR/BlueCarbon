@@ -56,10 +56,10 @@ estimate_compaction <- function(df = NULL,
 
 
   ## Omit missing data
-  complete <- complete.cases(df)
+  complete <- stats::complete.cases(df)
   if (!all(complete)) {
     warning("Removing cores with missing data: ", df$core[!(complete)])
-    df <- df[complete.cases(df), ]
+    df <- df[complete, ]
   }
 
   # Check that internal distance is greater than or equal to external distance

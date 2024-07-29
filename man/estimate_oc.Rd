@@ -18,6 +18,8 @@ estimate_oc(
 \item{df}{A tibble or data.frame containing all the data. Must have at least
 five columns (see arguments below).}
 
+\item{core}{TODO}
+
 \item{site}{Character Name of the column reporting sample site.}
 
 \item{ecosystem}{Character Name of the column reporting ecosystem type.

@@ -17,6 +17,7 @@
 #'
 #' @return A data.frame with the observed and extrapolated stocks. A plot with comparisons.
 #' @export
+#' @import ggplot2
 #'
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
@@ -138,9 +139,7 @@ colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
   m_stocks_f <- stocks_f[, c(1, 11:14)]
   m_stocks_f <- reshape::melt(m_stocks_f, id = c("core"))
 
-  library("ggplot2")
-
-  p1 <- ggplot2::ggplot(m_stocks_f, aes(variable, value)) +
+  p1 <- ggplot(m_stocks_f, aes(variable, value)) +
     ylab("% of deviation from observed value") +
     xlab("% of standard depth") +
     geom_boxplot() +
@@ -153,7 +152,7 @@ colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
 
   limits <- max(stocks_f[,c(2,3,5,7,9)], na.rm = TRUE) + (max(stocks_f[,c(2,3,5,7,9)], na.rm = TRUE)*20/100)
 
-  p2<-ggplot2::ggplot(stocks_f, aes(stock, stock_90)) +
+  p2 <- ggplot(stocks_f, aes(stock, stock_90)) +
     xlab("Observed Stock") + ylab("Extrapolated stock") +
     geom_point(aes(color = "90%"), size = 2) +
     geom_point(aes(stock, stock_75, color = "75%"), size = 2) +
@@ -221,12 +220,12 @@ model_stock<- function (df, depth = depth) {
   df <-df |> dplyr::mutate (ocM = cumsum(ocgcm2))
 
   if (nrow(df)>3){
-    model<-lm(ocM ~ emax, data=df)
-    mStock<-predict(model, newdata = data.frame(emax=depth))
-    mStock_se<-predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
+    model <- stats::lm(ocM ~ emax, data=df)
+    mStock <- stats::predict(model, newdata = data.frame(emax=depth))
+    mStock_se <- stats::predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
   } else {
-    mStock<-NA
-    mStock_se<-NA
+    mStock <- NA
+    mStock_se <- NA
   }
 
   stocks<-data.frame(mStock = mStock, mStock_se = mStock_se)

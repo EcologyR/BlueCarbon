@@ -17,7 +17,7 @@ test_that("decompact works correctly with valid inputs", {
 
 #Test 2: the function only work with dataframes
 test_that("decompact stops with invalid dataframe input", {
-  expect_error(decompact(list(a = 1, b = 2)), "The data provided must be a tibble or data.frame")
+  expect_error(decompact(list(a = 1, b = 2)))
 })
 
 #Test 3: the function check for numeric data

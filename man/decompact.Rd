@@ -16,6 +16,8 @@ decompact(
 \arguments{
 \item{df}{data.frame with core properties}
 
+\item{core}{TODO}
+
 \item{compaction}{name of the column with core compaction IN PERCENTAGE,
 as calculated with \code{\link[=estimate_compaction]{estimate_compaction()}}.}
 

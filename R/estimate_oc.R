@@ -13,10 +13,11 @@
 #'
 #' @param df A tibble or data.frame containing all the data. Must have at least
 #' five columns (see arguments below).
+#' @param core TODO
+#' @param site Character Name of the column reporting sample site.
 #' @param ecosystem Character Name of the column reporting ecosystem type.
 #' To apply published equations for OC estimation, ecosystem names should be
 #' either "Salt Marsh", "Seagrass" or "Mangrove".
-#' @param site Character Name of the column reporting sample site.
 #' @param species Character Name of the column reporting the main species in the site.
 #' @param om Character Name of the column reporting organic matter values.
 #' @param oc Character Name of the column reporting organic carbon values.
@@ -62,7 +63,7 @@ estimate_oc <- function(df = NULL,
   if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
 
   # check there are no negative values, nor values over 100
-  df.nona <- df[complete.cases(df[, c(om, oc)]), ]
+  df.nona <- df[stats::complete.cases(df[, c(om, oc)]), ]
   if (any(df.nona[[oc]] < 0 | df.nona[[oc]] > 100)) {
     stop("Organic carbon values must be between 0 and 100 (%)")
   }
@@ -163,7 +164,7 @@ estimate_oc <- function(df = NULL,
 # without distinguishing sites or species
 
 fit_ecosystem_model <- function(df = NULL) {
-  lm(log(oc_r) ~ log(om_r), data = df)
+  stats::lm(log(oc_r) ~ log(om_r), data = df)
 }
 
 
@@ -172,7 +173,7 @@ fit_ecosystem_model <- function(df = NULL) {
 # for each species within the ecosystem
 fit_multispecies_model <- function(df = NULL) {
   if (length(unique(df$species_r)) > 1) {
-    lm(log(oc_r) ~ log(om_r) * species_r, data = df)
+    stats::lm(log(oc_r) ~ log(om_r) * species_r, data = df)
   }
 }
 
@@ -182,9 +183,9 @@ fit_multispecies_model <- function(df = NULL) {
 # if there is >1 site, site differences will also be taken into account
 fit_site_model <- function(df) {
   if (length(unique(df$site_r)) > 1) {
-    lm(log(oc_r) ~ log(om_r) * site_r, data = df)
+    stats::lm(log(oc_r) ~ log(om_r) * site_r, data = df)
   } else {
-    lm(log(oc_r) ~ log(om_r), data = df)
+    stats::lm(log(oc_r) ~ log(om_r), data = df)
   }
 }
 
@@ -365,8 +366,8 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
       ## If there is a model, use it to predict OC from OM
       if (!is.null(mod)) {
 
-        eoc <- exp(predict(mod, df_row))
-        eoc_se <- predict(mod, df_row, se.fit = TRUE)$se.fit
+        eoc <- exp(stats::predict(mod, df_row))
+        eoc_se <- stats::predict(mod, df_row, se.fit = TRUE)$se.fit
         origin <- model_type
         n <- nrow(mod$model)
         min_oc <- exp(min(mod$model[,1]))
@@ -423,16 +424,16 @@ plot_eoc_om <- function(df = NULL) {
 
   df <- df[!is.na(df$origin), ]
 
-  gg <- ggplot2::ggplot(df, ggplot2::aes(om_r, eoc)) +
-    ggplot2::geom_point(ggplot2::aes(color = origin)) +
-    ggplot2::coord_cartesian(
+  gg <- ggplot(df, aes(om_r, eoc)) +
+    geom_point(aes(color = origin)) +
+    coord_cartesian(
       xlim = c(0, max(na.omit(df$om_r))),
       ylim = c(0, max(na.omit(df$om_r))),
       clip = "on") +
-    ggplot2::scale_color_discrete(name = "") +
-    ggplot2::geom_abline() +
-    ggplot2::labs(x = "Organic matter (%)", y = "Estimated organic carbon (%)") +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    scale_color_discrete(name = "") +
+    geom_abline() +
+    labs(x = "Organic matter (%)", y = "Estimated organic carbon (%)") +
+    theme(plot.title = element_text(hjust = 0.5))
 
   suppressWarnings(print(gg))
 }

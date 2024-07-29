@@ -111,9 +111,9 @@ estimate_core <- function(df, depth) {
       } else { #if core shorter than than the standardization depth we model the OC acumulated mass with depth and predict the stock at that depth
 
         df$ocm <- cumsum(df$ocgcm2)
-        model <- lm(ocm ~ emax, data = df)
-        stock <- predict(model, newdata = data.frame(emax = depth))
-        stock_se <- predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
+        model <- stats::lm(ocm ~ emax, data = df)
+        stock <- stats::predict(model, newdata = data.frame(emax = depth))
+        stock_se <- stats::predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
 
       }}
 
