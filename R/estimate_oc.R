@@ -32,10 +32,9 @@
 #'
 #' @export
 #'
-#'
 #' @examples
-#' estimate_oc(bluecarbon_data)
-#' estimate_oc(df = A,site = "SiteID", ecosystem = "Ecosystem", species = "Specie", om = "OM", oc = "OC")
+#' bluecarbon_decompact <- decompact(bluecarbon_data)
+#' out <- estimate_oc(bluecarbon_decompact)
 
 estimate_oc <- function(df = NULL,
                         core = "core",
@@ -88,7 +87,7 @@ estimate_oc <- function(df = NULL,
 
   # generate working df
 
-  df_r<-df[,c("core_r", "ecosystem_r", "species_r", "site_r", "om_r", "oc_r")]
+  df_r <-df[,c("core_r", "ecosystem_r", "species_r", "site_r", "om_r", "oc_r")]
 
 
   ## Split df per ecosystem
@@ -112,41 +111,33 @@ estimate_oc <- function(df = NULL,
 
   #less than 10 samples
 
-  if (any(!is.na(df_pred$n)==T)) {
+  if (any(!is.na(df_pred$n))) {
 
-  if (any(min(df_pred$n, na.rm=T)<10)) {
-    cores_list<-unique(subset(df_pred, n<10)[,"core_r"])
-    warning(
-      paste0(
-        "The following cores were estimated from models with less than 10 initial samples: ",
-        paste(cores_list, collapse = ", ")))}}
+  if (any(min(df_pred$n, na.rm = TRUE) < 10)) {
+    cores_list <- unique(subset(df_pred, n < 10)[,"core_r"])
+    warning("The following cores were estimated from models with less than 10 initial samples: ",
+        paste(cores_list, collapse = ", "))}}
 
   #out of range
 
-  if (!is.na(any(df_pred$eoc<df_pred$min_oc))) {
-    cores_list<-unique(subset(df_pred, df_pred$eoc<df_pred$min_oc)[,"core_r"])
-    warning(
-      paste0(
-        "The following cores had samples with organic carbon values below the organic carbo range used to built the model: ",
-        paste(cores_list, collapse = ", ")))}
+  if (!is.na(any(df_pred$eoc < df_pred$min_oc))) {
+    cores_list <- unique(subset(df_pred, df_pred$eoc < df_pred$min_oc)[,"core_r"])
+    warning("The following cores had samples with organic carbon values below the organic carbon range used to built the model: ",
+        paste(cores_list, collapse = ", "))}
 
-  if (!is.na(any(df_pred$eoc>df_pred$max_oc))) {
-    cores_list<-unique(subset(df_pred, df_pred$eoc>df_pred$max_oc)[,"core_r"])
-    warning(
-      paste0(
-        "The following cores had samples with organic carbon values above the organic carbo range used to built the model: ",
-        paste(cores_list, collapse = ", ")))}
+  if (!is.na(any(df_pred$eoc > df_pred$max_oc))) {
+    cores_list <- unique(subset(df_pred, df_pred$eoc > df_pred$max_oc)[,"core_r"])
+    warning("The following cores had samples with organic carbon values above the organic carbon range used to built the model: ",
+        paste(cores_list, collapse = ", "))}
 
 
   # Kaufmann et al. function used with less than 5% of organic matter
 
-  if (any(subset(df_pred, origin == "Kaufmann et al. 2011")[,"om_r"]<5)){
+  if (any(subset(df_pred, origin == "Kaufmann et al. 2011")[,"om_r"] < 5)) {
 
-    cores_list<-unique(subset(df_pred, origin == "Kaufmann et al. 2011" & om_r<5)[,"core_r"])
-    warning(
-      paste0(
-        "Kaufmann et al. overstimate organic carbon when organic matter concentrations are below 5%, please check your data from cores:",
-        paste(cores_list, collapse = ", ")))}
+    cores_list <- unique(subset(df_pred, origin == "Kaufmann et al. 2011" & om_r < 5)[,"core_r"])
+    warning("Kaufmann et al. overestimate organic carbon when organic matter concentrations are below 5%, please check your data from cores:",
+        paste(cores_list, collapse = ", "))}
 
 
   #outputs
@@ -156,8 +147,8 @@ estimate_oc <- function(df = NULL,
                   df_pred[,c("eoc", "eoc_se", "origin")])
 
 
-  out<-list (df_out, all_models)
-  names(out)<-c("data","models")
+  out <- list (df_out, all_models)
+  names(out) <- c("data","models")
 
   invisible(out)
 
