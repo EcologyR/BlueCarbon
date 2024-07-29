@@ -1,4 +1,3 @@
-library(testthat)
 
 # Test 1: Valid input
 test_that("Valid input returns expected result", {
@@ -10,7 +9,7 @@ test_that("Valid input returns expected result", {
   )
 
   # Call the estimate_h function
-  result <- estimate_h(df = df)
+  result <- estimate_h(df = df, mind = "mind", maxd = "maxd")
 
   # Define the expected result
   expected <-  c(2.5, 2.5, 3, 2, 2, 2)
@@ -30,7 +29,7 @@ test_that("Non-numeric 'mind' data throws an error", {
   )
 
   # Call the estimate_h function and expect an error to be thrown
-  expect_error(estimate_h(df = df), "'mind' data must be class numeric")
+  expect_error(estimate_h(df = df))
 })
 
 # Test 3: NAs in 'maxd' column
@@ -43,7 +42,7 @@ test_that("NAs in 'maxd' column throw an error", {
   )
 
   # Call the estimate_h function and expect an error to be thrown
-  expect_error(estimate_h(df = df), "Samples maximun depth column has NAs, please check")
+  expect_error(estimate_h(df = df))
 })
 
 

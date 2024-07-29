@@ -1,17 +1,23 @@
 #' Estimation of the thickness of the sample
 #'
 #' @description checks for space between samples and, if any, divide this space between the previous and
-#' next sample to return sample thickness withouth gaps in the core
+#' next sample to return sample thickness without gaps in the core
 #'
-#' @param df A [data.frame] with with columns core, mind (minimum depth of the sample)and maxd (maximum depth of the sample)
+#' @param df A data.frame with columns core, mind (minimum depth of the sample) and maxd (maximum depth of the sample)
 #' @param core Character Name of the column reporting core ID.
 #' @param mind Character Name of the column reporting the minimum depth of each sample.
 #' @param maxd Character Name of the column reporting the maximum depth of each sample.
 #'
-#' @return the initial [data.frame] with three additional columns: emin (estimated minimum depth of the sample), emax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
+#' @return the initial data.frame with three additional columns:
+#' - emin (estimated minimum depth of the sample)
+#' - emax (estimated maximum depth of the sample)
+#' - h (estimated thickness of the sample)
+#'
 #' @export
 #'
-#' @examples estimate_h(A)
+#' @examples
+#' bluecarbon_decompact <- decompact(bluecarbon_data)
+#' out <- estimate_h(bluecarbon_decompact)
 
 estimate_h <- function(df = NULL,
                        core = "core",
@@ -34,8 +40,8 @@ estimate_h <- function(df = NULL,
   if (!is.numeric(df[[maxd]])) {stop("'maxd' data must be class numeric")}
 
   #check for NAs in depth columns
-  if (sum(is.na(df[[mind]])) > 0) {stop("Samples minimun depth column has NAs, please check")}
-  if (sum(is.na(df[[maxd]])) > 0) {stop("Samples maximun depth column has NAs, please check")}
+  if (sum(is.na(df[[mind]])) > 0) {stop("Samples minimum depth column has NAs, please check")}
+  if (sum(is.na(df[[maxd]])) > 0) {stop("Samples maximum depth column has NAs, please check")}
 
   # create variables with working names with the data in the columns specified by the user
   df$core_r <- df[[core]]
@@ -51,6 +57,8 @@ estimate_h <- function(df = NULL,
   df_h <- do.call(rbind, list_h)
 
   rownames(df_h) <- NULL
+
+  df_h <- subset(df_h, select = -c(core_r, mind_r, maxd_r))
 
   return(df_h)
 
