@@ -11,13 +11,13 @@ test_that("estimate_compaction function works as expected", {
   # Test if the function runs without error
   expect_no_error(estimate_compaction(df))
 
-  # Test if the output data frame contains the compression column
-  expect_true("compression" %in% names(estimate_compaction(df)))
+  # Test if the output data frame contains the compaction column
+  expect_true("compaction" %in% names(estimate_compaction(df)))
 
-  # Test if the compression values are calculated correctly
-  expected_compression <- c(38, 50, 50)
-  actual_compression <- estimate_compaction(df)$compression
-  expect_equal(actual_compression, expected_compression, tolerance = 1)
+  # Test if the compaction values are calculated correctly
+  expected_compaction <- c(38, 50, 50)
+  actual_compaction <- estimate_compaction(df)$compaction
+  expect_equal(actual_compaction, expected_compaction, tolerance = 1)
 
   # Test if the function throws an error when non-numeric values are provided
   df$sampler_length <- as.character(df$sampler_length)

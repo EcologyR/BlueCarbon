@@ -1,5 +1,5 @@
 bluecarbon_data <- read.csv("data-raw/bluecarbon_data.csv", sep= ";")
-
+names(bluecarbon_data)[5] <- "compaction"
 
 usethis::use_data(bluecarbon_data, overwrite = TRUE)
 
