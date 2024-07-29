@@ -2,36 +2,43 @@
 % Please edit documentation in R/estimate_compaction.R
 \name{estimate_compaction}
 \alias{estimate_compaction}
-\title{Estimate core compaction}
+\title{Estimate Core Compaction}
 \usage{
 estimate_compaction(
-  df,
-  core = "core",
+  df = NULL,
+  core_id = "core",
   sampler_length = "sampler_length",
   internal_distance = "internal_distance",
   external_distance = "external_distance"
 )
 }
 \arguments{
-\item{df}{data.frame with core properties}
+\item{df}{A data.frame containing core properties.}
 
-\item{sampler_length}{name of the column with the total length of the sampler tube}
+\item{core_id}{Name of the column identifying each core.}
 
-\item{internal_distance}{name of the column with distance between sampler top and core surface}
+\item{sampler_length}{Name of the column with the total length of the sampler tube.}
 
-\item{external_distance}{name of the column with distance between sampler top and sediment surface}
+\item{internal_distance}{Name of the column with the distance between sampler top and core surface.}
 
-\item{core_id}{core identification}
+\item{external_distance}{Name of the column with the distance between sampler top and sediment surface.}
 }
 \value{
-the initial data.frame with the addition of Percentage of core compression
+Returns the input data.frame with an additional 'compaction' column indicating
+the estimated percentage of core compaction.
 }
 \description{
-Calculates Percentage of core compression for cores
-Accepts a data.frame with core field measurements and returns a modified version
-of it, with the addition of the estimated parameters
+Estimates the percentage of core compaction using measurements
+from a data.frame containing core properties. It computes a correction factor
+based on sampler tube length, internal distance, and external distance, and
+adds a 'compaction' column to the input data.frame with the calculated compaction
+rate as a percentage.
 }
 \examples{
-TODO
+df <- estimate_compaction(core_comp,
+core_id = "core",
+sampler_length = "sampler_length",
+internal_distance = "internal_distance",
+external_distance = "external_distance")
 
 }

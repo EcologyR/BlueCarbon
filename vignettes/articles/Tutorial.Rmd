@@ -1,10 +1,5 @@
 ---
-title: "from_raw_data_to_stocks_and_fluxes"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{from_raw_data_to_stocks_and_fluxes}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Tutorial"
 ---
 
 ```{r, include = FALSE}
@@ -17,6 +12,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(BlueCarbon)
 ```
+
 
 In this vignette we will use the example data from the BLueCarbon library to estimate the organic carbon stocks in the first 1 meter of blue carbon soils and the average OC fluxes to this soils in the last 100 years.
 

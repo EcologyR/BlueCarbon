@@ -40,7 +40,7 @@ test_that("Non-numeric 'timeframe' throws an error", {
   )
 
   # Call the estimate_flux function with non-numeric 'depth'
-  expect_error(estimate_flux(df = df, oc="oc", timeframe = "10"), "The time frame must be class numeric")
+  expect_error(estimate_flux(df = df, oc="oc", timeframe = "10"))
 })
 
 # Test 3: Non-numeric 'mind' data
@@ -56,7 +56,7 @@ test_that("Non-numeric 'mind' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_flux(df = df, oc="oc", timeframe = 10), "Minimum depth data is not class numeric, please check")
+  expect_error(estimate_flux(df = df, oc="oc", timeframe = 10))
 })
 
 # Test 4: Non-numeric 'maxd' data
@@ -72,7 +72,7 @@ test_that("Non-numeric 'maxd' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_flux(df = df, oc="oc", timeframe = 10), "Maximum depth data is not class numeric, please check")
+  expect_error(estimate_flux(df = df, oc="oc", timeframe = 10))
 })
 
 

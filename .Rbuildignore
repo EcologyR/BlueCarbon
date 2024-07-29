@@ -12,3 +12,4 @@
 .Rprofile
 Codigo/
 
+^vignettes/articles$

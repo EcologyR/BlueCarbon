@@ -8,14 +8,16 @@ test_extrapolation(
   df = NULL,
   depth = 100,
   core = "core",
-  mind = "mind",
-  maxd = "maxd",
+  mind = "mind_corrected",
+  maxd = "maxd_corrected",
   dbd = "dbd",
   oc = "eoc"
 )
 }
 \arguments{
-\item{df}{A \link{data.frame} with, at least, columns: CoreID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon \%)}
+\item{df}{A data.frame with, at least, columns: core,
+mind (minimum depth of the sample), maxd (maximum depth of the sample),
+dbd (dry bulk density), oc (organic carbon \%)}
 
 \item{depth}{standardization soil depth, by default 100 cm.}
 
@@ -30,12 +32,16 @@ test_extrapolation(
 \item{oc}{Character Name of the column reporting organic carbon concentrations.}
 }
 \value{
-A \link{data.frame} with the observed and extrapolated stocks. A plot with comparisons.
+A data.frame with the observed and extrapolated stocks. A plot with comparisons.
 }
 \description{
-subset those cores that reach the standardization depth and estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25\% top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
+subset those cores that reach the standardization depth and estimates the stock (observed stock),
+estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25\%
+top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
 }
 \examples{
-test_extrapolation(A, Depth = 50)
-test_extrapolation(A)
+bluecarbon_decompact <- decompact(bluecarbon_data)
+oc <- estimate_oc(bluecarbon_decompact)
+out <- test_extrapolation(oc)
+
 }

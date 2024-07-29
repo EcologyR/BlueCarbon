@@ -36,5 +36,4 @@ test_that("test_extrapolation function produces expected output", {
 
 })
 
-# Run the tests
-test_results <- testthat::test_file("path_to_your_test_file.R")
+

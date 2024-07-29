@@ -4,10 +4,15 @@
 \alias{estimate_h}
 \title{Estimation of the thickness of the sample}
 \usage{
-estimate_h(df = NULL, core = "core", mind = "mind", maxd = "maxd")
+estimate_h(
+  df = NULL,
+  core = "core",
+  mind = "mind_corrected",
+  maxd = "maxd_corrected"
+)
 }
 \arguments{
-\item{df}{A \link{data.frame} with with columns core, mind (minimum depth of the sample)and maxd (maximum depth of the sample)}
+\item{df}{A data.frame with columns core, mind (minimum depth of the sample) and maxd (maximum depth of the sample)}
 
 \item{core}{Character Name of the column reporting core ID.}
 
@@ -16,12 +21,18 @@ estimate_h(df = NULL, core = "core", mind = "mind", maxd = "maxd")
 \item{maxd}{Character Name of the column reporting the maximum depth of each sample.}
 }
 \value{
-the initial \link{data.frame} with three additional columns: emin (estimated minimum depth of the sample), emax (estimated maximum depth of the sample) and h (estimated thikness of the sample)
+the initial data.frame with three additional columns:
+\itemize{
+\item emin (estimated minimum depth of the sample)
+\item emax (estimated maximum depth of the sample)
+\item h (estimated thickness of the sample)
+}
 }
 \description{
 checks for space between samples and, if any, divide this space between the previous and
-next sample to return sample thickness withouth gaps in the core
+next sample to return sample thickness without gaps in the core
 }
 \examples{
-estimate_h(A)
+bluecarbon_decompact <- decompact(bluecarbon_data)
+out <- estimate_h(bluecarbon_decompact)
 }

@@ -8,15 +8,17 @@ estimate_flux(
   df = NULL,
   timeframe = 100,
   core = "core",
-  mind = "mind",
-  maxd = "maxd",
+  mind = "mind_corrected",
+  maxd = "maxd_corrected",
   dbd = "dbd",
   oc = "eoc",
   age = "age"
 )
 }
 \arguments{
-\item{df}{A \link{data.frame} with, at least, columns: Core.ID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon \%), Age (age of the sample obtained from a age-depth or age-accumulated mass model)}
+\item{df}{A data.frame with, at least, columns: core, mind (minimum depth of the sample),
+maxd (maximum depth of the sample), dbd (dry bulk density), oc (organic carbon \%),
+age (age of the sample obtained from a age-depth or age-accumulated mass model)}
 
 \item{timeframe}{standardization time frame, by default 100 years}
 
@@ -33,13 +35,15 @@ estimate_flux(
 \item{age}{Character Name of the column reporting the age of each sample.}
 }
 \value{
-\link{data.frame} with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
+data.frame with columns Core.id, F.WC (organic carbon fluxes at the whole core),
+A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 }
 \description{
 estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years)
 from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 }
 \examples{
-estimate_flux(A)
-estimate_flux(A, ,TimeFrame = 500)
+bluecarbon_decompact <- decompact(bluecarbon_data)
+oc <- estimate_oc(bluecarbon_decompact)
+out <- estimate_flux(oc)
 }

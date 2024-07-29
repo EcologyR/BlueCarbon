@@ -3,7 +3,9 @@
 #' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years)
 #' from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 #'
-#' @param df A [data.frame] with, at least, columns: Core.ID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %), Age (age of the sample obtained from a age-depth or age-accumulated mass model)
+#' @param df A data.frame with, at least, columns: core, mind (minimum depth of the sample),
+#' maxd (maximum depth of the sample), dbd (dry bulk density), oc (organic carbon %),
+#' age (age of the sample obtained from a age-depth or age-accumulated mass model)
 #' @param timeframe standardization time frame, by default 100 years
 #' @param core Character Name of the column reporting core ID.
 #' @param mind Character Name of the column reporting the minimum depth of each sample.
@@ -12,15 +14,18 @@
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #' @param age Character Name of the column reporting the age of each sample.
 #'
-#' @return [data.frame] with columns Core.id, F.WC (organic carbon fluxes at the whole core), A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
+#' @return data.frame with columns Core.id, F.WC (organic carbon fluxes at the whole core),
+#' A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
 #' @export
 #'
-#' @examples estimate_flux(A)
-#' @examples estimate_flux(A, ,TimeFrame = 500)
+#' @examples
+#' bluecarbon_decompact <- decompact(bluecarbon_data)
+#' oc <- estimate_oc(bluecarbon_decompact)
+#' out <- estimate_flux(oc)
 
 
-estimate_flux<- function(df=NULL,
-                         timeframe=100,
+estimate_flux <- function(df=NULL,
+                         timeframe = 100,
                          core = "core",
                          mind = "mind_corrected",
                          maxd = "maxd_corrected",
@@ -60,10 +65,10 @@ estimate_flux<- function(df=NULL,
 
 
   #select those cores with chronological models
-  df_r<-df_r[!is.na(df_r$age_r),]
-  df_r<-df_r[!is.na(df_r$oc_r),]
+  df_r <- df_r[!is.na(df_r$age_r),]
+  df_r <- df_r[!is.na(df_r$oc_r),]
 
-  df_h<-estimate_h (df = df_r,
+  df_h <- estimate_h(df = df_r,
                     core = "core_r",
                     mind = "mind_r",
                     maxd = "maxd_r")
@@ -83,7 +88,7 @@ estimate_flux<- function(df=NULL,
 
 
 
-estimate_core_f<- function (df, timeframe) {
+estimate_core_f <- function (df, timeframe) {
 
   core <- as.character(unique(df[1,"core_r"]))
 

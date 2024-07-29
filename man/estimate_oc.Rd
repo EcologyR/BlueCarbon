@@ -6,6 +6,7 @@
 \usage{
 estimate_oc(
   df = NULL,
+  core = "core",
   site = "site",
   ecosystem = "ecosystem",
   species = "species",
@@ -52,6 +53,6 @@ can not be created due to the low number of samples (<10) it uses the equations
 in Howard et al. 2014 to estimate the organic carbon.
 }
 \examples{
-estimate_oc(bluecarbon_data)
-estimate_oc(df = A,site = "SiteID", ecosystem = "Ecosystem", species = "Specie", om = "OM", oc = "OC")
+bluecarbon_decompact <- decompact(bluecarbon_data)
+out <- estimate_oc(bluecarbon_decompact)
 }

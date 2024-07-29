@@ -3,7 +3,7 @@
 #' @description Estimates carbon stocks from soil core data down to a specified depth, 100 cm by default.
 #' If the core does not reach the standardized depth, it extrapolates the stock from a linear model between accumulated mass of organic carbon and depth.
 #'
-#' @param df A [data.frame] with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample),
+#' @param df A data.frame with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample),
 #' dbd (dry bulk density), oc (organic carbon %)
 #' @param depth mas depth to estimate the stock, by default 100.
 #' @param core Character Name of the column reporting core ID.
@@ -12,11 +12,15 @@
 #' @param dbd Character Name of the column reporting dry bulk density.
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #'
-#' @return [data.frame] with columns core, swc (organic carbon stock at the whole core), maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
+#' @return data.frame with columns core, swc (organic carbon stock at the whole core),
+#' maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
 #' @export
 #'
-#' @examples estimate_oc_stock(A)
-#' @examples estimate_oc_stock(A, depth = 50)
+#' @examples
+#' bluecarbon_decompact <- decompact(bluecarbon_data)
+#' oc <- estimate_oc(bluecarbon_decompact)
+#' out <- estimate_oc_stock(oc)
+#'
 
 estimate_oc_stock <- function(df = NULL,
                            depth = 100,

@@ -4,9 +4,10 @@
 #' estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25%
 #' top length of the indicated standardization depth. Compares the observed stock with the estimated stocks by extrapolation.
 #'
-#' @param df A [data.frame] with, at least, columns: CoreID, DMin (minimum depth of the sample), DMax (maximum depth of the sample), DBD (dry bulk density), POC (organic carbon %)
+#' @param df A data.frame with, at least, columns: core,
+#' mind (minimum depth of the sample), maxd (maximum depth of the sample),
+#' dbd (dry bulk density), oc (organic carbon %)
 #' @param depth standardization soil depth, by default 100 cm.
-#' @param min_sample
 #' @param core Character Name of the column reporting core ID.
 #' @param mind Character Name of the column reporting the minimum depth of each sample.
 #' @param maxd Character Name of the column reporting the maximum depth of each sample.
@@ -14,11 +15,14 @@
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #'
 #'
-#' @return A [data.frame] with the observed and extrapolated stocks. A plot with comparisons.
+#' @return A data.frame with the observed and extrapolated stocks. A plot with comparisons.
 #' @export
 #'
-#' @examples test_extrapolation(A, Depth = 50)
-#' @examples test_extrapolation(A)
+#' @examples
+#' bluecarbon_decompact <- decompact(bluecarbon_data)
+#' oc <- estimate_oc(bluecarbon_decompact)
+#' out <- test_extrapolation(oc)
+#'
 
 test_extrapolation <- function(df = NULL,
                                depth = 100,
@@ -33,7 +37,7 @@ test_extrapolation <- function(df = NULL,
     stop("The data provided must be a tibble or data.frame")
   }
 
-  if (!is.numeric(depth)) {stop("The Depth provided is not class numeric, please chaeck data and transforme")}
+  if (!is.numeric(depth)) {stop("The Depth provided is not class numeric, please check data and transform")}
 
   # name of the columns
   check_column_in_df(df, core)
@@ -59,19 +63,19 @@ test_extrapolation <- function(df = NULL,
 
   # we select those cores larger than the standard depth
 
-  columns<-colnames(df_r)
+  columns <- colnames(df_r)
   x <- split(df_r, df_r$core_r)
 
-   cores_e<- lapply( X = x,  select_cores, depth = depth, columns) # return a list
-   cores_e<-cores_e[!vapply(cores_e, is.null, logical(1))]
+   cores_e <- lapply( X = x,  select_cores, depth = depth, columns) # return a list
+   cores_e <- cores_e[!vapply(cores_e, is.null, logical(1))]
    cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
 
-   if (nrow(cores_e)==0) {stop("None of the cores provided reach the standar depth")}
+   if (nrow(cores_e) == 0) {stop("None of the cores provided reach the standard depth")}
 
 
    # estimate observed stock
 
-   observed_stock<-estimate_oc_stock(df = cores_e,
+   observed_stock <- estimate_oc_stock(df = cores_e,
                     depth = depth,
                     core = "core_r",
                     mind = "mind_r",
@@ -83,44 +87,44 @@ test_extrapolation <- function(df = NULL,
 
    # estimate corrected sample depth, h and organic carbon density and carbon mass per sample
 
-   cores_e<-cores_e[!is.na(cores_e$oc_r),]
-   cores_e<-estimate_h(cores_e,
+   cores_e <- cores_e[!is.na(cores_e$oc_r),]
+   cores_e <- estimate_h(cores_e,
                        core = "core_r",
                        mind = "mind_r",
                        maxd = "maxd_r")
 
    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-   cores_e <-cores_e |> dplyr::mutate (ocgcm2 = dbd_r*(oc_r/100)*h)
+   cores_e <- cores_e |> dplyr::mutate (ocgcm2 = dbd_r*(oc_r/100)*h)
 
    # create data frames with same cores different lengths
 
    x <- split(cores_e, cores_e$core_r)
-   columns<-colnames(cores_e)
+   columns <- colnames(cores_e)
 
-   cores_c<- lapply( X = x,  cut_cores, depth = depth)
+   cores_c <- lapply( X = x,  cut_cores, depth = depth)
 
-  df90<-lapply(X= cores_c, extract_cores, position=1)
-  df75<-lapply(X= cores_c, extract_cores, position=2)
-  df50<-lapply(X= cores_c, extract_cores, position=3)
-  df25<-lapply(X= cores_c, extract_cores, position=4)
+  df90 <- lapply(X = cores_c, extract_cores, position = 1)
+  df75 <- lapply(X = cores_c, extract_cores, position = 2)
+  df50 <- lapply(X = cores_c, extract_cores, position = 3)
+  df25 <- lapply(X = cores_c, extract_cores, position = 4)
 
 
  # modeling stock
-  stocks90<-lapply(X = df90, model_stock, depth = depth)
+  stocks90 <- lapply(X = df90, model_stock, depth = depth)
   stocks90 <- as.data.frame(do.call(rbind, stocks90))
-  stocks75<-lapply(X = df75, model_stock, depth = depth)
+  stocks75 <- lapply(X = df75, model_stock, depth = depth)
   stocks75 <- as.data.frame(do.call(rbind, stocks75))
-  stocks50<-lapply(X = df50, model_stock, depth = depth)
+  stocks50 <- lapply(X = df50, model_stock, depth = depth)
   stocks50 <- as.data.frame(do.call(rbind, stocks50))
-  stocks25<-lapply(X = df25, model_stock, depth = depth)
+  stocks25 <- lapply(X = df25, model_stock, depth = depth)
   stocks25 <- as.data.frame(do.call(rbind, stocks25))
 
-predictions<-cbind(stocks90, stocks75, stocks50, stocks25)
-colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
+predictions <- cbind(stocks90, stocks75, stocks50, stocks25)
+colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
                         "stock_50", "stock_50_se", "stock_25", "stock_25_se")
 
 
-  stocks_f<-cbind(observed_stock[,c( 1, 4)], predictions)
+  stocks_f <- cbind(observed_stock[,c( 1, 4)], predictions)
 
 
   # estimate the error % of extrapolations and observed stock
@@ -136,8 +140,9 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
 
   library("ggplot2")
 
-  p1<-ggplot2::ggplot(m_stocks_f, aes(variable, value)) + ylab("% of deviation from observed value") +
-    xlab("% of standar depth") +
+  p1 <- ggplot2::ggplot(m_stocks_f, aes(variable, value)) +
+    ylab("% of deviation from observed value") +
+    xlab("% of standard depth") +
     geom_boxplot() +
     geom_jitter() +
     theme(
@@ -146,19 +151,20 @@ colnames(predictions)<-c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
       axis.ticks.x = element_blank()
     )
 
-  limits<-max(stocks_f[,c(2,3,5,7,9)], na.rm=T)+(max(stocks_f[,c(2,3,5,7,9)], na.rm=T)*20/100)
+  limits <- max(stocks_f[,c(2,3,5,7,9)], na.rm = TRUE) + (max(stocks_f[,c(2,3,5,7,9)], na.rm = TRUE)*20/100)
 
-  p2<-ggplot2::ggplot(stocks_f, aes(stock, stock_90)) + xlab("Observed Stock") + ylab("Extrapolated stock") +
+  p2<-ggplot2::ggplot(stocks_f, aes(stock, stock_90)) +
+    xlab("Observed Stock") + ylab("Extrapolated stock") +
     geom_point(aes(color = "90%"), size = 2) +
     geom_point(aes(stock, stock_75, color = "75%"), size = 2) +
     geom_point(aes(stock, stock_50, color = "50%"), size = 2) +
     geom_point(aes(stock, stock_25, color = "25%"), size = 2) +
     theme(text = element_text(size = 15)) +
-    labs(color=NULL) +
+    labs(color = NULL) +
     xlim(0, limits) + ylim(0, limits) +
     geom_abline()
 
-  extrapolation_plot<-gridExtra::grid.arrange(p1,p2, ncol=2)
+  extrapolation_plot <- gridExtra::grid.arrange(p1,p2, ncol = 2)
 
   extrapolation_plot
 

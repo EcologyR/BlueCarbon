@@ -80,4 +80,4 @@
 
 #' }
 #' @source made up data
-"exampledata"
+"core_comp"
