@@ -7,9 +7,11 @@
 #' log(organic carbon) ~ log(organic matter). It gives back a organic carbon
 #' value for each organic matter value provided. If there is a organic carbon
 #' value for that sample it return the same value, else, generates a model for
-#' that site, else, model for specie, else,  model for Ecosystem. If a model
-#' can not be created due to the low number of samples (<10) it uses the equations
-#' in Howard et al. 2014 to estimate the organic carbon.
+#' that site, else, model for specie, else, model for Ecosystem. If a model
+#' can not be created due to the low number of samples (<10) or the created model
+#' has less than xxx p value it uses published equations to estimate the organic carbon:
+#' Maxwell 2023 for salt marshes, and Fourqurean 2012 for seagrasses.
+#' For mangrove, a linear model has been  xxxxxxx
 #'
 #' @param df A tibble or data.frame containing all the data. Must have at least
 #' five columns (see arguments below).
@@ -305,11 +307,15 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
         mod <- mod_species
         mod_type <- "Model by species"}
 
-      } else {
+       else {
 
         mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
-        mod_type <- "Model by ecosystem"
+        mod_type <- "Model by ecosystem"}
 
+      } else {
+
+         mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
+         mod_type <- "Model by ecosystem"
       }
 
     }
