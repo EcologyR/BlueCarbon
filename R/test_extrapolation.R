@@ -22,7 +22,7 @@
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
 #' oc <- estimate_oc(bluecarbon_decompact)
-#' out <- test_extrapolation(oc)
+#' out <- test_extrapolation(oc[[1]])
 #'
 
 test_extrapolation <- function(df = NULL,

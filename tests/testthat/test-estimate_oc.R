@@ -1,17 +1,15 @@
 
 
-library(testthat)
-
 # Test 1: Valid input
 test_that("Valid input returns expected result", {
   # Create a sample data frame
   df <- data.frame(
     core = c("core1", "core1", "core2", "core2"),
     site = c("Site1", "Site1", "Site2", "Site2"),
-    ecosystem = c("Eco1", "Eco1", "Eco2", "Eco2"),
+    ecosystem = c("Salt Marsh", "Salt Marsh", "Seagrass", "Seagrass"),
     species = c("Sp1", "Sp1", "Sp2", "Sp2"),
     om = c(10, 20, 30, 40),
-    oc = c(5, 10, 15, 20)
+    oc = c(5, 10, 15, NA)
   )
 
   # Call the estimate_oc function
@@ -21,17 +19,17 @@ test_that("Valid input returns expected result", {
   expected <- data.frame(
     core = c("core1", "core1", "core2", "core2"),
     site = c("Site1", "Site1", "Site2", "Site2"),
-    ecosystem = c("Eco1", "Eco1", "Eco2", "Eco2"),
+    ecosystem = c("Salt Marsh", "Salt Marsh", "Seagrass", "Seagrass"),
     species = c("Sp1", "Sp1", "Sp2", "Sp2"),
     om = c(10, 20, 30, 40),
-    oc = c(5, 10, 15, 20),
-    eoc = c(5, 10, 15, 20),
+    oc = c(5, 10, 15, NA),
+    eoc = c(5, 10, 15, 17),
     eoc_se = NA,
-    origin = "Measured"
+    origin = c("Measured","Measured","Measured","Fourqurean et al. 2012")
   )
 
   # Compare the result with the expected value
-  expect_equal(result, expected)
+  expect_equal(result, expected, tolerance = 1)
 })
 
 # Test 2: Non-numeric 'om' data

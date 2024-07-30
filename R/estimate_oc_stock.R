@@ -19,7 +19,7 @@
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
 #' oc <- estimate_oc(bluecarbon_decompact)
-#' out <- estimate_oc_stock(oc)
+#' out <- estimate_oc_stock(oc[[1]])
 #'
 
 estimate_oc_stock <- function(df = NULL,
