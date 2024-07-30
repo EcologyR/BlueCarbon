@@ -1,6 +1,6 @@
-#' Estimate the average organic carbon flux
+#' Estimate the average organic carbon sequestration rate
 #'
-#' @description estimate the average organic carbon flux to the soil in a indicated time frame (by default last 100 years)
+#' @description estimate the average organic carbon sequestration rate to the soil in a indicated time frame (by default last 100 years)
 #' from the organic carbon concentration and ages obtained from a age-depth or age-accumulated mass model
 #'
 #' @param df A data.frame with, at least, columns: core, mind (minimum depth of the sample),
@@ -14,17 +14,17 @@
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #' @param age Character Name of the column reporting the age of each sample.
 #'
-#' @return data.frame with columns Core.id, F.WC (organic carbon fluxes at the whole core),
-#' A.Max (maximum age of the core), and Flux (average organic carbon flux at the indicated time frame)
+#' @return data.frame with columns Core.id, F.WC (organic carbon sequestration rates at the whole core),
+#' A.Max (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)
 #' @export
 #'
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
 #' oc <- estimate_oc(bluecarbon_decompact)
-#' out <- estimate_flux(oc)
+#' out <- estimate_seq_rate(oc[[1]])
 
 
-estimate_flux <- function(df=NULL,
+estimate_seq_rate <- function(df=NULL,
                          timeframe = 100,
                          core = "core",
                          mind = "mind_corrected",
@@ -74,7 +74,7 @@ estimate_flux <- function(df=NULL,
                     maxd = "maxd_r")
 
 
-  # estimate fluxes
+  # estimate sequestration rates
   x <- split(df_h, df_h$core_r)
   BCF_l <- lapply(X = x,  estimate_core_f, timeframe = timeframe) # return a list
   BCF <- as.data.frame(do.call(rbind, BCF_l)) # from list to dataframe
@@ -101,35 +101,35 @@ estimate_core_f <- function (df, timeframe) {
   df$ocgcm2 <- df$dbd_r * (df$oc_r / 100) * df$h
 
   #estimation of the OC stock in the whole core
-  fluxwc <- sum(df$ocgcm2)/max(df$age_r)
+  seq_rate_wc <- sum(df$ocgcm2)/max(df$age_r)
   maxage <- max(df$age_r)
 
   # if max age is lower than the time frame by a 25% of the time frame do not estimate
   if ((max(df$age_r) + (max(df$age_r) * 0.25)) < timeframe) {
     message (paste("Core", core, "is younger than the time frame provided"))
-    flux <- NA } else {
+    seq_rate <- NA } else {
 
       # if first sampole is older than timeframe do not stimate
       if ((df[1, "age_r"])>timeframe) {
-        message (paste("Core", core, "resolution is to low estimate the flux in the last", timeframe))
-        flux <- NA } else {
+        message (paste("Core", core, "resolution is to low estimate the sequestration rate in the last", timeframe))
+        seq_rate <- NA } else {
 
-      #estimation of the average carbon flux for the selected TimeFrame (OC stock / TimeFrame)
+      #estimation of the average carbon sequestration rate for the selected TimeFrame (OC stock / TimeFrame)
 
       if (max(df$age_r)==timeframe) {
 
-        flux<-sum(df$ocgcm2)/max(df$age_r)
+        seq_rate<-sum(df$ocgcm2)/max(df$age_r)
 
       } else {
         df<-df[c(1:(length(which(df$age_r <=timeframe))+1)),]
 
-        flux<-(
+        seq_rate<-(
           (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])+
              ((df[nrow(df),"ocgcm2"]/((max(df$age_r)-df[(nrow(df)-1),"age_r"])))
               *(timeframe-df[(nrow(df)-1),"age_r"])))/timeframe)
   }}}
 
-  BCF <- data.frame(core = core, fluxwc = fluxwc, maxage = maxage, flux = flux)
+  BCF <- data.frame(core = core, seq_rate_wc = seq_rate_wc, maxage = maxage, seq_rate = seq_rate)
 
   return(BCF)
 
