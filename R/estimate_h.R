@@ -58,7 +58,7 @@ estimate_h <- function(df = NULL,
 
   rownames(df_h) <- NULL
 
-  df_h <- subset(df_h, select = -c(core_r, mind_r, maxd_r))
+  df_h <- subset(df_h, select = -c(mind_r, maxd_r))
 
   return(df_h)
 
