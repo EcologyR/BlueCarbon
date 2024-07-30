@@ -9,9 +9,9 @@
 #' value for that sample it return the same value, else, generates a model for
 #' that site, else, model for specie, else, model for Ecosystem. If a model
 #' can not be created due to the low number of samples (<10) or the created model
-#' has less than xxx p value it uses published equations to estimate the organic carbon:
-#' Maxwell 2023 for salt marshes, and Fourqurean 2012 for seagrasses.
-#' For mangrove, a linear model has been  xxxxxxx
+#' has less than 0.5 r2 value it uses published equations to estimate the organic carbon:
+#' Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Piñeiro-Juncal
+#' et al. in prep for mangroves.
 #'
 #' @param df A tibble or data.frame containing all the data. Must have at least
 #' five columns (see arguments below).
@@ -131,15 +131,6 @@ estimate_oc <- function(df = NULL,
   if (!is.na(any(df_pred$eoc > df_pred$max_oc))) {
     cores_list <- unique(subset(df_pred, df_pred$eoc > df_pred$max_oc)[,"core_r"])
     warning("The following cores had samples with organic carbon values above the organic carbon range used to built the model: ",
-        paste(cores_list, collapse = ", "))}
-
-
-  # Kaufmann et al. function used with less than 5% of organic matter
-
-  if (any(subset(df_pred, origin == "Kaufmann et al. 2011")[,"om_r"] < 5)) {
-
-    cores_list <- unique(subset(df_pred, origin == "Kaufmann et al. 2011" & om_r < 5)[,"core_r"])
-    warning("Kaufmann et al. overestimate organic carbon when organic matter concentrations are below 5%, please check your data from cores:",
         paste(cores_list, collapse = ", "))}
 
 
@@ -403,10 +394,17 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
           origin <- "Fourqurean et al. 2012"
         }
 
-        if (df_row$ecosystem_r == "Mangrove") {
-          eoc <- 2.89 + 0.415 * df_row$om_r
+        if (df_row$ecosystem_r == "Mangrove" && df_row$om_r < 20) {
+          eoc <- 0.37 * df_row$om_r - 0.2
           eoc_se <- NA
-          origin <- "Kaufmann et al. 2011"
+          origin <- "Piñeiro-Juncal et al. in prepp"
+
+        }
+
+        if (df_row$ecosystem_r == "Mangrove" && df_row$om_r > 20) {
+          eoc <- 0.52 * df_row$om_r - 2
+          eoc_se <- NA
+          origin <- "Piñeiro-Juncal et al. in prepp"
 
         }
       }
