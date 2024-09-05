@@ -74,3 +74,22 @@ test_that("decompact check if compaction is provided in %", {
 })
 
 
+#Test 7: the function estimates decompaction properlly
+
+test_that("decompact provide expected results", {
+  df <- data.frame(
+    core = c("core1", "core2", "core3"),
+    compaction = c(12, 23, 0),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6)
+  )
+
+  out<- data.frame(
+    core = c("core1", "core2", "core3"),
+    compaction = c(12, 23, 0),
+    mind = c(1, 2, 3),
+    maxd = c(4, 5, 6),
+    mind_corrected = c(1,2.5,3),
+    maxd_corrected = c(4.5,6.5,6))
+
+  expect_equal(decompact(df), out, tolerance = 1)})

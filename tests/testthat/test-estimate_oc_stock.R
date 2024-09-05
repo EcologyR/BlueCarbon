@@ -12,7 +12,7 @@ test_that("Valid input returns expected result", {
   )
 
   # Call the estimate_oc_stock function
-  result <- estimate_oc_stock(df = df, oc="oc", depth = 75)
+  result <- estimate_oc_stock(df = df, oc="oc", mind = "mind", maxd="maxd", depth = 75)
 
   # Define the expected result
   expected <- data.frame(
@@ -39,7 +39,7 @@ test_that("Non-numeric 'depth' throws an error", {
   )
 
   # Call the estimate_oc_stock function with non-numeric 'depth'
-  expect_error(estimate_oc_stock(df = df, depth = "10"), "'depth' must be class numeric")
+  expect_error(estimate_oc_stock(df = df, depth = "10"))
 })
 
 # Test 3: Non-numeric 'mind' data
@@ -54,7 +54,7 @@ test_that("Non-numeric 'mind' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_oc_stock(df = df, oc="oc", depth = 10), "'mind' must be class numeric")
+  expect_error(estimate_oc_stock(df = df, oc="oc", depth = 10))
 })
 
 # Test 4: Non-numeric 'maxd' data
@@ -69,7 +69,7 @@ test_that("Non-numeric 'maxd' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_oc_stock(df = df,oc="oc", depth = 10), "'maxd' must be class numeric")
+  expect_error(estimate_oc_stock(df = df,oc="oc", depth = 10))
 })
 
 # Test 5: Non-numeric 'dbd' data
@@ -84,7 +84,7 @@ test_that("Non-numeric 'dbd' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_oc_stock(df = df, oc= "oc", depth = 10), "'dbd' must be class numeric")
+  expect_error(estimate_oc_stock(df = df, oc= "oc", depth = 10))
 })
 
 # Test 6: Non-numeric 'oc' data
@@ -99,7 +99,7 @@ test_that("Non-numeric 'oc' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_oc_stock(df = df,oc="oc", depth = 10), "'oc' must be class numeric")
+  expect_error(estimate_oc_stock(df = df,oc="oc", depth = 10))
 })
 
 

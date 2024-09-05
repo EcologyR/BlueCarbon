@@ -12,15 +12,15 @@ test_that("Valid input returns expected result", {
     age = c(10, 20, 30, 40, 10, 20, 50, 120)
   )
 
-  # Call the estimate_flux function
-  result <- estimate_flux(df = df, oc="oc", timeframe = 75)
+  # Call the estimate_seq_rate function
+  result <- estimate_seq_rate(df = df, mind= "mind", maxd= "maxd", oc="oc", timeframe = 75)
 
   # Define the expected result
   expected <- data.frame(
     core = c("Core1", "Core2"),
-    fluxwc = c(0.2198, 0.0367),
+    seq_rate_wc = c(0.2198, 0.0367),
     maxage = c(40, 120),
-    flux = c(NA, 0.0402057142857143)
+    seq_rate = c(NA, 0.0402057142857143)
   )
 
   # Compare the result with the expected value
@@ -39,8 +39,8 @@ test_that("Non-numeric 'timeframe' throws an error", {
     age= c(100)
   )
 
-  # Call the estimate_flux function with non-numeric 'depth'
-  expect_error(estimate_flux(df = df, oc="oc", timeframe = "10"))
+  # Call the estimate_seq_rate function with non-numeric 'depth'
+  expect_error(estimate_seq_rate(df = df, oc="oc", timeframe = "10"))
 })
 
 # Test 3: Non-numeric 'mind' data
@@ -56,7 +56,7 @@ test_that("Non-numeric 'mind' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_flux(df = df, oc="oc", timeframe = 10))
+  expect_error(estimate_seq_rate(df = df, oc="oc", timeframe = 10))
 })
 
 # Test 4: Non-numeric 'maxd' data
@@ -72,7 +72,7 @@ test_that("Non-numeric 'maxd' data throws an error", {
   )
 
   # Call the estimate_oc_stock function and expect an error to be thrown
-  expect_error(estimate_flux(df = df, oc="oc", timeframe = 10))
+  expect_error(estimate_seq_rate(df = df, oc="oc", timeframe = 10))
 })
 
 

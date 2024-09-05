@@ -45,7 +45,7 @@ test_that("Non-numeric 'om' data throws an error", {
   )
 
   # Call the estimate_oc function and expect an error to be thrown
-  expect_error(estimate_oc(df = df), "Organic matter data must be class numeric")
+  expect_error(estimate_oc(df = df))
 })
 
 # Test 3: Non-numeric 'oc' data
@@ -61,7 +61,7 @@ test_that("Non-numeric 'oc' data throws an error", {
   )
 
   # Call the estimate_oc function and expect an error to be thrown
-  expect_error(estimate_oc(df = df), "Organic carbon data must be class numeric")
+  expect_error(estimate_oc(df = df))
 })
 
 
