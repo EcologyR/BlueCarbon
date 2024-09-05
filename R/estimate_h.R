@@ -36,12 +36,12 @@ estimate_h <- function(df = NULL,
 
 
   # class of the columns
-  if (!is.numeric(df[[mind]])) {stop("'mind' data must be class numeric")}
-  if (!is.numeric(df[[maxd]])) {stop("'maxd' data must be class numeric")}
+  if (!is.numeric(df[[mind]])) {stop("Column 'mind' must be class numeric")}
+  if (!is.numeric(df[[maxd]])) {stop("Column 'maxd' must be class numeric")}
 
   #check for NAs in depth columns
-  if (sum(is.na(df[[mind]])) > 0) {stop("Samples minimum depth column has NAs, please check")}
-  if (sum(is.na(df[[maxd]])) > 0) {stop("Samples maximum depth column has NAs, please check")}
+  if (sum(is.na(df[[mind]])) > 0) {stop("Samples minimum depth column has NAs")}
+  if (sum(is.na(df[[maxd]])) > 0) {stop("Samples maximum depth column has NAs")}
 
   # create variables with working names with the data in the columns specified by the user
   df$core_r <- df[[core]]

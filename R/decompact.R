@@ -1,20 +1,26 @@
 #' Calculate sediment properties after decompaction
 #'
 #' @description
-#' Accepts a data.frame with sample properties and returns a modified version
-#' with sample properties after corrected for compaction
+#' Accepts a data.frame with sample properties and compaction estimations and
+#' returns a modified version with sample properties corrected for
+#' compaction
 #'
 #'
-#' @param df data.frame with core properties
-#' @param core TODO
-#' @param compaction name of the column with core compaction IN PERCENTAGE,
-#' as calculated with [estimate_compaction()].
-#' @param mind name of the column with minimum depth
-#' @param maxd name of the column with maximum depth
-#' @param dbd name of the column with dry bulk density
+#' @param df Data.frame with core properties
+#' @param core Character Name of the column with the id of the core to which
+#' the sample belongs
+#' @param compaction Character Name of the column with core compaction
+#' IN PERCENTAGE, as calculated with [estimate_compaction()].
+#' @param mind Character Name of the column with minimum depth of the sample
+#' (depth at the top of the sample)
+#' @param maxd Character Name of the column with maximum depth of the sample
+#' (depth at the bottom of the sample)
+#' @param dbd Character Name of the column with dry bulk density
 #'
-#' @return the initial data.frame with the addition of two columns with the corrected minimum and maximum depth of the samples
-#' (additionally, if a dry bulk density column is specified, it will return another column with corrected dry bulk density)
+#' @return The initial data.frame with the addition of two columns with the
+#' corrected minimum and maximum depth of the samples (additionally, if a
+#' dry bulk density column is specified, it will return another column with
+#' corrected dry bulk density)
 #'
 #' @examples
 #' decompact(bluecarbon_data)
@@ -43,12 +49,12 @@ decompact <- function(df   = NULL,
 
 
   # class of the columns
-  if (!is.numeric(df[[compaction]])) {stop("compaction data is not class numeric, please check")}
-  if (!is.numeric(df[[mind]])) {stop("Minimum depth data is not class numeric, please check")}
-  if (!is.numeric(df[[maxd]])) {stop("Maximum depth data is not class numeric, please check")}
+  if (!is.numeric(df[[compaction]])) {stop("Column Compaction must be class numeric")}
+  if (!is.numeric(df[[mind]])) {stop("Column mind must be class numeric")}
+  if (!is.numeric(df[[maxd]])) {stop("Column maxd must be class numeric")}
   if (!is.null(dbd)) {
     if (!is.numeric(df[[dbd]])) {
-      stop("Dry bulk density is not class numeric, please check")
+      stop("Column must be class numeric")
     }
   }
 
@@ -74,7 +80,7 @@ decompact <- function(df   = NULL,
   }
 
   if (any(df_r$compaction_r < 0 | df_r$compaction_r > 100)) {
-    stop("Estimated compaction below 0 or above 100: please check cores ",
+    stop("Estimated compaction below 0 or above 100: please, check cores ",
          df_r$core_r[df_r$compaction_r < 0 | df_r$compaction_r > 100])
   }
 

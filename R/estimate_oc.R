@@ -15,7 +15,8 @@
 #'
 #' @param df A tibble or data.frame containing all the data. Must have at least
 #' five columns (see arguments below).
-#' @param core TODO
+#' @param core Character Name of the column with the id of the core to which
+#' the sample belongs
 #' @param site Character Name of the column reporting sample site.
 #' @param ecosystem Character Name of the column reporting ecosystem type.
 #' To apply published equations for OC estimation, ecosystem names should be
@@ -61,8 +62,8 @@ estimate_oc <- function(df = NULL,
 
 
   # class of the columns
-  if (!is.numeric(df[[om]])) {stop("Organic matter data must be class numeric")}
-  if (!is.numeric(df[[oc]])) {stop("Organic carbon data must be class numeric")}
+  if (!is.numeric(df[[om]])) {stop("Column 'om' must be class numeric")}
+  if (!is.numeric(df[[oc]])) {stop("Column 'oc' must be class numeric")}
 
   # check there are no negative values, nor values over 100
   df.nona <- df[stats::complete.cases(df[, c(om, oc)]), ]

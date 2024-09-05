@@ -8,10 +8,13 @@
 #' rate as a percentage.
 #'
 #' @param df A data.frame containing core properties.
-#' @param core_id Name of the column identifying each core.
-#' @param sampler_length Name of the column with the total length of the sampler tube.
-#' @param internal_distance Name of the column with the distance between sampler top and core surface.
-#' @param external_distance Name of the column with the distance between sampler top and sediment surface.
+#' @param core_id Character Name of the column identifying each core.
+#' @param sampler_length Character Name of the column with the total length of the
+#' sampler tube.
+#' @param internal_distance Character Name of the column with the distance between
+#' sampler top and core surface.
+#' @param external_distance Character Name of the column with the distance between
+#' sampler top and sediment surface.
 #'
 #' @return
 #' Returns the input data.frame with an additional 'compaction' column indicating

@@ -48,10 +48,10 @@ test_extrapolation <- function(df = NULL,
   check_column_in_df(df, oc)
 
   # class of the columns
-  if (!is.numeric(df[[mind]])) {stop("Minimum depth data is not class numeric, please check")}
-  if (!is.numeric(df[[maxd]])) {stop("Maximum depth data is not class numeric, please check")}
-  if (!is.numeric(df[[dbd]])) {stop("Dry Bulk Density data is not class numeric, please check")}
-  if (!is.numeric(df[[oc]])) {stop("Organic carbon data is not class numeric, please check")}
+  if (!is.numeric(df[[mind]])) {stop("Column 'mind' must be class numeric")}
+  if (!is.numeric(df[[maxd]])) {stop("Column 'maxd' must be class numeric")}
+  if (!is.numeric(df[[dbd]])) {stop("Column 'dbd' must be class numeric")}
+  if (!is.numeric(df[[oc]])) {stop("Column 'oc' must be class numeric")}
 
 
   # create variables with working names with the data in the columns specified by the user

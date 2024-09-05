@@ -1,10 +1,13 @@
 #' Organic Carbon Stock estimation
 #'
-#' @description Estimates carbon stocks from soil core data down to a specified depth, 100 cm by default.
-#' If the core does not reach the standardized depth, it extrapolates the stock from a linear model between accumulated mass of organic carbon and depth.
+#' @description Estimates carbon stocks from soil core data down to a specified
+#' depth, 100 cm by default. If the core does not reach the standardized depth,
+#' it extrapolates the stock from a linear model between accumulated mass of
+#' organic carbon and depth.
 #'
-#' @param df A data.frame with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample),
-#' dbd (dry bulk density), oc (organic carbon %)
+#' @param df A data.frame with core (core id), mind (minimum depth of the
+#' sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
+#' (organic carbon %)
 #' @param depth mas depth to estimate the stock, by default 100.
 #' @param core Character Name of the column reporting core ID.
 #' @param mind Character Name of the column reporting the minimum depth of each sample.
@@ -44,11 +47,11 @@ estimate_oc_stock <- function(df = NULL,
 
 
   # class of the columns
-  if (!is.numeric(depth)) {stop("'depth' must be class numeric")}
-  if (!is.numeric(df[[mind]])) {stop("'mind' must be class numeric")}
-  if (!is.numeric(df[[maxd]])) {stop("'maxd' must be class numeric")}
-  if (!is.numeric(df[[dbd]])) {stop("'dbd' must be class numeric")}
-  if (!is.numeric(df[[oc]])) {stop("'oc' must be class numeric")}
+  if (!is.numeric(depth)) {stop("Column 'depth' must be class numeric")}
+  if (!is.numeric(df[[mind]])) {stop("Column 'mind' must be class numeric")}
+  if (!is.numeric(df[[maxd]])) {stop("Column 'maxd' must be class numeric")}
+  if (!is.numeric(df[[dbd]])) {stop("Column 'dbd' must be class numeric")}
+  if (!is.numeric(df[[oc]])) {stop("Column 'oc' must be class numeric")}
 
   # create variables with working names with the data in the columns specified by the user
   df_r <- df
