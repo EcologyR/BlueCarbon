@@ -52,6 +52,13 @@ estimate_h <- function(df = NULL,
   df$core_r <- factor(df$core_r, levels = unique(df$core_r))
   x <- split(df, df$core_r)
 
+  if (any(lapply(x, nrow)<2)) {
+
+    core_list<-names(x[which(lapply(x,nrow)==1)])
+    stop("Cores must have at least two samples. Check cores: ",paste(core_list, collapse = ", "))}
+
+  unsorted_cores<-list()
+
   list_h <- lapply(X = x, FUN = estimate_height)
 
   df_h <- do.call(rbind, list_h)
@@ -60,10 +67,28 @@ estimate_h <- function(df = NULL,
 
   df_h <- subset(df_h, select = -c(mind_r, maxd_r))
 
+  if (length(unsorted_cores>=1))
+    warning("The samples from the following cores were not sorted from shallow to deep: ",
+            paste(unsorted_cores, collapse = ", "))
+
   return(df_h)
 
 }
 
+# estimate height --------------------------------------------------------------
+
+estimate_height <- function(df) {
+  data <- as.data.frame(df)
+  colnames(data) <- colnames(df)
+
+  if (is.unsorted(df$mind_r)) {unsorted_cores<-data[1,"core_r"]}
+
+    data<-data[order(data$mind_r),]
+
+  data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
+  data$h <- data$emax - data$emin
+  return(data)
+}
 
 # estimate depth --------------------------------------------------------------
 
@@ -75,16 +100,4 @@ estimate_depth <- function(df, j) {
   return(df)
 }
 
-# estimate height --------------------------------------------------------------
-
-estimate_height <- function(df) {
-  data <- as.data.frame(df)
-  colnames(data) <- colnames(df)
-
-  if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
-
-  data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
-  data$h <- data$emax - data$emin
-  return(data)
-}
 
