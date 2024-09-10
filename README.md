@@ -1,3 +1,8 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -26,12 +31,7 @@ estimate organic carbon content from organic matter content, estimate
 organic carbon stocks fluxes and visualize the error of stock
 extrapolation.
 
-<figure>
-<img src="man/figures/esquemaBC.png"
-alt="Diagram of BlueCarbon main functions" />
-<figcaption aria-hidden="true">Diagram of BlueCarbon main
-functions</figcaption>
-</figure>
+![Diagram of BlueCarbon main functions](images/BC_workflow.png)
 
 #### ***estimate_oc*** **- Organic carbon content estimation from organic carbon data**
 
@@ -42,7 +42,7 @@ This function model a linear correlation between organic matter and
 organic carbon content in your samples and predict the content of
 organic carbon for those samples were there is no organic carbon values.
 Estimation of organic carbon is done by means of linear regressions on
-log(organic carbon) ~ log(organic matter). It gives back a organic
+log(organic carbon) \~ log(organic matter). It gives back a organic
 carbon value for each organic matter value provided. If there is a
 organic carbon value for that sample it return the same value, else,
 generates a model for that site, else, model for specie, else, model for
