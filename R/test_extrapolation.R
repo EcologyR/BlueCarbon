@@ -24,6 +24,7 @@
 #' oc <- estimate_oc(bluecarbon_decompact)
 #' out <- test_extrapolation(oc[[1]])
 #'
+#'
 
 test_extrapolation <- function(df = NULL,
                                depth = 100,
@@ -38,7 +39,7 @@ test_extrapolation <- function(df = NULL,
     stop("The data provided must be a tibble or data.frame")
   }
 
-  if (!is.numeric(depth)) {stop("The Depth provided is not class numeric, please check data and transform")}
+  if (!is.numeric(depth)) {stop("Depth provided must be class numeric")}
 
   # name of the columns
   check_column_in_df(df, core)
@@ -104,10 +105,15 @@ test_extrapolation <- function(df = NULL,
 
    cores_c <- lapply( X = x,  cut_cores, depth = depth)
 
+
   df90 <- lapply(X = cores_c, extract_cores, position = 1)
+
+  if (!any(sapply(df90, nrow)>2)) {stop("None of the cores provide had enough samples to model the stock at 90% of Depth provided")}
+
   df75 <- lapply(X = cores_c, extract_cores, position = 2)
   df50 <- lapply(X = cores_c, extract_cores, position = 3)
   df25 <- lapply(X = cores_c, extract_cores, position = 4)
+
 
 
  # modeling stock
@@ -155,9 +161,9 @@ colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
   p2 <- ggplot(stocks_f, aes(stock, stock_90)) +
     xlab("Observed Stock") + ylab("Extrapolated stock") +
     geom_point(aes(color = "90%"), size = 2) +
-    geom_point(aes(stock, stock_75, color = "75%"), size = 2) +
-    geom_point(aes(stock, stock_50, color = "50%"), size = 2) +
-    geom_point(aes(stock, stock_25, color = "25%"), size = 2) +
+    {if (!is.na(stocks75[1,1])) geom_point(aes(stock, stock_75, color = "75%"), size = 2)} +
+    {if (!is.na(stocks50[1,1])) geom_point(aes(stock, stock_50, color = "50%"), size = 2)} +
+    {if (!is.na(stocks25[1,1])) geom_point(aes(stock, stock_25, color = "25%"), size = 2)} +
     theme(text = element_text(size = 15)) +
     labs(color = NULL) +
     xlim(0, limits) + ylim(0, limits) +
@@ -219,7 +225,7 @@ model_stock<- function (df, depth = depth) {
 
   df <-df |> dplyr::mutate (ocM = cumsum(ocgcm2))
 
-  if (nrow(df)>3){
+  if (nrow(df)>=3){
     model <- stats::lm(ocM ~ emax, data=df)
     mStock <- stats::predict(model, newdata = data.frame(emax=depth))
     mStock_se <- stats::predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
