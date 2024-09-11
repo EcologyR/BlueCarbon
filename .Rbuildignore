@@ -11,5 +11,5 @@
 ^pkgdown$
 .Rprofile
 Codigo/
-
+other/
 ^vignettes/articles$

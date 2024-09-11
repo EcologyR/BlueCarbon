@@ -10,7 +10,7 @@
 #' that site, else, model for specie, else, model for Ecosystem. If a model
 #' can not be created due to the low number of samples (<10) or the created model
 #' has less than 0.5 r2 value it uses published equations to estimate the organic carbon:
-#' Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Piñeiro-Juncal
+#' Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Pineiro-Juncal
 #' et al. in prep for mangroves.
 #'
 #' @param df A tibble or data.frame containing all the data. Must have at least
@@ -398,14 +398,14 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
         if (df_row$ecosystem_r == "Mangrove" && df_row$om_r < 20) {
           eoc <- 0.37 * df_row$om_r - 0.2
           eoc_se <- NA
-          origin <- "Piñeiro-Juncal et al. in prepp"
+          origin <- "Pineiro-Juncal et al. in prep"
 
         }
 
         if (df_row$ecosystem_r == "Mangrove" && df_row$om_r > 20) {
           eoc <- 0.52 * df_row$om_r - 2
           eoc_se <- NA
-          origin <- "Piñeiro-Juncal et al. in prepp"
+          origin <- "Pineiro-Juncal et al. in prep"
 
         }
       }
@@ -432,8 +432,8 @@ plot_eoc_om <- function(df = NULL) {
   gg <- ggplot(df, aes(om_r, eoc)) +
     geom_point(aes(color = origin)) +
     coord_cartesian(
-      xlim = c(0, max(na.omit(df$om_r))),
-      ylim = c(0, max(na.omit(df$om_r))),
+      xlim = c(0, max(stats::na.omit(df$om_r))),
+      ylim = c(0, max(stats::na.omit(df$om_r))),
       clip = "on") +
     scale_color_discrete(name = "") +
     geom_abline() +

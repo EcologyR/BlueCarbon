@@ -54,7 +54,7 @@ value for that sample it return the same value, else, generates a model for
 that site, else, model for specie, else, model for Ecosystem. If a model
 can not be created due to the low number of samples (<10) or the created model
 has less than 0.5 r2 value it uses published equations to estimate the organic carbon:
-Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Piñeiro-Juncal
+Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Pineiro-Juncal
 et al. in prep for mangroves.
 }
 \examples{
