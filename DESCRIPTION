@@ -19,7 +19,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-URL: https://github.com/EcologyR/BlueCarbon
+URL: https://github.com/EcologyR/BlueCarbon, https://ecologyr.github.io/BlueCarbon/
 BugReports: https://github.com/EcologyR/BlueCarbon/issues
 Depends: 
     R (>= 4.1)

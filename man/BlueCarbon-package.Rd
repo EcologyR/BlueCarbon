@@ -12,6 +12,7 @@ BlueCarbon package intends to provide tools to estimate soil organic carbon stoc
 Useful links:
 \itemize{
   \item \url{https://github.com/EcologyR/BlueCarbon}
+  \item \url{https://ecologyr.github.io/BlueCarbon/}
   \item Report bugs at \url{https://github.com/EcologyR/BlueCarbon/issues}
 }
 
