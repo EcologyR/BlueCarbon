@@ -33,4 +33,4 @@ Imports:
     ggplot2,
     gridExtra,
     reshape
-VignetteBuilder: knitr
+Config/Needs/website: rmarkdown
