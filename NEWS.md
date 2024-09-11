@@ -1,3 +1,3 @@
-# BlueCarbon (development version)
+# BlueCarbon 0.0.1
 
-* Initial CRAN submission.
+* First release

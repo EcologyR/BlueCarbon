@@ -5,14 +5,14 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/EcologyR/templateRpackage/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/templateRpackage/actions/workflows/R-CMD-check.yaml)
+![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
+[![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/EcologyR/templateRpackage/branch/master/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/templateRpackage?branch=master)
+coverage](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: WIP - Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-<!-- [![CodeFactor](https://www.codefactor.io/repository/github/ecologyr/templaterpackage/badge)](https://www.codefactor.io/repository/github/ecologyr/templaterpackage) -->
 <!-- badges: end -->
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon
@@ -115,7 +115,24 @@ The code to create this package is available
 If using this package, please cite it:
 
 ``` r
-#citation("BlueCarbon")
+citation("BlueCarbon")
+To cite package 'BlueCarbon' in publications use:
+
+  Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
+  Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
+  Stocks and Fluxes From Soil Core Data_. R package version 0.0.1,
+  https://ecologyr.github.io/BlueCarbon/,
+  <https://github.com/EcologyR/BlueCarbon>.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data},
+    author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
+    year = {2024},
+    url = {https://github.com/EcologyR/BlueCarbon},
+    note = {R package version 0.0.1, https://ecologyr.github.io/BlueCarbon/},
+  }
 ```
 
 ## Funding

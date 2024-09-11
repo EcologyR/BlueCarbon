@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 # BlueCarbon
 
 <!-- badges: start -->
+![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
 `r badger::badge_lifecycle("experimental")`
@@ -98,7 +99,7 @@ The code to create this package is available [here](https://github.com/EcologyR/
 If using this package, please cite it:
 
 ```{r comment=NA}
-#citation("BlueCarbon")
+citation("BlueCarbon")
 ```
 
 ## Funding

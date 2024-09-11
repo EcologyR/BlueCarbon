@@ -1,6 +1,6 @@
 Package: BlueCarbon
 Title: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
   c(
     person("Nerea", "Piñeiro-Juncal", email = "npineiro@ua.pt", role = c("aut", "cre"),
