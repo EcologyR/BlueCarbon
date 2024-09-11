@@ -2,9 +2,9 @@
 
 export(decompact)
 export(estimate_compaction)
-export(estimate_flux)
 export(estimate_h)
 export(estimate_oc)
 export(estimate_oc_stock)
+export(estimate_seq_rate)
 export(test_extrapolation)
 import(ggplot2)

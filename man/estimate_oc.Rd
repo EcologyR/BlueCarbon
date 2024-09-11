@@ -18,7 +18,8 @@ estimate_oc(
 \item{df}{A tibble or data.frame containing all the data. Must have at least
 five columns (see arguments below).}
 
-\item{core}{TODO}
+\item{core}{Character Name of the column with the id of the core to which
+the sample belongs}
 
 \item{site}{Character Name of the column reporting sample site.}
 
@@ -50,9 +51,11 @@ Estimation of organic Carbon is done by means of linear regressions on
 log(organic carbon) ~ log(organic matter). It gives back a organic carbon
 value for each organic matter value provided. If there is a organic carbon
 value for that sample it return the same value, else, generates a model for
-that site, else, model for specie, else,  model for Ecosystem. If a model
-can not be created due to the low number of samples (<10) it uses the equations
-in Howard et al. 2014 to estimate the organic carbon.
+that site, else, model for specie, else, model for Ecosystem. If a model
+can not be created due to the low number of samples (<10) or the created model
+has less than 0.5 r2 value it uses published equations to estimate the organic carbon:
+Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Piñeiro-Juncal
+et al. in prep for mangroves.
 }
 \examples{
 bluecarbon_decompact <- decompact(bluecarbon_data)

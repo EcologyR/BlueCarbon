@@ -14,26 +14,32 @@ decompact(
 )
 }
 \arguments{
-\item{df}{data.frame with core properties}
+\item{df}{Data.frame with core properties}
 
-\item{core}{TODO}
+\item{core}{Character Name of the column with the id of the core to which
+the sample belongs}
 
-\item{compaction}{name of the column with core compaction IN PERCENTAGE,
-as calculated with \code{\link[=estimate_compaction]{estimate_compaction()}}.}
+\item{compaction}{Character Name of the column with core compaction
+IN PERCENTAGE, as calculated with \code{\link[=estimate_compaction]{estimate_compaction()}}.}
 
-\item{mind}{name of the column with minimum depth}
+\item{mind}{Character Name of the column with minimum depth of the sample
+(depth at the top of the sample)}
 
-\item{maxd}{name of the column with maximum depth}
+\item{maxd}{Character Name of the column with maximum depth of the sample
+(depth at the bottom of the sample)}
 
-\item{dbd}{name of the column with dry bulk density}
+\item{dbd}{Character Name of the column with dry bulk density}
 }
 \value{
-the initial data.frame with the addition of two columns with the corrected minimum and maximum depth of the samples
-(additionally, if a dry bulk density column is specified, it will return another column with corrected dry bulk density)
+The initial data.frame with the addition of two columns with the
+corrected minimum and maximum depth of the samples (additionally, if a
+dry bulk density column is specified, it will return another column with
+corrected dry bulk density)
 }
 \description{
-Accepts a data.frame with sample properties and returns a modified version
-with sample properties after corrected for compaction
+Accepts a data.frame with sample properties and compaction estimations and
+returns a modified version with sample properties corrected for
+compaction
 }
 \examples{
 decompact(bluecarbon_data)

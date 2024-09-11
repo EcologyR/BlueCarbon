@@ -15,13 +15,16 @@ estimate_compaction(
 \arguments{
 \item{df}{A data.frame containing core properties.}
 
-\item{core_id}{Name of the column identifying each core.}
+\item{core_id}{Character Name of the column identifying each core.}
 
-\item{sampler_length}{Name of the column with the total length of the sampler tube.}
+\item{sampler_length}{Character Name of the column with the total length of the
+sampler tube.}
 
-\item{internal_distance}{Name of the column with the distance between sampler top and core surface.}
+\item{internal_distance}{Character Name of the column with the distance between
+sampler top and core surface.}
 
-\item{external_distance}{Name of the column with the distance between sampler top and sediment surface.}
+\item{external_distance}{Character Name of the column with the distance between
+sampler top and sediment surface.}
 }
 \value{
 Returns the input data.frame with an additional 'compaction' column indicating
