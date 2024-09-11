@@ -1,3 +1,3 @@
-# templateRpackage 0.0.0.9000
+# BlueCarbon (development version)
 
-* Added a `NEWS.md` file to track changes to the package.
+* Initial CRAN submission.
