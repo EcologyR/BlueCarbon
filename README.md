@@ -7,8 +7,7 @@
 
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
+[![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg?token=5PabVL1UJK)](https://codecov.io/gh/EcologyR/BlueCarbon)
 [![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: WIP - Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
