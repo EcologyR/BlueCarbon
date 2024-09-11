@@ -13,13 +13,6 @@ coverage](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://ap
 [![Project Status: WIP - Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-<<<<<<< HEAD
-=======
-\< !–
-[![CodeFactor](https://www.codefactor.io/repository/github/ecologyr/templaterpackage/badge)](https://www.codefactor.io/repository/github/ecologyr/templaterpackage)
-– \>
-
->>>>>>> 2bfb4eb255b141e6fcbfe2799280f79c74dcc0e1
 <!-- badges: end -->
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon
@@ -31,7 +24,7 @@ estimate organic carbon stocks and sequestration rates and visualize the
 error of stock extrapolation.
 
 <figure>
-<img src="images/BC_workflow-01.png"
+<img src="man/figures/BC_workflow-01.png"
 alt="Blue Carbon library workflow" />
 <figcaption aria-hidden="true">Blue Carbon library workflow</figcaption>
 </figure>
@@ -139,7 +132,7 @@ To cite package 'BlueCarbon' in publications use:
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
   Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
   Stocks and Fluxes From Soil Core Data_. R package version 0.0.1,
-  https://ecologyr.github.io/BlueCarbon/,
+  https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
@@ -149,7 +142,7 @@ A BibTeX entry for LaTeX users is
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
     year = {2024},
     url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.0.1, https://ecologyr.github.io/BlueCarbon/},
+    note = {R package version 0.0.1, https://EcologyR.github.io/BlueCarbon/},
   }
 ```
 

@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and sequestration rates from soil/sediment cores from blue carbon ecosystems.
 It contains seven main functions to estimate the compaction of cores, mathematically correct core compaction, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation.
 
-![Blue Carbon library workflow](images/BC_workflow-01.png)
+![Blue Carbon library workflow](man/figures/BC_workflow-01.png)
 
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
