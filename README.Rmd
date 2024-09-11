@@ -19,11 +19,10 @@ knitr::opts_chunk$set(
 # BlueCarbon
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/EcologyR/templateRpackage/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/templateRpackage/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/EcologyR/templateRpackage/branch/master/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/templateRpackage?branch=master)
+[![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
 `r badger::badge_lifecycle("experimental")`
 `r badger::badge_repostatus("WIP")`
-<!-- `r badger::badge_codefactor("ecologyr/templaterpackage")` -->
 <!-- badges: end -->
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and fluxes from soil/sediment cores from blue carbon ecosystems.
