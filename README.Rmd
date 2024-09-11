@@ -31,6 +31,7 @@ It contains seven main functions to estimate the compaction of cores, mathematic
 
 ![Blue Carbon library workflow](man/figures/BC_workflow-01.png)
 
+
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
 Sampling soil cores by manual percussion usually leads to the compaction of the material retrieved.
