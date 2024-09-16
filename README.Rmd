@@ -101,6 +101,6 @@ citation("BlueCarbon")
 
 ## Funding
 
-The development of this software has been funded by Fondo Europeo de Desarrollo Regional (FEDER) and Consejería de Transformación Económica, Industria, Conocimiento y Universidades of Junta de Andalucía (proyecto US-1381388 led by Francisco Rodríguez Sánchez, Universidad de Sevilla).
+The development of this software has been funded by Fondo Europeo de Desarrollo Regional (FEDER) and Consejería de Transformación Económica, Industria, Conocimiento y Universidades of Junta de Andalucía (proyecto US-1381388 led by Francisco Rodríguez Sánchez, Universidad de Sevilla). NPJ was supported by a Juan de la Cierva fellowship (JDC2022-048342-I). 
 
 ![](https://ecologyr.github.io/workshop/images/logos.png)

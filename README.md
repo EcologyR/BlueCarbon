@@ -137,7 +137,7 @@ To cite package 'BlueCarbon' in publications use:
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data},
+    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
     year = {2024},
     url = {https://github.com/EcologyR/BlueCarbon},
@@ -151,5 +151,6 @@ The development of this software has been funded by Fondo Europeo de
 Desarrollo Regional (FEDER) and Consejería de Transformación Económica,
 Industria, Conocimiento y Universidades of Junta de Andalucía (proyecto
 US-1381388 led by Francisco Rodríguez Sánchez, Universidad de Sevilla).
+NPJ was supported by a Juan de la Cierva fellowship (JDC2022-048342-I). 
 
 ![](https://ecologyr.github.io/workshop/images/logos.png)

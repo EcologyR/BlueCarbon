@@ -1,20 +1,20 @@
 Package: BlueCarbon
-Title: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data
+Title: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data
 Version: 0.0.1
 Authors@R: 
   c(
-    person("Nerea", "Piñeiro-Juncal", email = "npineiro@ua.pt", role = c("aut", "cre"),
+    person("Nerea", "Piñeiro-Juncal", email = "nerea.pineiro.juncal@uvigo.gal", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-3767-1812")),
     person("Julen", "Astigarraga", role = "aut", comment = c(ORCID = "0000-0001-9520-3713")),
     person("Valentina", "Costa", role = "aut", comment = c(ORCID = "0000-0002-1513-0284")),
     person("Marcio", "Martins", role = "aut", comment = c(ORCID = "0000-0002-6969-2215")),
     person("Francisco", "Rodriguez-Sanchez", role = "aut", comment = c(ORCID = "0000-0002-7981-1599"))
   )
-Description: BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in 
+Description: BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and sequestration rates in 
     blue carbon ecosystems. 
     It contains seven main functions to estimate the compresion of cores, matematially correct 
-    core comprasion, estimate sample tchikness, estimate organic carbon content from organic matter content, 
-    estimate organic carbon stocks fluxes and visualize the error of stock extrapolation. 
+    core compaction, estimate sample tchikness, estimate organic carbon content from organic matter content, 
+    estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
