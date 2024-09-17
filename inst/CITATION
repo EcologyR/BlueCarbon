@@ -1,6 +1,6 @@
 bibentry(
   bibtype  = "Manual",
-  title    = "BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data",
+  title    = "BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data",
   author   = c("Nerea Piñeiro-Juncal", "Julen Astigarraga", "Valentina Costa", "Marcio Martins", "Francisco Rodriguez-Sanchez"),
   year     = 2024,
   url      = "https://github.com/EcologyR/BlueCarbon",

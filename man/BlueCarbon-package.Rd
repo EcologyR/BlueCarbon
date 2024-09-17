@@ -4,9 +4,9 @@
 \name{BlueCarbon-package}
 \alias{BlueCarbon}
 \alias{BlueCarbon-package}
-\title{BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data}
+\title{BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data}
 \description{
-BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and fluxes in blue carbon ecosystems. It contains seven main functions to estimate the compresion of cores, matematially correct core comprasion, estimate sample tchikness, estimate organic carbon content from organic matter content, estimate organic carbon stocks fluxes and visualize the error of stock extrapolation.
+BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. It contains seven main functions to estimate the compresion of cores, matematially correct core compaction, estimate sample tchikness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation.
 }
 \seealso{
 Useful links:
@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Nerea Piñeiro-Juncal \email{npineiro@ua.pt} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID})
+\strong{Maintainer}: Nerea Piñeiro-Juncal \email{nerea.pineiro.juncal@uvigo.gal} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID})
 
 Authors:
 \itemize{
