@@ -130,8 +130,8 @@ To cite package 'BlueCarbon' in publications use:
 
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
   Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
-  Stocks and Fluxes From Soil Core Data_. R package version 0.0.1,
-  https://EcologyR.github.io/BlueCarbon/,
+  Stocks and Sequestration Rates From Soil Core Data_. R package
+  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
@@ -151,6 +151,8 @@ The development of this software has been funded by Fondo Europeo de
 Desarrollo Regional (FEDER) and Consejería de Transformación Económica,
 Industria, Conocimiento y Universidades of Junta de Andalucía (proyecto
 US-1381388 led by Francisco Rodríguez Sánchez, Universidad de Sevilla).
-NPJ was supported by a Juan de la Cierva fellowship (JDC2022-048342-I). 
+NPJ was supported by a Juan de la Cierva fellowship (JDC2022-048342-I).
+JA acknowledges funding from the CLIMB-FOREST Horizon Europe Project (No
+101059888) that was funded by the European Union.
 
 ![](https://ecologyr.github.io/workshop/images/logos.png)
