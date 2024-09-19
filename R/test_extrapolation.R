@@ -161,9 +161,9 @@ colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
   p2 <- ggplot(stocks_f, aes(stock, stock_90)) +
     xlab("Observed Stock") + ylab("Extrapolated stock") +
     geom_point(aes(color = "90%"), size = 2) +
-    {if (!is.na(stocks75[1,1])) geom_point(aes(stock, stock_75, color = "75%"), size = 2)} +
-    {if (!is.na(stocks50[1,1])) geom_point(aes(stock, stock_50, color = "50%"), size = 2)} +
-    {if (!is.na(stocks25[1,1])) geom_point(aes(stock, stock_25, color = "25%"), size = 2)} +
+    {if (!all(is.na(stocks75$mStock))) geom_point(aes(stock, stock_75, color = "75%"), size = 2)} +
+    {if (!all(is.na(stocks50$mStock))) geom_point(aes(stock, stock_50, color = "50%"), size = 2)} +
+    {if (!all(is.na(stocks25$mStock))) geom_point(aes(stock, stock_25, color = "25%"), size = 2)} +
     theme(text = element_text(size = 15)) +
     labs(color = NULL) +
     xlim(0, limits) + ylim(0, limits) +
