@@ -104,9 +104,9 @@ dbd (dry bulk density), oc (organic carbon %)</p></dd>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bluecarbon_decompact</span> <span class="op">&lt;-</span> <span class="fu"><a href="decompact.html">decompact</a></span><span class="op">(</span><span class="va">bluecarbon_data</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Setting compaction = 0 for these cores: Sm_03_04, Sm_03_04, Sm_03_04, Sm_03_04, Sm_03_04, Sm_03_04, Sm_03_04, Sg_10_02, Sg_10_02, Sg_10_02, Sg_10_02, Sg_10_02, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sg_11_03, Sm_05_01, Sm_05_01, Sm_05_01, Sm_05_01, Sm_05_01, Sm_05_01, Sm_06_01, Sm_06_01, Sm_06_01, Sm_06_01, Sm_06_01, Sm_06_01</span>
 <span class="r-in"><span><span class="va">oc</span> <span class="op">&lt;-</span> <span class="fu"><a href="estimate_oc.html">estimate_oc</a></span><span class="op">(</span><span class="va">bluecarbon_decompact</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="test_extrapolation-1.png" alt="" width="700" height="433"></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following cores had samples with organic carbon values below the organic carbon range used to built the model: Sg_04_01, Sm_04_03, Sm_04_04, Sm_05_01</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following cores had samples with organic carbon values above the organic carbon range used to built the model: Sg_04_01, Sm_03_01, Sm_04_02, Sm_04_03, Sm_04_04, Sm_05_01</span>
-<span class="r-plt img"><img src="test_extrapolation-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">test_extrapolation</span><span class="op">(</span><span class="va">oc</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 4 rows containing non-finite outside the scale range</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> (`stat_boxplot()`).</span>
@@ -130,7 +130,7 @@ dbd (dry bulk density), oc (organic carbon %)</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
