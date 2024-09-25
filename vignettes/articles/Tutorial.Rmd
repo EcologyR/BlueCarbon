@@ -65,6 +65,26 @@ However, it does affect the depth of the core samples.
 As stocks are given until a known soil depth to be able to compere among areas (e.g. the first 1m), the depth of the samples is needed to properly estimate the final stock.
 
 We use function decompact() to estimate de decompacted minimum and maximum depth of each sample before stock estimation.
+Furthermore, as compaction reduce the volume of the samples, dry bulk density has to be corrected.
+This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function decompact() will correct it.
+To provide compacted dry bulk density the name of the column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
+
+decompact() has 6 parameters:
+
+-   "df" Data.frame with core properties
+
+-   "core" Character Name of the column with the id of the core to which the sample belongs
+
+-   "compaction" Character Name of the column with core compaction IN PERCENTAGE, as calculated with [estimate_compaction()].
+
+-   "mind" Character Name of the column with minimum depth of the sample (depth at the top of the sample)
+
+-   "maxd" Character Name of the column with maximum depth of the sample (depth at the bottom of the sample)
+
+-   "dbd" Character Name of the column with dry bulk density
+
+We don't need to specify the name of the columns as in the example data the names are the same as the default names.
+We DO need to specify the dry bulk density column name as by default this parameter is NULL.
 
 ```{r}
 bluecarbon_decompact <- decompact(bluecarbon_data, dbd="dbd" )
@@ -73,9 +93,6 @@ bluecarbon_decompact <- decompact(bluecarbon_data, dbd="dbd" )
 
 The warning has given a list of cores that has no compaction percentage data.
 The function assumes that these cores were not compacted in the field and sets compaction to zero.
-Furthermore, as compaction reduce the volume of the samples, dry bulk density has to be corrected.
-This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function decompact() will correct it.
-To provide compacted dry bulk density the name of the column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
 
 Here are the first 10 rows of the final dataframe, with corrected minimum and maximum sample depth and dry bulk density.
 
@@ -106,6 +123,26 @@ Maxwell et al. (2023) Global dataset of soil organic carbon in tidal marshes.Sci
 
 Piñeiro-Juncal et al. (in prepp) Soil organic carbon preservation and decay trends in tidal marsh, mangrove and seagrass blue carbon ecosystems.
 
+The function estimate_oc () has 7 parameters:
+
+-   "df" A tibble or data.frame containing all the data.
+    Must have at least five columns (see arguments below).
+
+-   "core" Character Name of the column with the id of the core to which the sample belongs
+
+-   "site" Character Name of the column reporting sample site.
+
+-   "ecosystem" Character Name of the column reporting ecosystem type.
+    To apply published equations for OC estimation, ecosystem names should be either "Salt Marsh", "Seagrass" or "Mangrove".
+
+-   "species" Character Name of the column reporting the main species in the site.
+
+-   "om" Character Name of the column reporting organic matter values.
+
+-   "oc" Character Name of the column reporting organic carbon values.
+
+We don't need to specify the name of the columns as in the example data the names are the same as the default names.
+
 ```{r}
 
 oc_out <- estimate_oc(bluecarbon_decompact)
@@ -134,7 +171,7 @@ If the depth of the samples is provided in cm (as in the example data) this will
 If the core does not reach the desired depth (standardization depth), it extrapolates the stock to that depth from a linear model between accumulated mass of organic carbon and depth.
 The organic carbon mass of each sample is estimated as:
 
-\$\$OC=DBD\*(OCp/100)\*h\$\$ Equation 1
+OC=DBD\*(OCp/100)\*h (Equation 1)
 
 where DBD is the dry bulk density, OCp the organic carbon content in percentage and h the thickness of the sample (maximum depth of the sample - minimum depth of the sample).
 
@@ -147,6 +184,22 @@ Later the organic carbon mass of that sample will be estimated following equatio
 ![Distribution of empty spaces between samples by estimate_h() function](images/estimate_h().png){width="401"}
 
 The function estimate_h() is already incorporated within functions estimate_oc_stock(), test_extrapolation() and estimate_seq_rate(), and there is no need to run it beforehand.
+
+function estimate_oc_stock has 7 parameters:
+
+-   "df" A data.frame with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc (organic carbon %)
+
+-   "depth" Numeric Maximum depth to estimate the stock, by default 100.
+
+-   "core" Character Name of the column reporting core ID.
+
+-   "mind" Character Name of the column reporting the minimum depth of each sample.
+
+-   "maxd" Character Name of the column reporting the maximum depth of each sample.
+
+-   "dbd" Character Name of the column reporting dry bulk density.
+
+-   "oc" Character Name of the column reporting organic carbon concentrations.
 
 We used the output from estimate_oc() to estimate the organic carbon stock per cm^2^ up to 1m depth.
 As the column names from the estimte_oc() output are the same as the default names in estimate_oc_stock we don't need to specify them.
@@ -198,6 +251,22 @@ This function subset the cores that reach the desired depth, estimates the stock
 Compares the observed stock with the estimated stocks by extrapolation.
 This function requires that some of you core do reach the desired depth.
 
+function test_extrapolation() has 7 parameters:
+
+-   "df" A data.frame with core (core id), mind (minimum depth of the sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc (organic carbon %)
+
+-   "depth" Numeric Maximum depth to estimate the stock, by default 100.
+
+-   "core" Character Name of the column reporting core ID.
+
+-   "mind" Character Name of the column reporting the minimum depth of each sample.
+
+-   "maxd" Character Name of the column reporting the maximum depth of each sample.
+
+-   "dbd" Character Name of the column reporting dry bulk density.
+
+-   "oc" Character Name of the column reporting organic carbon concentrations.
+
 As for the estimate_oc_stock() function example, we used the output from estimate_oc() to estimate the organic carbon stock per cm^2^ up to 1m depth.
 As the column names from the estimte_oc() output are the same as the default names in estimate_oc_stock we don't need to specify them.
 Furthermore, the default depth is 100, and hour data is in cm so we don't need to specify the depth.
@@ -236,6 +305,24 @@ To be able to compare among cores, all sequestration rates must be standardized 
 
 Function estimate_seq_rate() estimates the average carbon sequestration rates for a known timeframe (a 100 by default) by summing the carbon stocks down to that age-depth and dividing by the timeframe.
 The timeframe always refers to the last period of time (the last 100, the last 1000, etc...)
+
+function estimate_seq_rates has 8 parameters:
+
+-   "df" A data.frame with, at least, columns: core, mind (minimum depth of the sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc (organic carbon %), age (age of the sample obtained from a age-depth or age-accumulated mass model)
+
+-   "timeframe" Numeric Standardization time frame, by default 100 years
+
+-   "core" Character Name of the column reporting core ID.
+
+-   "mind" Character Name of the column reporting the minimum depth of each sample.
+
+-   "maxd" Character Name of the column reporting the maximum depth of each sample.
+
+-   "dbd" Character Name of the column reporting dry bulk density.
+
+-   "oc" Character Name of the column reporting organic carbon concentrations.
+
+-   "age" Character Name of the column reporting the age of each sample.
 
 We used the output from estimate_oc() to estimate the organic carbon sequestration rate per cm^2^ in the last 100 years.
 As the column names from the estimte_oc() output are the same as the default names in estimate_seq_rate we don't need to specify them.
