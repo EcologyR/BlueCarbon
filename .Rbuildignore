@@ -13,3 +13,4 @@
 Codigo/
 other/
 ^vignettes/articles$
+^cran-comments\.md$
