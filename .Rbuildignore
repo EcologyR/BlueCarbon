@@ -14,3 +14,4 @@ Codigo/
 other/
 ^vignettes/articles$
 ^cran-comments\.md$
+^CITATION\.cff$
