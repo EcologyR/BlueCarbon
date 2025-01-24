@@ -11,3 +11,11 @@ check_column_in_df <- function(df = NULL, colname = NULL) {
   }
 
 }
+
+
+utils::globalVariables(
+  c("all_models", "compaction_r", "core_r", "dbd_r", "ecosystem_r", "eoc",
+    "external_distance_r", "h", "internal_distance_r", "maxd_r", "mind_r", "n",
+    "oc_r", "ocgcm2", "om_r", "origin", "sampler_length_r", "site_r",
+    "species_r", "stock", "stock_25", "stock_50", "stock_75", "stock_90",
+    "value", "variable"))
