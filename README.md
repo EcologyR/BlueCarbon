@@ -8,19 +8,21 @@
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg?token=5PabVL1UJK)](https://codecov.io/gh/EcologyR/BlueCarbon)
-[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Project Status: WIP - Initial development is in progress, but there
-has not yet been a stable, usable release suitable for the
-public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon
 stocks and sequestration rates from soil/sediment cores from blue carbon
-ecosystems. It contains seven main functions to estimate the compaction
-of cores, mathematically correct core compaction, estimate sample
-thickness, estimate organic carbon content from organic matter content,
-estimate organic carbon stocks and sequestration rates and visualize the
-error of stock extrapolation.
+ecosystems.
+
+It contains seven main functions to estimate the compaction of cores,
+mathematically correct core compaction, estimate sample thickness,
+estimate organic carbon content from organic matter content, estimate
+organic carbon stocks and sequestration rates and visualize the error of
+stock extrapolation.
 
 <figure>
 <img src="man/figures/BC_workflow-01.png"
@@ -74,7 +76,7 @@ carbon stock. Nat. Geosci.5, 505–509. <https://doi.org/10.1038/ngeo1477>
 Maxwell et al. (2023) Global dataset of soil organic carbon in tidal
 marshes.Sci.Data 10, 1–14.<https://doi.org/10.1038/s41597-023-02633-x>
 
-Piñeiro-Juncal et al. (in prepp) Soil organic carbon preservation and
+Piñeiro-Juncal et al. (in prep) Soil organic carbon preservation and
 decay trends in tidal marsh, mangrove and seagrass blue carbon
 ecosystems.
 
@@ -112,13 +114,18 @@ concentration and the age of the samples.
 
 ## Installation
 
+BlueCarbon can be installed directly from GitHub:
+
 ``` r
 # install.packages("devtools")
 devtools::install_github("EcologyR/BlueCarbon")
 ```
 
-The code to create this package is available
-[here](https://github.com/EcologyR/BlueCarbon).
+or from R-universe:
+
+``` r
+install.packages("BlueCarbon", repos = c("https://pakillo.r-universe.dev", "https://cloud.r-project.org"))
+```
 
 ## Citation
 
@@ -130,14 +137,14 @@ To cite package 'BlueCarbon' in publications use:
 
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
   Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
-  Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
+  Stocks and Fluxes From Soil Core Data_. R package version 0.0.1,
+  https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
+    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data},
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
     year = {2024},
     url = {https://github.com/EcologyR/BlueCarbon},
