@@ -1,5 +1,5 @@
 Package: BlueCarbon
-Title: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data
+Title: Estimation of Organic Carbon Stocks and Sequestration Rates from Soil Core Data
 Version: 0.0.1
 Authors@R: 
   c(

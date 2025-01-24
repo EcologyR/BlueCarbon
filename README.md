@@ -7,7 +7,7 @@
 
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg?token=5PabVL1UJK)](https://codecov.io/gh/EcologyR/BlueCarbon)
+[![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg?token=5PabVL1UJK)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
@@ -137,14 +137,14 @@ To cite package 'BlueCarbon' in publications use:
 
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
   Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
-  Stocks and Fluxes From Soil Core Data_. R package version 0.0.1,
-  https://EcologyR.github.io/BlueCarbon/,
+  Stocks and Sequestration Rates From Soil Core Data_. R package
+  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
-    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Fluxes From Soil Core Data},
+    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
     year = {2024},
     url = {https://github.com/EcologyR/BlueCarbon},

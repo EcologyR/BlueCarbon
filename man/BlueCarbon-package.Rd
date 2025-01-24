@@ -4,9 +4,9 @@
 \name{BlueCarbon-package}
 \alias{BlueCarbon}
 \alias{BlueCarbon-package}
-\title{BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data}
+\title{BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from Soil Core Data}
 \description{
-BlueCarbon package intends to provide tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. It contains seven main functions to estimate the compresion of cores, matematially correct core compaction, estimate sample tchikness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation.
+Tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. BlueCarbon contains functions to estimate and correct for core compaction, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates, and visualize the error of carbon stock extrapolation.
 }
 \seealso{
 Useful links:
