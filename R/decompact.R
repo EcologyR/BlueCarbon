@@ -74,10 +74,12 @@ decompact <- function(df   = NULL,
 
   ## Setting NA compaction as 0
   if (any(is.na(df_r$compaction_r))) {
+    cores_list <- unique(subset(df_r, is.na(df_r$compaction_r))[,"core_r"])
     warning("Setting compaction = 0 for these cores: ",
-            paste0(df_r$core_r[is.na(df_r$compaction_r)], collapse = ", "))
+            paste(cores_list, collapse = ", "))
     df_r$compaction_r[is.na(df_r$compaction_r)] <- 0
   }
+
 
   if (any(df_r$compaction_r < 0 | df_r$compaction_r > 100)) {
     stop("Estimated compaction below 0 or above 100: please, check cores ",
