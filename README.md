@@ -7,27 +7,28 @@
 
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg?token=5PabVL1UJK)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
+[![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
 <!-- badges: end -->
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon
 stocks and sequestration rates from soil/sediment cores from blue carbon
 ecosystems.
 
-It contains seven main functions to estimate the compaction of cores,
-mathematically correct core compaction, estimate sample thickness,
-estimate organic carbon content from organic matter content, estimate
-organic carbon stocks and sequestration rates and visualize the error of
-stock extrapolation.
+It contains seven main functions to deal with core compaction (estimate
+the compaction of cores and mathematically correct core compaction),
+transform laboratory data (estimate sample thickness and estimate
+organic carbon content from organic matter content) and estimate organic
+carbon stocks and sequestration rates (estimate organic carbon stocks
+and sequestration rates and visualize the error of stock extrapolation).
 
 <figure>
-<img src="man/figures/BC_workflow-01.png"
-alt="Blue Carbon library workflow" />
-<figcaption aria-hidden="true">Blue Carbon library workflow</figcaption>
+<img src="images/BC_workflow.png" alt="BlueCarbon library workflow" />
+<figcaption aria-hidden="true">BlueCarbon library workflow</figcaption>
 </figure>
 
 #### ***estimate_compaction*** **- Estimate Core Compaction**
@@ -35,10 +36,18 @@ alt="Blue Carbon library workflow" />
 Sampling soil cores by manual percussion usually leads to the compaction
 of the material retrieved. This function will estimate the percentage of
 compaction from measurements taken in the field after inserting the
-corer tube and before extracting it: length of the corer tube, distance
-between the surface of the soil and the top of the tube in the outside
-and distance between the surface of the soil and the top of the tube in
-the inside of the tube.
+corer tube and before extracting it: length of the corer tube
+(sampler_length), distance between the surface of the soil and the top
+of the tube in the outside (external_distance) and distance between the
+surface of the soil and the top of the tube in the inside of the tube
+(internal_distance).
+
+<figure>
+<img src="images/compaction.png" width="339"
+alt="Soil compaction from field sampling" />
+<figcaption aria-hidden="true">Soil compaction from field
+sampling</figcaption>
+</figure>
 
 #### ***decompact*** **- Calculate sediment properties after decompaction**
 
@@ -63,12 +72,12 @@ organic carbon value for that sample it return the same value, else,
 generates a model for that site, else, model for specie, else, model for
 that ecosystem. If a model can not be created due to the low number of
 samples (\<10) it uses the equations in Fourqurean et al. 2012 for
-seagrasses, Maxwell et al. 2023 for salt marshes and Piñeiro-Juncal in
-prepp for mangroves to estimate the organic carbon. It is unlikely, but
-possible, that a model will predict a higher organic carbon than organic
-matter content. This is not possible in nature. If this is the case the
-function will give a warning and it is recommended to discard that
-model.
+seagrasses, Maxwell et al. 2023 for salt marshes and Piñeiro-Juncal, in
+review, for mangroves to estimate the organic carbon. It is unlikely,
+but possible, that a model will predict a higher organic carbon than
+organic matter content. This is not possible in nature. If this is the
+case the function will give a warning and it is recommended to discard
+that model.
 
 Fourqureanet al. (2012) Seagrass ecosystems as a globally significant
 carbon stock. Nat. Geosci.5, 505–509. <https://doi.org/10.1038/ngeo1477>
@@ -76,7 +85,7 @@ carbon stock. Nat. Geosci.5, 505–509. <https://doi.org/10.1038/ngeo1477>
 Maxwell et al. (2023) Global dataset of soil organic carbon in tidal
 marshes.Sci.Data 10, 1–14.<https://doi.org/10.1038/s41597-023-02633-x>
 
-Piñeiro-Juncal et al. (in prep) Soil organic carbon preservation and
+Piñeiro-Juncal et al. (in review) Soil organic carbon preservation and
 decay trends in tidal marsh, mangrove and seagrass blue carbon
 ecosystems.
 
@@ -86,9 +95,21 @@ For those cores were only selected samples were measured it is necessary
 to assign a carbon density to the empty spaces before the estimation the
 total stock. This function checks for gaps between samples and, if any,
 divide this space between the previous and next sample to return sample
-thickness without gaps in the core. The stock and sequestration rate
-estimation functions (estimate_oc_stock and estimate_seq_rate) have this
-function incorporated and it is not necessary to run it beforehand.
+thickness without gaps in the core. The middle point between one sample
+and the other is estimated from the bottom of the previous sample to the
+top of the next sample, and not form the middle point of one sample to
+the middle part of the next, as this would inequality distribute the
+gaps between samples if the samples have different thickness. The stock
+and sequestration rate estimation functions (estimate_oc_stock and
+estimate_seq_rate) have this function incorporated and it is not
+necessary to run it beforehand.
+
+<figure>
+<img src="images/estimate_h().png" width="465"
+alt="Gap distribution between samples to estimate accumulated organic carbon mass." />
+<figcaption aria-hidden="true">Gap distribution between samples to
+estimate accumulated organic carbon mass.</figcaption>
+</figure>
 
 #### ***estimate_oc_stock*** **- Organic carbon stock estimation**
 
@@ -96,6 +117,12 @@ Estimates carbon stocks from soil core data down to a specified depth,
 100 cm by default. If the core does not reach the desired depth, it
 extrapolates the stock from a linear model between accumulated mass of
 organic carbon and depth.
+
+<figure>
+<img src="images/estimate_stock.png" width="446"
+alt="OC stock estimation diagram" />
+<figcaption aria-hidden="true">OC stock estimation diagram</figcaption>
+</figure>
 
 #### ***test_extrapolation*** **- Visualize the error of stock extrapolation**
 
