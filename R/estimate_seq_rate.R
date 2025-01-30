@@ -105,8 +105,8 @@ estimate_core_f <- function (df, timeframe) {
   maxage <- max(df$age_r)
 
   # if max age is lower than the time frame by a 25% of the time frame do not estimate
-  if ((max(df$age_r) + (max(df$age_r) * 0.25)) < timeframe) {
-    message (paste("Core", core, "is younger than the time frame provided (by more than 25%)"))
+  if ((max(df$age_r)) < timeframe) {
+    message (paste("Core", core, "is younger than the time frame provided"))
     seq_rate <- NA } else {
 
       # if first sampole is older than timeframe do not stimate
