@@ -20,7 +20,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon) [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) `r badger::badge_lifecycle("stable")` `r badger::badge_repostatus("Active")`
+![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon) [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) 
+`r badger::badge_lifecycle("stable")` 
+`r badger::badge_repostatus("Active")`
 
 <!-- badges: end -->
 
@@ -28,14 +30,14 @@ The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks 
 
 It contains seven main functions to deal with core compaction (estimate the compaction of cores and mathematically correct core compaction), transform laboratory data (estimate sample thickness and estimate organic carbon content from organic matter content) and estimate organic carbon stocks and sequestration rates (estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation).
 
-![BlueCarbon library workflow](images/BC_workflow.png)
+![BlueCarbon library workflow](man/figures/BC_workflow.png)
 
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
 Sampling soil cores by manual percussion usually leads to the compaction of the material retrieved.
 This function will estimate the percentage of compaction from measurements taken in the field after inserting the corer tube and before extracting it: length of the corer tube (sampler_length), distance between the surface of the soil and the top of the tube in the outside (external_distance) and distance between the surface of the soil and the top of the tube in the inside of the tube (internal_distance).
 
-![Soil compaction from field sampling](images/compaction.png){width="339"}
+![Soil compaction from field sampling](man/figures/compaction.png){width="339"}
 
 #### ***decompact*** **- Calculate sediment properties after decompaction**
 
@@ -71,14 +73,14 @@ This function checks for gaps between samples and, if any, divide this space bet
 The middle point between one sample and the other is estimated from the bottom of the previous sample to the top of the next sample, and not form the middle point of one sample to the middle part of the next, as this would inequality distribute the gaps between samples if the samples have different thickness.
 The stock and sequestration rate estimation functions (estimate_oc_stock and estimate_seq_rate) have this function incorporated and it is not necessary to run it beforehand.
 
-![Gap distribution between samples to estimate accumulated organic carbon mass.](images/estimate_h().png){width="465"}
+![Gap distribution between samples to estimate accumulated organic carbon mass.](man/figures/estimate_h().png){width="465"}
 
 #### ***estimate_oc_stock*** **- Organic carbon stock estimation**
 
 Estimates carbon stocks from soil core data down to a specified depth, 100 cm by default.
 If the core does not reach the desired depth, it extrapolates the stock from a linear model between accumulated mass of organic carbon and depth.
 
-![OC stock estimation diagram](images/estimate_stock.png){width="446"}
+![OC stock estimation diagram](man/figures/estimate_stock.png){width="446"}
 
 #### ***test_extrapolation*** **- Visualize the error of stock extrapolation**
 

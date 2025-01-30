@@ -27,7 +27,8 @@ carbon stocks and sequestration rates (estimate organic carbon stocks
 and sequestration rates and visualize the error of stock extrapolation).
 
 <figure>
-<img src="images/BC_workflow.png" alt="BlueCarbon library workflow" />
+<img src="man/figures/BC_workflow.png"
+alt="BlueCarbon library workflow" />
 <figcaption aria-hidden="true">BlueCarbon library workflow</figcaption>
 </figure>
 
@@ -43,7 +44,7 @@ surface of the soil and the top of the tube in the inside of the tube
 (internal_distance).
 
 <figure>
-<img src="images/compaction.png" width="339"
+<img src="man/figures/compaction.png" width="339"
 alt="Soil compaction from field sampling" />
 <figcaption aria-hidden="true">Soil compaction from field
 sampling</figcaption>
@@ -105,7 +106,7 @@ estimate_seq_rate) have this function incorporated and it is not
 necessary to run it beforehand.
 
 <figure>
-<img src="images/estimate_h().png" width="465"
+<img src="man/figures/estimate_h().png" width="465"
 alt="Gap distribution between samples to estimate accumulated organic carbon mass." />
 <figcaption aria-hidden="true">Gap distribution between samples to
 estimate accumulated organic carbon mass.</figcaption>
@@ -119,7 +120,7 @@ extrapolates the stock from a linear model between accumulated mass of
 organic carbon and depth.
 
 <figure>
-<img src="images/estimate_stock.png" width="446"
+<img src="man/figures/estimate_stock.png" width="446"
 alt="OC stock estimation diagram" />
 <figcaption aria-hidden="true">OC stock estimation diagram</figcaption>
 </figure>
