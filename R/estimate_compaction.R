@@ -8,7 +8,7 @@
 #' rate as a percentage.
 #'
 #' @param df A data.frame containing core properties.
-#' @param core_id Character Name of the column identifying each core.
+#' @param core Character Name of the column identifying each core.
 #' @param sampler_length Character Name of the column with the total length of the
 #' sampler tube.
 #' @param internal_distance Character Name of the column with the distance between
@@ -23,7 +23,7 @@
 #' @examples
 #' df <- estimate_compaction(
 #'   core_comp,
-#'   core_id = "core",
+#'   core = "core",
 #'   sampler_length = "sampler_length",
 #'   internal_distance = "internal_distance",
 #'   external_distance = "external_distance"
@@ -34,7 +34,7 @@
 #' @export
 #'
 estimate_compaction <- function(df = NULL,
-                                core_id = "core",
+                                core = "core",
                                 sampler_length = "sampler_length",
                                 internal_distance = "internal_distance",
                                 external_distance = "external_distance") {
@@ -45,7 +45,7 @@ estimate_compaction <- function(df = NULL,
   }
 
   # Check existence of required columns
-  check_column_in_df(df, core_id)
+  check_column_in_df(df, core)
   check_column_in_df(df, sampler_length)
   check_column_in_df(df, internal_distance)
   check_column_in_df(df, external_distance)
@@ -76,7 +76,7 @@ estimate_compaction <- function(df = NULL,
 
 
   # Create working copies of columns
-  df$core_r <- df[[core_id]]
+  df$core_r <- df[[core]]
   df$sampler_length_r <- df[[sampler_length]]
   df$internal_distance_r <- df[[internal_distance]]
   df$external_distance_r <- df[[external_distance]]
