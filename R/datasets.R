@@ -43,22 +43,22 @@
 #'   \item{oc}{number column with percentage of organic carbon, numbers between 0 and 100}
 #'   \item{age}{number column with age of the sample, years from sampling, positive numbers}
 #' }
-#' @source data from cores collected by the authors that has been anonymized
+#' @source data from cores collected by the authors that have been anonymized
 #' and modified to cover different cases that may occur when using the package.
-#' It no longer represent any existing dataset.
+#' It no longer represents any existing dataset.
 "bluecarbon_data"
 
 
-#' Dataframe containing field measurements of soil cores to estimate compression caused
+#' Dataframe containing field measurements of soil cores to estimate compaction caused
 #' by core collection.
 #'
 #' Example dataset of field measurements of cores collected by percussion.
-#' All variables needed to estimate core compression are included.
-#' The cores ID is the same as in bluecarbon_data. sampler_length is the length
+#' All variables needed to estimate core compaction are included.
+#' The 'core' ID is the same as in bluecarbon_data. 'sampler_length' is the length
 #' of the tube or sampler introduced in the soil from top to bottom.
-#' internal_distance refers to the distance between the top of the sampler to the
-#' surface of the soil withing the sampler (the same depth or lower than the
-#' surface of the soil outside). external_distance refers to the distance from
+#' 'internal_distance' refers to the distance between the top of the sampler and the
+#' surface of the soil within the sampler (the same depth or lower than the
+#' surface of the soil outside). 'external_distance' refers to the distance from
 #' the top of the sampler to the surface of the soil outside the sampler. The
 #' reference used as "top of the sampler" is the same in the three measurements.
 #' Internal and external distances are measured after sampler insertion in the
