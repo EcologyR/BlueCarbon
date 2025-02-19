@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Nerea Piñeiro-Juncal \email{nerea.pineiro.juncal@uvigo.gal} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID})
+\strong{Maintainer}: Nerea Piñeiro-Juncal \email{nerea.pineiro.juncal@uvigo.gal} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{

@@ -42,6 +42,7 @@ returns a modified version with sample properties corrected for
 compaction
 }
 \examples{
-decompact(bluecarbon_data)
+decompact(bluecarbon_data) |>
+  head()
 
 }
