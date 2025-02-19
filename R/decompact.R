@@ -23,7 +23,8 @@
 #' corrected dry bulk density)
 #'
 #' @examples
-#' decompact(bluecarbon_data)
+#' decompact(bluecarbon_data) |>
+#'   head()
 #'
 #' @export
 
