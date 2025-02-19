@@ -21,11 +21,15 @@
 #' the estimated percentage of core compaction.
 #'
 #' @examples
-#' df <- estimate_compaction(core_comp,
-#' core_id = "core",
-#' sampler_length = "sampler_length",
-#' internal_distance = "internal_distance",
-#' external_distance = "external_distance")
+#' df <- estimate_compaction(
+#'   core_comp,
+#'   core_id = "core",
+#'   sampler_length = "sampler_length",
+#'   internal_distance = "internal_distance",
+#'   external_distance = "external_distance"
+#' )
+#' head(df)
+#'
 #'
 #' @export
 #'
