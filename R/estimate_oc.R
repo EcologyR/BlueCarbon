@@ -10,8 +10,8 @@
 #'  from a model fitted to that site, or a model fitted to that species, or else
 #'  a model fitted to that ecosystem. If there are too few samples (<10) to build a
 #'  reliable model or the model fit is too poor (r2 < 0.5), [estimate_oc()] uses the equations
-#'  in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses,
-#'  [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes
+#'  in Fourqurean et al. (2012) \doi{10.1038/ngeo1477} for seagrasses,
+#'  Maxwell et al. (2023) \doi{10.1038/s41597-023-02633-x} for salt marshes
 #'  and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
 #'
 #'

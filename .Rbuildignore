@@ -12,6 +12,6 @@
 .Rprofile
 Codigo/
 other/
-^vignettes/articles$
+^vignettes$
 ^cran-comments\.md$
 ^CITATION\.cff$

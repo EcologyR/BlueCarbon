@@ -12,7 +12,7 @@ Authors@R:
     person("Francisco", "Rodriguez-Sanchez", role = "aut", comment = c(ORCID = "0000-0002-7981-1599"))
   )
 Description: Tools to estimate soil organic carbon stocks and sequestration rates 
-    in blue carbon ecosystems. BlueCarbon contains functions to estimate and correct
+    in blue carbon ecosystems. 'BlueCarbon' contains functions to estimate and correct
     for core compaction, estimate sample thickness, estimate organic carbon content 
     from organic matter content, estimate organic carbon stocks and 
     sequestration rates, and visualize the error of carbon stock extrapolation. 

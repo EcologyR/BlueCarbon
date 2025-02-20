@@ -55,8 +55,8 @@ for that sample it returns the same value; otherwise, it estimates organic carbo
 from a model fitted to that site, or a model fitted to that species, or else
 a model fitted to that ecosystem. If there are too few samples (<10) to build a
 reliable model or the model fit is too poor (r2 < 0.5), \code{\link[=estimate_oc]{estimate_oc()}} uses the equations
-in \href{https://doi.org/10.1038/ngeo1477}{Fourqurean et al. (2012)} for seagrasses,
-\href{https://doi.org/10.1038/s41597-023-02633-x}{Maxwell et al. (2023)} for salt marshes
+in Fourqurean et al. (2012) \doi{10.1038/ngeo1477} for seagrasses,
+Maxwell et al. (2023) \doi{10.1038/s41597-023-02633-x} for salt marshes
 and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
 }
 \examples{
