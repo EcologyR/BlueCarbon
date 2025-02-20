@@ -9,11 +9,11 @@ type: software
 license: MIT
 title: 'BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from
   Soil Core Data'
-version: 0.0.1
+version: 0.1.0
 abstract: Tools to estimate soil organic carbon stocks and sequestration rates in
-  blue carbon ecosystems. BlueCarbon contains functions to estimate and correct for
-  core compaction, estimate sample thickness, estimate organic carbon content from
-  organic matter content, estimate organic carbon stocks and sequestration rates,
+  blue carbon ecosystems. 'BlueCarbon' contains functions to estimate and correct
+  for core compaction, estimate sample thickness, estimate organic carbon content
+  from organic matter content, estimate organic carbon stocks and sequestration rates,
   and visualize the error of carbon stock extrapolation.
 authors:
 - family-names: Piñeiro-Juncal
