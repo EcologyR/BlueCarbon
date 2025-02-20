@@ -90,6 +90,11 @@ If using this package, please cite it:
 citation("BlueCarbon")
 ```
 
+## Code of Conduct
+
+Please note that the BlueCarbon project is released with a [Contributor Code of Conduct](https://ecologyr.github.io/BlueCarbon/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
+
 ## Funding
 
 The development of this software has been funded by Fondo Europeo de Desarrollo Regional (FEDER) and Consejería de Transformación Económica, Industria, Conocimiento y Universidades of Junta de Andalucía (proyecto US-1381388 led by Francisco Rodríguez Sánchez, Universidad de Sevilla).
@@ -97,3 +102,5 @@ NPJ was supported by a Juan de la Cierva fellowship (JDC2022-048342-I).
 JA acknowledges funding from the CLIMB-FOREST Horizon Europe Project (No 101059888) that was funded by the European Union.
 
 ![](https://ecologyr.github.io/workshop/images/logos.png)
+
+

@@ -174,6 +174,13 @@ A BibTeX entry for LaTeX users is
   }
 ```
 
+## Code of Conduct
+
+Please note that the BlueCarbon project is released with a [Contributor
+Code of
+Conduct](https://ecologyr.github.io/BlueCarbon/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
+
 ## Funding
 
 The development of this software has been funded by Fondo Europeo de
