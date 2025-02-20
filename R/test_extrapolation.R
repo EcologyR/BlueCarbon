@@ -68,42 +68,42 @@ test_extrapolation <- function(df = NULL,
   columns <- colnames(df_r)
   x <- split(df_r, df_r$core_r)
 
-   cores_e <- lapply( X = x,  select_cores, depth = depth, columns) # return a list
-   cores_e <- cores_e[!vapply(cores_e, is.null, logical(1))]
-   cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
+  cores_e <- lapply( X = x,  select_cores, depth = depth, columns) # return a list
+  cores_e <- cores_e[!vapply(cores_e, is.null, logical(1))]
+  cores_e <- as.data.frame(do.call(rbind, cores_e)) # from list to dataframe
 
-   if (nrow(cores_e) == 0) {stop("None of the cores provided reach the standard depth")}
-
-
-   # estimate observed stock
-
-   observed_stock <- estimate_oc_stock(df = cores_e,
-                    depth = depth,
-                    core = "core_r",
-                    mind = "mind_r",
-                    maxd = "maxd_r",
-                    dbd = "dbd_r",
-                    oc = "oc_r")
+  if (nrow(cores_e) == 0) {stop("None of the cores provided reach the standard depth")}
 
 
+  # estimate observed stock
 
-   # estimate corrected sample depth, h and organic carbon density and carbon mass per sample
+  observed_stock <- estimate_oc_stock(df = cores_e,
+                                      depth = depth,
+                                      core = "core_r",
+                                      mind = "mind_r",
+                                      maxd = "maxd_r",
+                                      dbd = "dbd_r",
+                                      oc = "oc_r")
 
-   cores_e <- cores_e[!is.na(cores_e$oc_r),]
-   cores_e <- estimate_h(cores_e,
-                       core = "core_r",
-                       mind = "mind_r",
-                       maxd = "maxd_r")
 
-   #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-   cores_e <- cores_e |> dplyr::mutate (ocgcm2 = dbd_r*(oc_r/100)*h)
 
-   # create data frames with same cores different lengths
+  # estimate corrected sample depth, h and organic carbon density and carbon mass per sample
 
-   x <- split(cores_e, cores_e$core_r)
-   columns <- colnames(cores_e)
+  cores_e <- cores_e[!is.na(cores_e$oc_r),]
+  cores_e <- estimate_h(cores_e,
+                        core = "core_r",
+                        mind = "mind_r",
+                        maxd = "maxd_r")
 
-   cores_c <- lapply( X = x,  cut_cores, depth = depth)
+  #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
+  cores_e <- cores_e |> dplyr::mutate (ocgcm2 = dbd_r*(oc_r/100)*h)
+
+  # create data frames with same cores different lengths
+
+  x <- split(cores_e, cores_e$core_r)
+  columns <- colnames(cores_e)
+
+  cores_c <- lapply( X = x,  cut_cores, depth = depth)
 
 
   df90 <- lapply(X = cores_c, extract_cores, position = 1)
@@ -116,7 +116,7 @@ test_extrapolation <- function(df = NULL,
 
 
 
- # modeling stock
+  # modeling stock
   stocks90 <- lapply(X = df90, model_stock, depth = depth)
   stocks90 <- as.data.frame(do.call(rbind, stocks90))
   stocks75 <- lapply(X = df75, model_stock, depth = depth)
@@ -126,9 +126,9 @@ test_extrapolation <- function(df = NULL,
   stocks25 <- lapply(X = df25, model_stock, depth = depth)
   stocks25 <- as.data.frame(do.call(rbind, stocks25))
 
-predictions <- cbind(stocks90, stocks75, stocks50, stocks25)
-colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
-                        "stock_50", "stock_50_se", "stock_25", "stock_25_se")
+  predictions <- cbind(stocks90, stocks75, stocks50, stocks25)
+  colnames(predictions) <- c("stock_90", "stock_90_se", "stock_75", "stock_75_se",
+                             "stock_50", "stock_50_se", "stock_25", "stock_25_se")
 
 
   stocks_f <- cbind(observed_stock[,c( 1, 4)], predictions)
