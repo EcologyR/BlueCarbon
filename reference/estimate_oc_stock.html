@@ -99,19 +99,30 @@ sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>data.frame with columns core, swc (organic carbon stock at the whole core),
-maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)</p>
+    <p>data.frame with columns core, stockwc (organic carbon stock at the whole core),
+maxd (maximum depth of the core), stock (organic carbon stock at the standardized depth),
+and stock_se (standard error for the estimated stock).</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">bluecarbon_decompact</span> <span class="op">&lt;-</span> <span class="fu"><a href="decompact.html">decompact</a></span><span class="op">(</span><span class="va">bluecarbon_data</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Setting compaction = 0 for these cores: Sm_03_04, Sg_10_02, Sg_11_03, Sm_05_01, Sm_06_01</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">oc</span> <span class="op">&lt;-</span> <span class="fu"><a href="estimate_oc.html">estimate_oc</a></span><span class="op">(</span><span class="va">bluecarbon_decompact</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="estimate_oc_stock-1.png" alt="" width="700" height="433"></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following cores had samples with organic carbon values below the organic carbon range used to built the model: Sg_04_01, Sm_04_03, Sm_04_04, Sm_05_01</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following cores had samples with organic carbon values above the organic carbon range used to built the model: Sg_04_01, Sm_03_01, Sm_04_02, Sm_04_03, Sm_04_04, Sm_05_01</span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">estimate_oc_stock</span><span class="op">(</span><span class="va">oc</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       core    stockwc      maxd     stock   stock_se</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Sg_01_01 2.62947377 156.96970 1.8551331         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Sg_01_02 2.37997169  78.34839 2.9938578 0.09274054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Sg_01_03 2.08002346  99.63509 2.1763784 0.06938244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Sg_02_01 2.06631095 124.21053 1.6774846         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Sg_02_02 0.06798487  23.14286 0.3099306 0.01537332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Sg_02_03 0.93076430  55.82951 1.6394040 0.05576503</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

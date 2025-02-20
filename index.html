@@ -59,7 +59,7 @@
 
 <!-- badges: end -->
 <p>The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and sequestration rates from soil/sediment cores from blue carbon ecosystems.</p>
-<p>It contains seven main functions to deal with core compaction (estimate the compaction of cores and mathematically correct core compaction), transform laboratory data (estimate sample thickness and estimate organic carbon content from organic matter content) and estimate organic carbon stocks and sequestration rates (estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation).</p>
+<p>It contains seven main <a href="https://ecologyr.github.io/BlueCarbon/reference/index.html">functions</a> to deal with core compaction (estimate and correct for the compaction of cores when sampling), transform laboratory data (estimate sample thickness and estimate organic carbon content from organic matter content) and estimate organic carbon stocks and sequestration rates (estimate organic carbon stocks and sequestration rates and visualize the error of stock extrapolation).</p>
 <figure><img src="reference/figures/BC_workflow.png" alt="BlueCarbon library workflow"><figcaption aria-hidden="true">
 BlueCarbon library workflow
 </figcaption></figure><div class="section level4">
@@ -77,24 +77,21 @@ Soil compaction from field sampling
 <strong><em>decompact</em></strong> <strong>- Calculate sediment properties after decompaction</strong>
 <a class="anchor" aria-label="anchor" href="#decompact---calculate-sediment-properties-after-decompaction"></a>
 </h4>
-<p>Core compaction derived from field extraction can be mathematically correct to estimate the original depth of the samples. This function will apply a linear correction (all the core material is assumed to have been compacted equally) to correct sample depth and, if provided, dry bulk density.</p>
+<p>Core compaction derived from field extraction can be mathematically corrected to estimate the original depth of the samples. This function will apply a linear correction (all the core material is assumed to have been compacted equally) to correct sample depth and, if provided, dry bulk density.</p>
 </div>
 <div class="section level4">
 <h4 id="estimate_oc---organic-carbon-content-estimation-from-organic-carbon-data">
 <strong><em>estimate_oc</em></strong> <strong>- Organic carbon content estimation from organic carbon data</strong>
 <a class="anchor" aria-label="anchor" href="#estimate_oc---organic-carbon-content-estimation-from-organic-carbon-data"></a>
 </h4>
-<p>There is linear correlation between organic carbon and organic matter content. This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors. This function model a linear correlation between organic matter and organic carbon content in your samples and predict the content of organic carbon for those samples were there is no organic carbon values. Estimation of organic carbon is done by means of linear regressions on log(organic carbon) ~ log(organic matter). It gives back a organic carbon value for each organic matter value provided. If there is a organic carbon value for that sample it return the same value, else, generates a model for that site, else, model for specie, else, model for that ecosystem. If a model can not be created due to the low number of samples (&lt;10) it uses the equations in Fourqurean et al. 2012 for seagrasses, Maxwell et al. 2023 for salt marshes and Piñeiro-Juncal, in review, for mangroves to estimate the organic carbon. It is unlikely, but possible, that a model will predict a higher organic carbon than organic matter content. This is not possible in nature. If this is the case the function will give a warning and it is recommended to discard that model.</p>
-<p>Fourqureanet al. (2012) Seagrass ecosystems as a globally significant carbon stock. Nat. Geosci.5, 505–509. <a href="https://doi.org/10.1038/ngeo1477" class="external-link uri">https://doi.org/10.1038/ngeo1477</a></p>
-<p>Maxwell et al. (2023) Global dataset of soil organic carbon in tidal marshes.Sci.Data 10, 1–14.<a href="https://doi.org/10.1038/s41597-023-02633-x" class="external-link uri">https://doi.org/10.1038/s41597-023-02633-x</a></p>
-<p>Piñeiro-Juncal et al. (in review) Soil organic carbon preservation and decay trends in tidal marsh, mangrove and seagrass blue carbon ecosystems.</p>
+<p>Typically the relationship between organic carbon and organic matter content can be modelled with a linear regression model. This relationship can change between ecosystems and sampling sites due to changes in organic matter composition among other factors. This function (<code><a href="reference/estimate_oc.html">estimate_oc()</a></code>) fits a linear model between organic matter and organic carbon content in your samples to estimate the content of organic carbon in those samples lacking those values. The estimation of organic carbon is done by means of linear regressions on log(organic carbon) ~ log(organic matter). If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem. If there are too few samples to build a reliable model or the model fit is too poor,<code><a href="reference/estimate_oc.html">estimate_oc()</a></code> uses the equations in <a href="https://doi.org/10.1038/ngeo1477" class="external-link">Fourqurean et al. (2012)</a> for seagrasses, <a href="https://doi.org/10.1038/s41597-023-02633-x" class="external-link">Maxwell et al. (2023)</a> for salt marshes and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon. It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content. As this is not possible in nature, the function will give a warning and it is recommended to discard that model.</p>
 </div>
 <div class="section level4">
 <h4 id="estimate_h---sample-thickness-estimation">
 <strong><em>estimate_h</em></strong> <strong>- Sample thickness estimation</strong>
 <a class="anchor" aria-label="anchor" href="#estimate_h---sample-thickness-estimation"></a>
 </h4>
-<p>For those cores were only selected samples were measured it is necessary to assign a carbon density to the empty spaces before the estimation the total stock. This function checks for gaps between samples and, if any, divide this space between the previous and next sample to return sample thickness without gaps in the core. The middle point between one sample and the other is estimated from the bottom of the previous sample to the top of the next sample, and not form the middle point of one sample to the middle part of the next, as this would inequality distribute the gaps between samples if the samples have different thickness. The stock and sequestration rate estimation functions (estimate_oc_stock and estimate_seq_rate) have this function incorporated and it is not necessary to run it beforehand.</p>
+<p>For those cores where only selected samples were measured it is necessary to assign a carbon density to the empty spaces to estimate the total stock. This function (<code><a href="reference/estimate_h.html">estimate_h()</a></code>) checks for gaps between samples and, if any, divides this space between the previous and next sample to return sample thickness without gaps in the core. The middle point between one sample and the other is estimated from the bottom of the previous sample to the top of the next sample, and not from the middle point of one sample to the middle part of the next, as this would unequally distribute the gaps between samples if the samples have different thickness. The stock and sequestration rate estimation functions (<code><a href="reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> and <code><a href="reference/estimate_seq_rate.html">estimate_seq_rate()</a></code>) have this function incorporated and it is not necessary to run it beforehand.</p>
 <figure><img src="reference/figures/estimate_h().png" width="465" alt="Gap distribution between samples to estimate accumulated organic carbon mass."><figcaption aria-hidden="true">
 Gap distribution between samples to estimate accumulated organic carbon mass.
 </figcaption></figure>
@@ -114,22 +111,22 @@ OC stock estimation diagram
 <strong><em>test_extrapolation</em></strong> <strong>- Visualize the error of stock extrapolation</strong>
 <a class="anchor" aria-label="anchor" href="#test_extrapolation---visualize-the-error-of-stock-extrapolation"></a>
 </h4>
-<p>This function subset those cores that reach the desired depth, estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated desired depth. Compares the observed stock with the estimated stocks by extrapolation. This function requires that some of you core do reach the desired depth.</p>
+<p>This function subset those cores that reach the desired depth, estimates the stock (observed stock), estimates the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% top length of the indicated desired depth, and compares the observed stock with the estimated stocks by extrapolation. This function requires that some of your cores do reach the desired depth.</p>
 </div>
 <div class="section level4">
 <h4 id="estimate_seq_rate---organic-carbon-sequestration-rates-estimation">
 <strong><em>estimate_seq_rate</em></strong> <strong>- Organic carbon sequestration rates estimation</strong>
 <a class="anchor" aria-label="anchor" href="#estimate_seq_rate---organic-carbon-sequestration-rates-estimation"></a>
 </h4>
-<p>Estimate the average organic carbon sequestration rate to the soil in a indicated time frame (by default last 100 years) from the organic carbon concentration and the age of the samples.</p>
+<p>Estimate the average organic carbon sequestration rate in the soil in a given time frame (by default last 100 years) from the organic carbon concentration and the age of the samples.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>BlueCarbon can be installed directly from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"EcologyR/BlueCarbon"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"EcologyR/BlueCarbon"</span><span class="op">)</span></span></code></pre></div>
 <p>or from R-universe:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BlueCarbon"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://pakillo.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -142,9 +139,9 @@ OC stock estimation diagram
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>To cite package <span class="st">'BlueCarbon'</span> <span class="cf">in</span> publications use<span class="sc">:</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  Piñeiro<span class="sc">-</span>Juncal N, Astigarraga J, Costa V, Martins M,</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  Rodriguez<span class="sc">-</span>Sanchez <span class="fu">F</span> (<span class="dv">2024</span>). _BlueCarbon<span class="sc">:</span> Estimation of Organic Carbon</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  Rodriguez<span class="sc">-</span>Sanchez <span class="fu">F</span> (<span class="dv">2025</span>). _BlueCarbon<span class="sc">:</span> Estimation of Organic Carbon</span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  Stocks and Sequestration Rates From Soil Core Data_. R package</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  version <span class="dv">0</span>.<span class="fl">0.1</span>, https<span class="sc">:</span><span class="er">//</span>EcologyR.github.io<span class="sc">/</span>BlueCarbon<span class="sc">/</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  version <span class="dv">0</span>.<span class="fl">1.0</span>, https<span class="sc">:</span><span class="er">//</span>EcologyR.github.io<span class="sc">/</span>BlueCarbon<span class="sc">/</span>,</span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="sc">&lt;</span>https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>EcologyR<span class="sc">/</span>BlueCarbon<span class="sc">&gt;</span>.</span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>A BibTeX entry <span class="cf">for</span> LaTeX users is</span>
@@ -152,9 +149,9 @@ OC stock estimation diagram
 <span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="sc">@</span>Manual{,</span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>    title <span class="ot">=</span> {BlueCarbon<span class="sc">:</span> Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},</span>
 <span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>    author <span class="ot">=</span> {Nerea Piñeiro<span class="sc">-</span>Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez<span class="sc">-</span>Sanchez},</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2024</span>},</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2025</span>},</span>
 <span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>    url <span class="ot">=</span> {https<span class="sc">:</span><span class="er">//</span>github.com<span class="sc">/</span>EcologyR<span class="sc">/</span>BlueCarbon},</span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>    note <span class="ot">=</span> {R package version <span class="dv">0</span>.<span class="fl">0.1</span>, https<span class="sc">:</span><span class="er">//</span>EcologyR.github.io<span class="sc">/</span>BlueCarbon<span class="sc">/</span>},</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>    note <span class="ot">=</span> {R package version <span class="dv">0</span>.<span class="fl">1.0</span>, https<span class="sc">:</span><span class="er">//</span>EcologyR.github.io<span class="sc">/</span>BlueCarbon<span class="sc">/</span>},</span>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  }</span></code></pre></div>
 </div>
 <div class="section level2">

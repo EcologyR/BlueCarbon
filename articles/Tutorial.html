@@ -74,14 +74,14 @@ these soils in the last 100 and 200 years.</p>
 <div class="section level2">
 <h2 id="load-example-data">Load example data<a class="anchor" aria-label="anchor" href="#load-example-data"></a>
 </h2>
-<p>The first dataframe (<code>core_comp</code>) has field measurement
-data that we will use to estimate soil compaction at core
-collection.</p>
-<p>The second dataframe (<code>bluecarbon_data</code>) has core field
-information and laboratory data that we will use to correct core
-compaction, estimate organic carbon content in each sample from organic
-matter content, and to estimate the organic carbon stocks and
-sequestration rates.</p>
+<p>The first dataframe (<a href="https://ecologyr.github.io/BlueCarbon/reference/core_comp.html"><code>core_comp</code></a>)
+has field measurement data that we will use to estimate soil compaction
+at core collection.</p>
+<p>The second dataframe (<a href="https://ecologyr.github.io/BlueCarbon/reference/bluecarbon_data.html"><code>bluecarbon_data</code></a>)
+has core field information and laboratory data that we will use to
+correct core compaction, estimate organic carbon content in each sample
+from organic matter content, and to estimate the organic carbon stocks
+and sequestration rates.</p>
 <p>The core field information and laboratory data includes: sampling
 site, core ID, blue carbon ecosystem, dominant species, core compaction
 percentage, sample minimum depth, sample maximum depth, dry bulk
@@ -89,7 +89,7 @@ density, organic matter content and (if available) organic carbon
 content and sample age.</p>
 </div>
 <div class="section level2">
-<h2 id="core-compaction-estimations">Core compaction estimations<a class="anchor" aria-label="anchor" href="#core-compaction-estimations"></a>
+<h2 id="core-compaction-estimation">Core compaction estimation<a class="anchor" aria-label="anchor" href="#core-compaction-estimation"></a>
 </h2>
 <p>Many field methods to extract soil cores can lead to the compaction
 of the material retrieved (e.g. manual percussion).</p>
@@ -178,29 +178,204 @@ compacted in the field and sets compaction to zero.</p>
 <p>Here are the first 10 rows of the final dataframe, with corrected
 minimum and maximum sample depth and dry bulk density.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bluecarbon_decompact</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     site     core ecosystem            species compaction mind maxd       dbd</span></span>
-<span><span class="co">#&gt; 1  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    0    1 0.7352912</span></span>
-<span><span class="co">#&gt; 2  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    1    2 0.9754336</span></span>
-<span><span class="co">#&gt; 3  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    2    3 0.8698411</span></span>
-<span><span class="co">#&gt; 4  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    3    4 1.0272564</span></span>
-<span><span class="co">#&gt; 5  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    4    5 0.9307887</span></span>
-<span><span class="co">#&gt; 6  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    5    6 1.4696196</span></span>
-<span><span class="co">#&gt; 7  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    6    7 1.0500201</span></span>
-<span><span class="co">#&gt; 8  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    7    8 0.7396556</span></span>
-<span><span class="co">#&gt; 9  Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    8    9 0.7380564</span></span>
-<span><span class="co">#&gt; 10 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    9   10 0.6777988</span></span>
-<span><span class="co">#&gt;          om oc age mind_corrected maxd_corrected dbd_corrected</span></span>
-<span><span class="co">#&gt; 1  6.554329 NA   8       0.000000       1.060606     0.6932745</span></span>
-<span><span class="co">#&gt; 2        NA NA  13       1.060606       2.121212     0.9196945</span></span>
-<span><span class="co">#&gt; 3  7.382634 NA  15       2.121212       3.181818     0.8201359</span></span>
-<span><span class="co">#&gt; 4        NA NA  22       3.181818       4.242424     0.9685560</span></span>
-<span><span class="co">#&gt; 5  8.026646 NA  29       4.242424       5.303030     0.8776007</span></span>
-<span><span class="co">#&gt; 6        NA NA  35       5.303030       6.363636     1.3856413</span></span>
-<span><span class="co">#&gt; 7  7.349944 NA  38       6.363636       7.424242     0.9900190</span></span>
-<span><span class="co">#&gt; 8        NA NA  44       7.424242       8.484848     0.6973896</span></span>
-<span><span class="co">#&gt; 9  9.431279 NA  46       8.484848       9.545455     0.6958817</span></span>
-<span><span class="co">#&gt; 10       NA NA  51       9.545455      10.606061     0.6390675</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bluecarbon_decompact</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="4%">
+<col width="6%">
+<col width="7%">
+<col width="14%">
+<col width="8%">
+<col width="3%">
+<col width="3%">
+<col width="7%">
+<col width="6%">
+<col width="2%">
+<col width="2%">
+<col width="11%">
+<col width="11%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">site</th>
+<th align="left">core</th>
+<th align="left">ecosystem</th>
+<th align="left">species</th>
+<th align="right">compaction</th>
+<th align="right">mind</th>
+<th align="right">maxd</th>
+<th align="right">dbd</th>
+<th align="right">om</th>
+<th align="right">oc</th>
+<th align="right">age</th>
+<th align="right">mind_corrected</th>
+<th align="right">maxd_corrected</th>
+<th align="right">dbd_corrected</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.7352912</td>
+<td align="right">6.554328</td>
+<td align="right">NA</td>
+<td align="right">8</td>
+<td align="right">0.000000</td>
+<td align="right">1.060606</td>
+<td align="right">0.6932745</td>
+</tr>
+<tr class="even">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.9754336</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">13</td>
+<td align="right">1.060606</td>
+<td align="right">2.121212</td>
+<td align="right">0.9196945</td>
+</tr>
+<tr class="odd">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0.8698411</td>
+<td align="right">7.382634</td>
+<td align="right">NA</td>
+<td align="right">15</td>
+<td align="right">2.121212</td>
+<td align="right">3.181818</td>
+<td align="right">0.8201359</td>
+</tr>
+<tr class="even">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">1.0272564</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">22</td>
+<td align="right">3.181818</td>
+<td align="right">4.242424</td>
+<td align="right">0.9685560</td>
+</tr>
+<tr class="odd">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="right">0.9307887</td>
+<td align="right">8.026647</td>
+<td align="right">NA</td>
+<td align="right">29</td>
+<td align="right">4.242424</td>
+<td align="right">5.303030</td>
+<td align="right">0.8776007</td>
+</tr>
+<tr class="even">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">1.4696196</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">35</td>
+<td align="right">5.303030</td>
+<td align="right">6.363636</td>
+<td align="right">1.3856413</td>
+</tr>
+<tr class="odd">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">1.0500201</td>
+<td align="right">7.349944</td>
+<td align="right">NA</td>
+<td align="right">38</td>
+<td align="right">6.363636</td>
+<td align="right">7.424242</td>
+<td align="right">0.9900190</td>
+</tr>
+<tr class="even">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">0.7396556</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">44</td>
+<td align="right">7.424242</td>
+<td align="right">8.484849</td>
+<td align="right">0.6973896</td>
+</tr>
+<tr class="odd">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">8</td>
+<td align="right">9</td>
+<td align="right">0.7380564</td>
+<td align="right">9.431279</td>
+<td align="right">NA</td>
+<td align="right">46</td>
+<td align="right">8.484849</td>
+<td align="right">9.545454</td>
+<td align="right">0.6958817</td>
+</tr>
+<tr class="even">
+<td align="left">Sg_01</td>
+<td align="left">Sg_01_01</td>
+<td align="left">Seagrass</td>
+<td align="left">Posidonia oceanica</td>
+<td align="right">5.714286</td>
+<td align="right">9</td>
+<td align="right">10</td>
+<td align="right">0.6777988</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">51</td>
+<td align="right">9.545454</td>
+<td align="right">10.606061</td>
+<td align="right">0.6390675</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="estimation-of-organic-carbon-from-organic-matter">Estimation of organic carbon from organic matter<a class="anchor" aria-label="anchor" href="#estimation-of-organic-carbon-from-organic-matter"></a>
@@ -265,17 +440,17 @@ example data the names are the same as the default names.</p>
 <span><span class="co">#&gt; with organic carbon values above the organic carbon range used to built the</span></span>
 <span><span class="co">#&gt; model: Sg_04_01, Sm_03_01, Sm_04_02, Sm_04_03, Sm_04_04, Sm_05_01</span></span></code></pre>
 <p>The <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> function produces a plot showing the
-relationship between organic matter and organic carbon content (in %),
-and will provide warnings if any of the samples had organic matter
-contents outside the percentage of organic carbon in the samples used to
-estimate the models.</p>
+relationship between organic matter and organic carbon content, and will
+provide warnings if any of the samples had organic matter contents
+outside the percentage of organic carbon in the samples used to estimate
+the models.</p>
 <p>The function returns a list with two elements: [1] the original
 dataframe with three new columns on the estimated organic carbon, the
 standard error of the estimate, and the type of model used to estimate
 the organic carbon value in that sample; and [2] a list of the models
 estimated, for further inspection.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
@@ -431,82 +606,6 @@ estimated, for further inspection.</p>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">6</td>
-<td align="right">7</td>
-<td align="right">1.0500201</td>
-<td align="right">7.349944</td>
-<td align="right">NA</td>
-<td align="right">38</td>
-<td align="right">6.363636</td>
-<td align="right">7.424242</td>
-<td align="right">0.9900190</td>
-<td align="right">2.555907</td>
-<td align="right">0.0514391</td>
-<td align="left">Model by species</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">7</td>
-<td align="right">8</td>
-<td align="right">0.7396556</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">44</td>
-<td align="right">7.424242</td>
-<td align="right">8.484849</td>
-<td align="right">0.6973896</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">8</td>
-<td align="right">9</td>
-<td align="right">0.7380564</td>
-<td align="right">9.431279</td>
-<td align="right">NA</td>
-<td align="right">46</td>
-<td align="right">8.484849</td>
-<td align="right">9.545454</td>
-<td align="right">0.6958817</td>
-<td align="right">3.227684</td>
-<td align="right">0.0643847</td>
-<td align="left">Model by species</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">9</td>
-<td align="right">10</td>
-<td align="right">0.6777988</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">51</td>
-<td align="right">9.545454</td>
-<td align="right">10.606061</td>
-<td align="right">0.6390675</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-</tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -602,46 +701,45 @@ estimated following equation 1 with the corrected sample thickness.</p>
 <img src="images%2Festimate_h().png" width="401" alt="Distribution of empty spaces between samples by estimate_h() function"><div class="figcaption">Distribution of empty spaces between samples by
 estimate_h() function</div>
 </div>
-<p>The function <a href="reference/estimate_h.html">estimate_h()</a> is
-already incorporated within functions estimate_oc_stock(),
-test_extrapolation() and estimate_seq_rate(), and there is no need to
-run it beforehand.</p>
-<p>function estimate_oc_stock has 7 parameters:</p>
+<p>The function <code><a href="../reference/estimate_h.html">estimate_h()</a></code> is already incorporated within
+functions <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code>,
+<code><a href="../reference/test_extrapolation.html">test_extrapolation()</a></code> and <code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code>,
+and there is no need to run it beforehand.</p>
+<p>function <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> has 7 parameters:</p>
 <ul>
-<li><p>“df” A data.frame with core (core id), mind (minimum depth of the
-sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
-(organic carbon %)</p></li>
-<li><p>“depth” Numeric Maximum depth to estimate the stock, by default
+<li><p>“df”: A data.frame with core (core id), mind (minimum depth of
+the sample), maxd (maximum depth of the sample), dbd (dry bulk density),
+oc (organic carbon %)</p></li>
+<li><p>“depth”: Numeric Maximum depth to estimate the stock, by default
 100.</p></li>
-<li><p>“core” Character Name of the column reporting core ID.</p></li>
-<li><p>“mind” Character Name of the column reporting the minimum depth
+<li><p>“core”: Character Name of the column reporting core ID.</p></li>
+<li><p>“mind”: Character Name of the column reporting the minimum depth
 of each sample.</p></li>
-<li><p>“maxd” Character Name of the column reporting the maximum depth
+<li><p>“maxd”: Character Name of the column reporting the maximum depth
 of each sample.</p></li>
-<li><p>“dbd” Character Name of the column reporting dry bulk
+<li><p>“dbd”: Character Name of the column reporting dry bulk
 density.</p></li>
-<li><p>“oc” Character Name of the column reporting organic carbon
+<li><p>“oc”: Character Name of the column reporting organic carbon
 concentrations.</p></li>
 </ul>
-<p>We used the output from estimate_oc() to estimate the organic carbon
-stock per cm<sup>2</sup> up to 1m depth. As the column names from the
-estimte_oc() output are the same as the default names in
-estimate_oc_stock we don’t need to specify them. Furthermore, the
-default depth is 100, and hour data is in cm so we don’t need to specify
-the depth.</p>
+<p>We used the output from <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> to estimate the
+organic carbon stock per cm<sup>2</sup> up to 1m depth. As the column
+names from the <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> output are the same as the
+default names in <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> we don’t need to
+specify them. Furthermore, the default depth is 100, and our data is in
+cm so we don’t need to specify the depth (i.e. will estimate carbon
+stock down to 1m depth).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">stocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_oc_stock.html">estimate_oc_stock</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p>The output of this function is a dataframe with 5 columns. the first
-column is the core ID. The second column is the stock in the whole core.
-The third column is the maximum depth of that core. The fourth column is
-the stock until the standardization depth. Furthermore, if the core
-didn’t reach the standardization depth, we will get a value in the fifth
-column with the standard error of the accumulated mass-depth model used
-to estimate the stock.</p>
+<code class="sourceCode R"><span><span class="va">stocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_oc_stock.html">estimate_oc_stock</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p>The output of this function is a dataframe with 5 columns. The first
+column is the core ID. The second column (<code>stockwc</code>) is the
+carbon stock in the whole core. The third column is the maximum depth of
+that core. The fourth column is the stock down to the standardization
+depth. Finally, if the core didn’t reach the standardization depth, we
+will get a value in the fifth column with the standard error of the
+accumulated mass-depth model used to estimate the stock.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">stocks</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">stocks</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        core    stockwc      maxd     stock    stock_se</span></span>
 <span><span class="co">#&gt; 1  Sg_01_01 2.62947377 156.96970 1.8551331          NA</span></span>
 <span><span class="co">#&gt; 2  Sg_01_02 2.37997169  78.34839 2.9938578 0.092740541</span></span>
@@ -653,20 +751,21 @@ to estimate the stock.</p>
 <span><span class="co">#&gt; 8  Sg_03_02 0.19106567  35.80000 0.5485867 0.021102396</span></span>
 <span><span class="co">#&gt; 9  Sg_03_03 0.17326199  60.76078 0.3048915 0.021924873</span></span>
 <span><span class="co">#&gt; 10 Sg_04_01 0.97516409  95.60894 1.1414566 0.055859866</span></span></code></pre></div>
-<p>The stocks units are mass/area to a depth (length). The units will be
-those provided in the dataframe. In the example data mass will be g and
+<p>The stock units are mass/area to a depth (length). The actual units
+will depend on those provided in the original dataframe. In the example
+data (<code>bluecarbon_data</code>), the carbon mass will be in g and
 the area cm<sup>-2</sup> (as the dry bulk density was in
 g/cm<sup>-3</sup>) and the depth will be 100 cm, as the minimum and
-maximum depth of the samples was in cm: <strong>g/cm<sup>-2</sup> in the
-top 100 cm</strong>.</p>
-<p>To estimate the stock to a depth different than 100, we have to
-specify it in the parameter “depth”.</p>
+maximum depth of the samples was in cm. So the units for the estimated
+carbon stock in this case are <strong>g/cm<sup>-2</sup> in the top 100
+cm</strong>.</p>
+<p>To estimate the stock to a depth different than 100 cm, we have to
+specify it in the parameter “depth”. For example, to estimate the carbon
+stock down to 75 cm:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">stocks75</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_oc_stock.html">estimate_oc_stock</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, depth<span class="op">=</span><span class="fl">75</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">stocks75</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_oc_stock.html">estimate_oc_stock</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, depth <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">stocks75</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">stocks75</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        core    stockwc      maxd     stock    stock_se</span></span>
 <span><span class="co">#&gt; 1  Sg_01_01 2.62947377 156.96970 1.5957092          NA</span></span>
 <span><span class="co">#&gt; 2  Sg_01_02 2.37997169  78.34839 2.2059969          NA</span></span>
@@ -682,45 +781,46 @@ specify it in the parameter “depth”.</p>
 <div class="section level2">
 <h2 id="test-stock-extrapolation">Test stock extrapolation<a class="anchor" aria-label="anchor" href="#test-stock-extrapolation"></a>
 </h2>
-<p>With this function we aim to visualize which error can be introduced
-by the stock extrapolation of short cores to a deeper standardization
-depth. This function uses those cores that do reach the desired depth
-and test what would be the error in the stock if we modeled it from the
-90, 75, 50 and 25% of that depth. IT DOES NOT provide an error for those
-cores modeled by the function estimate_oc_stock() as that function
-models those cores that do not reach the desired length. This function
-subset the cores that reach the desired depth, estimates the stock
-(observed stock), estimate the stock from the linear relation of organic
-carbon accumulated mass and depth using the 90, 75, 50 and 25% length of
-the indicated desired depth. Compares the observed stock with the
-estimated stocks by extrapolation. This function requires that some of
-you core do reach the desired depth.</p>
-<p>function test_extrapolation() has 7 parameters:</p>
+<p>With this function (<code><a href="../reference/test_extrapolation.html">test_extrapolation()</a></code>) we can
+visualize the amount of error that may be introduced by extrapolating
+carbon stocks of short cores to a deeper standardization depth. This
+function uses those cores that do reach the desired depth and test what
+would be the error in the estimated carbon stock if we modeled it from
+the 90, 75, 50 and 25% of that depth. IT DOES NOT provide the error for
+those cores modeled by the function <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> as
+that function models those cores that do not reach the desired length.
+This function subsets the cores that reach the desired depth, estimates
+the stock (observed stock), estimate the stock from the linear relation
+of organic carbon accumulated mass and depth using the 90, 75, 50 and
+25% length of the indicated desired depth, and compares the observed
+stock with the estimated stocks by extrapolation. This function requires
+that some of your cores do reach the desired depth.</p>
+<p>function <code><a href="../reference/test_extrapolation.html">test_extrapolation()</a></code> has 7 parameters:</p>
 <ul>
-<li><p>“df” A data.frame with core (core id), mind (minimum depth of the
-sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
-(organic carbon %)</p></li>
-<li><p>“depth” Numeric Maximum depth to estimate the stock, by default
+<li><p>“df”: A data.frame with core (core id), mind (minimum depth of
+the sample), maxd (maximum depth of the sample), dbd (dry bulk density),
+oc (organic carbon %)</p></li>
+<li><p>“depth”: Numeric Maximum depth to estimate the stock, by default
 100.</p></li>
-<li><p>“core” Character Name of the column reporting core ID.</p></li>
-<li><p>“mind” Character Name of the column reporting the minimum depth
+<li><p>“core”: Character Name of the column reporting core ID.</p></li>
+<li><p>“mind”: Character Name of the column reporting the minimum depth
 of each sample.</p></li>
-<li><p>“maxd” Character Name of the column reporting the maximum depth
+<li><p>“maxd”: Character Name of the column reporting the maximum depth
 of each sample.</p></li>
-<li><p>“dbd” Character Name of the column reporting dry bulk
+<li><p>“dbd”: Character Name of the column reporting dry bulk
 density.</p></li>
-<li><p>“oc” Character Name of the column reporting organic carbon
+<li><p>“oc”: Character Name of the column reporting organic carbon
 concentrations.</p></li>
 </ul>
-<p>As for the estimate_oc_stock() function example, we used the output
-from estimate_oc() to estimate the organic carbon stock per
-cm<sup>2</sup> up to 1m depth. As the column names from the estimte_oc()
-output are the same as the default names in estimate_oc_stock we don’t
-need to specify them. Furthermore, the default depth is 100, and hour
-data is in cm so we don’t need to specify the depth.</p>
+<p>As in the <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> example, we used the
+output from <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> to estimate the organic carbon
+stock per cm<sup>2</sup> up to 1m depth. As the column names from the
+<code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> output are the same as the default names in
+<code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> we don’t need to specify them.
+Furthermore, the default depth is 100, and our data is in cm so we don’t
+need to specify the depth.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">stocks_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_extrapolation.html">test_extrapolation</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stocks_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_extrapolation.html">test_extrapolation</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 4 rows containing non-finite outside the scale range</span></span>
 <span><span class="co">#&gt; (`stat_boxplot()`).</span></span>
 <span><span class="co">#&gt; Warning: Removed 4 rows containing missing values or values outside the scale range</span></span>
@@ -730,18 +830,19 @@ data is in cm so we don’t need to specify the depth.</p>
 <span><span class="co">#&gt; Warning: Removed 3 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
 <p><img src="Tutorial_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
-<p>We get two plots. The first plot (right) shows the deviation of the
+<p>This function returns a dataframe with observed and extrapolated
+stocks, and two plots. The first plot (left) shows the deviation of the
 extrapolated stock from the observed stock, in percentage of the
-observed stock. The second plot (left), shows the distribution of the
+observed stock. The second plot (right) shows the distribution of the
 extrapolated and observed stocks. The diagonal line indicate that both
 stocks are equal. Above that line, the extrapolated stock was
 overestimated; below the line, the extrapolated stock was
 underestimated.</p>
 <p>The same can be done for a different depth. Like in the example of
-estimate_oc_stock() we use 75 by modifying the parameter “depth”.</p>
+<code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> we use 75 by modifying the parameter
+“depth”.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">stocks_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_extrapolation.html">test_extrapolation</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, depth <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stocks_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_extrapolation.html">test_extrapolation</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, depth <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing non-finite outside the scale range</span></span>
 <span><span class="co">#&gt; (`stat_boxplot()`).</span></span>
 <span><span class="co">#&gt; Warning: Removed 5 rows containing missing values or values outside the scale range</span></span>
@@ -755,61 +856,61 @@ estimate_oc_stock() we use 75 by modifying the parameter “depth”.</p>
 <div class="section level2">
 <h2 id="estimate-soil-organic-carbon-sequestration-rates">Estimate soil organic carbon sequestration rates<a class="anchor" aria-label="anchor" href="#estimate-soil-organic-carbon-sequestration-rates"></a>
 </h2>
-<p>In depositional environments, as seagrass meadows, salt marshes and
+<p>In depositional environments, like seagrass meadows, salt marshes and
 mangroves forests, it is possible to estimate the sediment accretion
 rate of the cores, as long as the sedimentary record has not been mixed.
-estimate_seq_rates() estimates the organic carbon sequestration rates of
-those cores that have a coherent age-depth model. The information of the
-model is included as the age of the sample in a column of the dataframe
-(column “age” in the example dataframe). The function will select those
-samples that have age data and delete those without.</p>
-<p>As organic carbon sequestration rates estimations from soil cores are
-a balance between organic matter burial and degradation. Therefore, the
+<code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code> estimates the organic carbon
+sequestration rates of those cores that have a coherent age-depth model.
+The information of the model is included as the age of the sample in a
+column of the dataframe (column “age” in the example dataframe). The
+function will select those samples that have age data and delete those
+without.</p>
+<p>Estimations of organic carbon sequestration rates depend on the
+balance between organic matter burial and degradation. Therefore, the
 longer the time frame used to estimate the average sequestration rate,
 the lower the estimated sequestration rate. To be able to compare among
-cores, all sequestration rates must be standardized to the same
-timeframe.</p>
-<p>Function estimate_seq_rate() estimates the average carbon
-sequestration rates for a known timeframe (a 100 by default) by summing
-the carbon stocks down to that age-depth and dividing by the timeframe.
-The timeframe always refers to the last period of time (the last 100,
-the last 1000, etc…)</p>
-<p>function estimate_seq_rates has 8 parameters:</p>
+cores, all sequestration rates must be standardized to the same time
+frame.</p>
+<p>The function <code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code> estimates the average
+carbon sequestration rates for a known time frame (100 by default) by
+summing the carbon stocks down to that age-depth and dividing by the
+time frame. The timeframe always refers to the last period of time (the
+last 100, the last 1000, etc…)</p>
+<p><code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code> has 8 parameters:</p>
 <ul>
-<li><p>“df” A data.frame with, at least, columns: core, mind (minimum
+<li><p>“df”: A data.frame with, at least, columns: core, mind (minimum
 depth of the sample), maxd (maximum depth of the sample), dbd (dry bulk
 density), oc (organic carbon %), age (age of the sample obtained from a
 age-depth or age-accumulated mass model)</p></li>
-<li><p>“timeframe” Numeric Standardization time frame, by default 100
+<li><p>“timeframe”: Numeric Standardization time frame, by default 100
 years</p></li>
-<li><p>“core” Character Name of the column reporting core ID.</p></li>
-<li><p>“mind” Character Name of the column reporting the minimum depth
+<li><p>“core”: Character Name of the column reporting core ID.</p></li>
+<li><p>“mind”: Character Name of the column reporting the minimum depth
 of each sample.</p></li>
-<li><p>“maxd” Character Name of the column reporting the maximum depth
+<li><p>“maxd”: Character Name of the column reporting the maximum depth
 of each sample.</p></li>
-<li><p>“dbd” Character Name of the column reporting dry bulk
+<li><p>“dbd”: Character Name of the column reporting dry bulk
 density.</p></li>
-<li><p>“oc” Character Name of the column reporting organic carbon
+<li><p>“oc”: Character Name of the column reporting organic carbon
 concentrations.</p></li>
-<li><p>“age” Character Name of the column reporting the age of each
+<li><p>“age”: Character Name of the column reporting the age of each
 sample.</p></li>
 </ul>
-<p>We used the output from estimate_oc() to estimate the organic carbon
-sequestration rate per cm<sup>2</sup> in the last 100 years. As the
-column names from the estimte_oc() output are the same as the default
-names in estimate_seq_rate we don’t need to specify them. Furthermore,
-the default timeframe is 100.</p>
+<p>We use the output from <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> to estimate the
+organic carbon sequestration rate per cm<sup>2</sup> in the last 100
+years. As the column names from the <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> output
+are the same as the default names in <code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code> we
+don’t need to specify them. Furthermore, the default time frame is
+100.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">seq_rate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_seq_rate.html">estimate_seq_rate</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">seq_rate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_seq_rate.html">estimate_seq_rate</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>The output of this function is a dataframe with 4 columns. The first
 column is the core ID. The second column is the average sequestration
 rate in the whole core. The third column is the maximum age of that
-core. The fourth column is the sequestration rate in the provided
-timeframe.</p>
+core. The fourth column is the sequestration rate in the provided time
+frame.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">seq_rate</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">seq_rate</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        core  seq_rate_wc  maxage     seq_rate</span></span>
 <span><span class="co">#&gt; 1  Sg_01_01 0.0020180152 1303.00 0.0043626875</span></span>
 <span><span class="co">#&gt; 2  Sg_02_01 0.0005423388 3810.00 0.0027556600</span></span>
@@ -821,24 +922,23 @@ timeframe.</p>
 <span><span class="co">#&gt; 8  Sm_03_01 0.0012985371  592.00 0.0025806030</span></span>
 <span><span class="co">#&gt; 9  Sg_06_01 0.0080307101  164.15 0.0069686883</span></span>
 <span><span class="co">#&gt; 10 Sg_06_02 0.0021769458  776.50 0.0045876577</span></span></code></pre></div>
-<p>The sequestration rates are mass/area by time in the last xxx units
-of time. The units will be those provided in the dataframe. In the
-example data, mass will be g and the area cm<sup>-2</sup> (as the dry
-bulk density was in g/cm<sup>-3</sup>) and both times will be in years,
-as the age of the samples was in years: <strong>g/cm<sup>-2</sup>
+<p>The sequestration rates units are mass/area by time (in the last xxx
+units of time). The units will be those provided in the dataframe. In
+the example data, mass will be g and the area cm<sup>-2</sup> (as the
+dry bulk density was in g/cm<sup>-3</sup>) and both times will be in
+years, as the age of the samples was in years. So, the sequestration
+rates units in this example are <strong>g/cm<sup>-2</sup>
 yr<sup>-1</sup> in the last 100 years</strong>.</p>
 <p>To estimate the organic carbon sequestration rate in a different
 timeframe than 100, we have to specify it in the parameter
 “timeframe”.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">seq_rate_200</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_seq_rate.html">estimate_seq_rate</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, timeframe <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">seq_rate_200</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_seq_rate.html">estimate_seq_rate</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, timeframe <span class="op">=</span> <span class="fl">200</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Core Sg_06_01 is younger than the time frame provided</span></span>
 <span><span class="co">#&gt; Core Sm_07_01 is younger than the time frame provided</span></span>
 <span><span class="co">#&gt; Core Mg_02_01 is younger than the time frame provided</span></span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">seq_rate_200</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">seq_rate_200</span>, n<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        core  seq_rate_wc  maxage     seq_rate</span></span>
 <span><span class="co">#&gt; 1  Sg_01_01 0.0020180152 1303.00 0.0036333524</span></span>
 <span><span class="co">#&gt; 2  Sg_02_01 0.0005423388 3810.00 0.0017522040</span></span>

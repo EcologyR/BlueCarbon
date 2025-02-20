@@ -98,8 +98,8 @@ age (age of the sample obtained from a age-depth or age-accumulated mass model)<
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>data.frame with columns Core.id, F.WC (organic carbon sequestration rates at the whole core),
-A.Max (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)</p>
+    <p>data.frame with columns 'core', seq_rate_wc (organic carbon sequestration rates at the whole core),
+maxage (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)</p>
     </div>
 
     <div class="section level2">
@@ -111,6 +111,14 @@ A.Max (maximum age of the core), and seq_rate (average organic carbon sequestrat
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following cores had samples with organic carbon values below the organic carbon range used to built the model: Sg_04_01, Sm_04_03, Sm_04_04, Sm_05_01</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The following cores had samples with organic carbon values above the organic carbon range used to built the model: Sg_04_01, Sm_03_01, Sm_04_02, Sm_04_03, Sm_04_04, Sm_05_01</span>
 <span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">estimate_seq_rate</span><span class="op">(</span><span class="va">oc</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       core  seq_rate_wc maxage     seq_rate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Sg_01_01 0.0020180152   1303 0.0043626875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Sg_02_01 0.0005423388   3810 0.0027556600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Sg_03_01 0.0001068260   1618 0.0002322665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Sg_05_01 0.0023649409    422 0.0022770729</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Mg_01_01 0.0024467131    990 0.0040171986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Sm_01_01 0.0009239537   1247 0.0012018703</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
