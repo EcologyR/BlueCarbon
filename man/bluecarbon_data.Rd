@@ -9,7 +9,7 @@
 
 A data frame with 1719 rows and 11 columns:
 \describe{
-\item{site}{character column with the id of the sampling locatios}
+\item{site}{character column with the id of the sampling locations}
 \item{core}{character column with the id of the core}
 \item{ecosystem}{character column with the name of the ecosystem,
 "seagrass", "salt marsh" or "mangrove"}
@@ -17,7 +17,7 @@ A data frame with 1719 rows and 11 columns:
 \item{compaction}{numbers between 0 and 100}
 \item{mind}{number column with the upper depth of each sample}
 \item{maxd}{number column with the lower depth of each sample}
-\item{dbd}{number column with dry bulk density values, mass/volumen}
+\item{dbd}{number column with dry bulk density values, mass/volume}
 \item{om}{number column with percentage of organic matter, numbers between 0 and 100}
 \item{oc}{number column with percentage of organic carbon, numbers between 0 and 100}
 \item{age}{number column with age of the sample, years from sampling, positive numbers}
