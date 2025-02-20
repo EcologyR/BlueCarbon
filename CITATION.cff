@@ -53,9 +53,9 @@ preferred-citation:
   - family-names: Rodriguez-Sanchez
     given-names: Francisco
     orcid: https://orcid.org/0000-0002-7981-1599
-  year: '2024'
+  year: '2025'
   url: https://github.com/EcologyR/BlueCarbon
-  notes: R package version 0.0.1, https://EcologyR.github.io/BlueCarbon/
+  notes: R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/
 repository-code: https://github.com/EcologyR/BlueCarbon
 url: https://ecologyr.github.io/BlueCarbon/
 contact:
