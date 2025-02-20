@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_oc.R
 \name{estimate_oc}
 \alias{estimate_oc}
-\title{Estimate organic carbon}
+\title{Estimate organic carbon content}
 \usage{
 estimate_oc(
   df = NULL,
@@ -39,25 +39,29 @@ The initial tibble or data.frame with three new columns:
 \item one column with estimated organic carbon values (eOC) in \%
 \item the standard error of the prediction (eOC_se)
 \item the type of model used for estimation (origin)
-In addition, a plot with the relationship between organic matter and estimated
-organic carbon
 }
+
+In addition, a plot with the relationship between organic matter and estimated
+organic carbon values.
 }
 \description{
 Estimate organic carbon from organic matter values
 }
 \details{
 Estimation of organic Carbon is done by means of linear regressions on
-log(organic carbon) ~ log(organic matter). It gives back a organic carbon
-value for each organic matter value provided. If there is a organic carbon
-value for that sample it return the same value, else, generates a model for
-that site, else, model for specie, else, model for Ecosystem. If a model
-can not be created due to the low number of samples (<10) or the created model
-has less than 0.5 r2 value it uses published equations to estimate the organic carbon:
-Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Pineiro-Juncal
-et al. in prep for mangroves.
+log(organic carbon) ~ log(organic matter), which return estimated organic carbon
+value for each organic matter value provided. If there is a value for organic carbon
+for that sample it returns the same value; otherwise, it estimates organic carbon
+from a model fitted to that site, or a model fitted to that species, or else
+a model fitted to that ecosystem. If there are too few samples (<10) to build a
+reliable model or the model fit is too poor (r2 < 0.5), \code{\link[=estimate_oc]{estimate_oc()}} uses the equations
+in \href{https://doi.org/10.1038/ngeo1477}{Fourqurean et al. (2012)} for seagrasses,
+\href{https://doi.org/10.1038/s41597-023-02633-x}{Maxwell et al. (2023)} for salt marshes
+and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
 }
 \examples{
 bluecarbon_decompact <- decompact(bluecarbon_data)
 out <- estimate_oc(bluecarbon_decompact)
+head(out$data)
+out$models
 }
