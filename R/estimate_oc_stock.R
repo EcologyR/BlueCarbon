@@ -15,14 +15,18 @@
 #' @param dbd Character Name of the column reporting dry bulk density.
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #'
-#' @return data.frame with columns core, swc (organic carbon stock at the whole core),
-#' maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
+#' @return data.frame with columns core, stockwc (organic carbon stock at the whole core),
+#' maxd (maximum depth of the core), stock (organic carbon stock at the standardized depth),
+#' and stock_se (standard error for the estimated stock).
 #' @export
 #'
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
+#'
 #' oc <- estimate_oc(bluecarbon_decompact)
+#'
 #' out <- estimate_oc_stock(oc[[1]])
+#' head(out)
 #'
 
 estimate_oc_stock <- function(df = NULL,
