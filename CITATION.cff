@@ -6,7 +6,7 @@
 cff-version: 1.2.0
 message: 'To cite package "BlueCarbon" in publications use:'
 type: software
-license: MIT
+license: GPL-3.0-or-later
 title: 'BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from
   Soil Core Data'
 version: 0.1.0
