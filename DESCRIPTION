@@ -16,7 +16,7 @@ Description: Tools to estimate soil organic carbon stocks and sequestration rate
     for core compaction, estimate sample thickness, estimate organic carbon content 
     from organic matter content, estimate organic carbon stocks and 
     sequestration rates, and visualize the error of carbon stock extrapolation. 
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
