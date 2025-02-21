@@ -32,8 +32,9 @@ sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
 \item{oc}{Character Name of the column reporting organic carbon concentrations.}
 }
 \value{
-data.frame with columns core, swc (organic carbon stock at the whole core),
-maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
+data.frame with columns core, stockwc (organic carbon stock at the whole core),
+maxd (maximum depth of the core), stock (organic carbon stock at the standardized depth),
+and stock_se (standard error for the estimated stock).
 }
 \description{
 Estimates carbon stocks from soil core data down to a specified
@@ -43,7 +44,10 @@ organic carbon and depth.
 }
 \examples{
 bluecarbon_decompact <- decompact(bluecarbon_data)
+
 oc <- estimate_oc(bluecarbon_decompact)
+
 out <- estimate_oc_stock(oc[[1]])
+head(out)
 
 }

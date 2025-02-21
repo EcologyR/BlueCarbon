@@ -1,17 +1,19 @@
-#' Estimate organic carbon
+#' Estimate organic carbon content
 #'
 #' Estimate organic carbon from organic matter values
 #'
 #' @details
 #' Estimation of organic Carbon is done by means of linear regressions on
-#' log(organic carbon) ~ log(organic matter). It gives back a organic carbon
-#' value for each organic matter value provided. If there is a organic carbon
-#' value for that sample it return the same value, else, generates a model for
-#' that site, else, model for specie, else, model for Ecosystem. If a model
-#' can not be created due to the low number of samples (<10) or the created model
-#' has less than 0.5 r2 value it uses published equations to estimate the organic carbon:
-#' Maxwell et al. 2023 for salt marshes, Fourqurean et al. 2012 for seagrasses and Pineiro-Juncal
-#' et al. in prep for mangroves.
+#' log(organic carbon) ~ log(organic matter), which return estimated organic carbon
+#' value for each organic matter value provided. If there is a value for organic carbon
+#'  for that sample it returns the same value; otherwise, it estimates organic carbon
+#'  from a model fitted to that site, or a model fitted to that species, or else
+#'  a model fitted to that ecosystem. If there are too few samples (<10) to build a
+#'  reliable model or the model fit is too poor (r2 < 0.5), [estimate_oc()] uses the equations
+#'  in Fourqurean et al. (2012) \doi{10.1038/ngeo1477} for seagrasses,
+#'  Maxwell et al. (2023) \doi{10.1038/s41597-023-02633-x} for salt marshes
+#'  and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
+#'
 #'
 #' @param df A tibble or data.frame containing all the data. Must have at least
 #' five columns (see arguments below).
@@ -29,8 +31,9 @@
 #' - one column with estimated organic carbon values (eOC) in %
 #' - the standard error of the prediction (eOC_se)
 #' - the type of model used for estimation (origin)
+#'
 #' In addition, a plot with the relationship between organic matter and estimated
-#' organic carbon
+#' organic carbon values.
 #'
 #' @import ggplot2
 #'
@@ -39,6 +42,8 @@
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
 #' out <- estimate_oc(bluecarbon_decompact)
+#' head(out$data)
+#' out$models
 
 estimate_oc <- function(df = NULL,
                         core = "core",
@@ -117,28 +122,28 @@ estimate_oc <- function(df = NULL,
 
   if (any(!is.na(df_pred$n))) {
 
-  if (any(min(df_pred$n, na.rm = TRUE) < 10)) {
-    cores_list <- unique(subset(df_pred, n < 10)[,"core_r"])
-    warning("The following cores were estimated from models with less than 10 initial samples: ",
-        paste(cores_list, collapse = ", "))}}
+    if (any(min(df_pred$n, na.rm = TRUE) < 10)) {
+      cores_list <- unique(subset(df_pred, n < 10)[,"core_r"])
+      warning("The following cores were estimated from models with less than 10 initial samples: ",
+              paste(cores_list, collapse = ", "))}}
 
   #out of range
 
   if (!is.na(any(df_pred$eoc < df_pred$min_oc))) {
     cores_list <- unique(subset(df_pred, df_pred$eoc < df_pred$min_oc)[,"core_r"])
     warning("The following cores had samples with organic carbon values below the organic carbon range used to built the model: ",
-        paste(cores_list, collapse = ", "))}
+            paste(cores_list, collapse = ", "))}
 
   if (!is.na(any(df_pred$eoc > df_pred$max_oc))) {
     cores_list <- unique(subset(df_pred, df_pred$eoc > df_pred$max_oc)[,"core_r"])
     warning("The following cores had samples with organic carbon values above the organic carbon range used to built the model: ",
-        paste(cores_list, collapse = ", "))}
+            paste(cores_list, collapse = ", "))}
 
 
   #outputs
 
   df_out <- cbind(subset(df,
-                    select = c(-core_r, -ecosystem_r, -species_r, -site_r, -om_r, -oc_r)),
+                         select = c(-core_r, -ecosystem_r, -species_r, -site_r, -om_r, -oc_r)),
                   df_pred[,c("eoc", "eoc_se", "origin")])
 
 
@@ -211,47 +216,47 @@ fit_models <- function(df = NULL) {
     multispecies_model <- NULL
     site_models <- NULL
 
-     } else {
+  } else {
 
-      ecosystem_model <- fit_ecosystem_model(df)
+    ecosystem_model <- fit_ecosystem_model(df)
 
-      # check if there is 2 or more specie with more than 3 samples (if not we don't adjust model per species)
+    # check if there is 2 or more specie with more than 3 samples (if not we don't adjust model per species)
 
-      if (length(which(table(df$species_r)>3))<2) {
+    if (length(which(table(df$species_r)>3))<2) {
 
-        multispecies_model <- NULL} else {
+      multispecies_model <- NULL} else {
 
-          # check if there is any specie with less than 3 samples to adjust model, if so, we delete that specie from the model fitting
+        # check if there is any specie with less than 3 samples to adjust model, if so, we delete that specie from the model fitting
 
-          if (length(which(table(df$species_r)<3))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=3)))
+        if (length(which(table(df$species_r)<3))>=1) {to_keep_sp<-rownames(as.data.frame(which(table(df$species_r)>=3)))
 
-                      df<-subset(df, df$species_r %in% to_keep_sp)}
+        df<-subset(df, df$species_r %in% to_keep_sp)}
 
-          multispecies_model <- fit_multispecies_model(df)}
+        multispecies_model <- fit_multispecies_model(df)}
 
-      # check if there is 2 or more sites with more than 3 samples (if not we dont adjust model per sites)
+    # check if there is 2 or more sites with more than 3 samples (if not we dont adjust model per sites)
 
-      if (length(which(table(df$site_r)>3))<2) { site_models <- NULL } else {
+    if (length(which(table(df$site_r)>3))<2) { site_models <- NULL } else {
 
-        if (length(which(table(df$site_r)>3))>=2) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=3)))
+      if (length(which(table(df$site_r)>3))>=2) {to_keep_st<-rownames(as.data.frame(which(table(df$site_r)>=3)))
 
-        df<-subset(df, df$site_r %in% to_keep_st)}
+      df<-subset(df, df$site_r %in% to_keep_st)}
 
-        # divide the data.frame per species and fit one model per species
-        site_ls <- split(df, df$site_r)
-        site_models <- lapply(site_ls, fit_site_model)
+      # divide the data.frame per species and fit one model per species
+      site_ls <- split(df, df$site_r)
+      site_models <- lapply(site_ls, fit_site_model)
 
-      }}
+    }}
 
 
 
-    # assemble output list
-    output <- list(ecosystem_model, multispecies_model, site_models)
-    names(output) <- c("ecosystem_model", "multispecies_model", "site_models")
+  # assemble output list
+  output <- list(ecosystem_model, multispecies_model, site_models)
+  names(output) <- c("ecosystem_model", "multispecies_model", "site_models")
 
-    output
+  output
 
-  }
+}
 
 
 
@@ -290,28 +295,28 @@ choose_model <- function(df_row = NULL, model_list = all_models) {
 
       if (!is.null(model_list[[df_row$ecosystem_r]][["multispecies_model"]])) {
 
-      mod_species <- model_list[[df_row$ecosystem_r]][["multispecies_model"]]
+        mod_species <- model_list[[df_row$ecosystem_r]][["multispecies_model"]]
 
-      # check if the species is in the species model and it has a r2 >0.5
-      if (summary(mod_species)$r.squared > 0.5 &&
-          df_row$species_r %in% mod_species$xlevels$`species_r`) {
+        # check if the species is in the species model and it has a r2 >0.5
+        if (summary(mod_species)$r.squared > 0.5 &&
+            df_row$species_r %in% mod_species$xlevels$`species_r`) {
 
-        mod <- mod_species
-        mod_type <- "Model by species"}
+          mod <- mod_species
+          mod_type <- "Model by species"}
 
-       else {
+        else {
 
-        mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
-        mod_type <- "Model by ecosystem"}
+          mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
+          mod_type <- "Model by ecosystem"}
 
       } else {
 
-         mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
-         mod_type <- "Model by ecosystem"
+        mod <- model_list[[df_row$ecosystem_r]][["ecosystem_model"]]
+        mod_type <- "Model by ecosystem"
       }
 
     }
-    }
+  }
 
   chosen_model <- list(mod, mod_type)
 

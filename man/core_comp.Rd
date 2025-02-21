@@ -3,7 +3,7 @@
 \docType{data}
 \name{core_comp}
 \alias{core_comp}
-\title{Dataframe containing field measurements of soil cores to estimate compression caused
+\title{Dataframe containing field measurements of soil cores to estimate compaction caused
 by core collection.}
 \format{
 \subsection{\code{core_comp}}{
@@ -32,12 +32,12 @@ core_comp
 }
 \description{
 Example dataset of field measurements of cores collected by percussion.
-All variables needed to estimate core compression are included.
-The cores ID is the same as in bluecarbon_data. sampler_length is the length
+All variables needed to estimate core compaction are included.
+The 'core' ID is the same as in bluecarbon_data. 'sampler_length' is the length
 of the tube or sampler introduced in the soil from top to bottom.
-internal_distance refers to the distance between the top of the sampler to the
-surface of the soil withing the sampler (the same depth or lower than the
-surface of the soil outside). external_distance refers to the distance from
+'internal_distance' refers to the distance between the top of the sampler and the
+surface of the soil within the sampler (the same depth or lower than the
+surface of the soil outside). 'external_distance' refers to the distance from
 the top of the sampler to the surface of the soil outside the sampler. The
 reference used as "top of the sampler" is the same in the three measurements.
 Internal and external distances are measured after sampler insertion in the

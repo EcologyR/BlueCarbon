@@ -35,8 +35,8 @@ age (age of the sample obtained from a age-depth or age-accumulated mass model)}
 \item{age}{Character Name of the column reporting the age of each sample.}
 }
 \value{
-data.frame with columns Core.id, F.WC (organic carbon sequestration rates at the whole core),
-A.Max (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)
+data.frame with columns 'core', seq_rate_wc (organic carbon sequestration rates at the whole core),
+maxage (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)
 }
 \description{
 estimate the average organic carbon sequestration rate to the soil in a indicated time frame (by default last 100 years)
@@ -46,4 +46,5 @@ from the organic carbon concentration and ages obtained from a age-depth or age-
 bluecarbon_decompact <- decompact(bluecarbon_data)
 oc <- estimate_oc(bluecarbon_decompact)
 out <- estimate_seq_rate(oc[[1]])
+head(out)
 }

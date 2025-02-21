@@ -6,7 +6,7 @@
 \usage{
 estimate_compaction(
   df = NULL,
-  core_id = "core",
+  core = "core",
   sampler_length = "sampler_length",
   internal_distance = "internal_distance",
   external_distance = "external_distance"
@@ -15,7 +15,7 @@ estimate_compaction(
 \arguments{
 \item{df}{A data.frame containing core properties.}
 
-\item{core_id}{Character Name of the column identifying each core.}
+\item{core}{Character Name of the column identifying each core.}
 
 \item{sampler_length}{Character Name of the column with the total length of the
 sampler tube.}
@@ -38,10 +38,14 @@ adds a 'compaction' column to the input data.frame with the calculated compactio
 rate as a percentage.
 }
 \examples{
-df <- estimate_compaction(core_comp,
-core_id = "core",
-sampler_length = "sampler_length",
-internal_distance = "internal_distance",
-external_distance = "external_distance")
+df <- estimate_compaction(
+  core_comp,
+  core = "core",
+  sampler_length = "sampler_length",
+  internal_distance = "internal_distance",
+  external_distance = "external_distance"
+)
+head(df)
+
 
 }

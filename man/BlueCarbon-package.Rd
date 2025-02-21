@@ -6,7 +6,7 @@
 \alias{BlueCarbon-package}
 \title{BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from Soil Core Data}
 \description{
-Tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. BlueCarbon contains functions to estimate and correct for core compaction, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates, and visualize the error of carbon stock extrapolation.
+Tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. 'BlueCarbon' contains functions to estimate and correct for core compaction, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates, and visualize the error of carbon stock extrapolation.
 }
 \seealso{
 Useful links:
@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Nerea Piñeiro-Juncal \email{nerea.pineiro.juncal@uvigo.gal} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID})
+\strong{Maintainer}: Nerea Piñeiro-Juncal \email{nerea.pineiro.juncal@uvigo.gal} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{

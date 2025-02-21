@@ -15,23 +15,27 @@
 #' @param dbd Character Name of the column reporting dry bulk density.
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #'
-#' @return data.frame with columns core, swc (organic carbon stock at the whole core),
-#' maxd (maximum depth of the core), and stock (organic carbon stock at the standardized depth)
+#' @return data.frame with columns core, stockwc (organic carbon stock at the whole core),
+#' maxd (maximum depth of the core), stock (organic carbon stock at the standardized depth),
+#' and stock_se (standard error for the estimated stock).
 #' @export
 #'
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
+#'
 #' oc <- estimate_oc(bluecarbon_decompact)
+#'
 #' out <- estimate_oc_stock(oc[[1]])
+#' head(out)
 #'
 
 estimate_oc_stock <- function(df = NULL,
-                           depth = 100,
-                           core = "core",
-                           mind = "mind_corrected",
-                           maxd = "maxd_corrected",
-                           dbd = "dbd",
-                           oc = "eoc") {
+                              depth = 100,
+                              core = "core",
+                              mind = "mind_corrected",
+                              maxd = "maxd_corrected",
+                              dbd = "dbd",
+                              oc = "eoc") {
 
   # class of the dataframe or tibble
   if (!inherits(df, "data.frame")) {
@@ -85,40 +89,40 @@ estimate_core <- function(df, depth) {
 
   if (is.unsorted(df$mind_r)) {stop("Samples must be ordered from shallow to deep")}
 
-    #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
-    df$ocgcm2 <- df$dbd_r * (df$oc_r / 100) * df$h
+  #estimation of carbon g cm2 per sample, OCgcm2= carbon density (g cm3) by thickness (h)
+  df$ocgcm2 <- df$dbd_r * (df$oc_r / 100) * df$h
 
-    #estimation of the OC stock in the whole core
-    stockwc <- sum(df$ocgcm2)
-    maxd <- max(df$emax)
+  #estimation of the OC stock in the whole core
+  stockwc <- sum(df$ocgcm2)
+  maxd <- max(df$emax)
 
-    #if core exactly the standarization depth, we keep the stock of the whole core
-    if(max(df$emax) == depth) {
+  #if core exactly the standarization depth, we keep the stock of the whole core
+  if(max(df$emax) == depth) {
 
-      stock <- sum(df$ocgcm2)
+    stock <- sum(df$ocgcm2)
+    stock_se <- NA
+
+  } else {
+
+    # if the core longer than the standardization depth we estimate the stock until that depth
+    if (max(df$emax) >= depth) {
+
+      df <- df[c(1:(length(which(df$emax <= depth)) + 1)), ]
+
+      stock <- (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])) +
+        ((df[nrow(df), "ocgcm2"] / (max(df$emax) - df[(nrow(df) - 1), "emax"]))
+         * (depth - df[(nrow(df) - 1), "emax"]))
       stock_se <- NA
 
-    } else {
 
-      # if the core longer than the standardization depth we estimate the stock until that depth
-      if (max(df$emax) >= depth) {
+    } else { #if core shorter than than the standardization depth we model the OC acumulated mass with depth and predict the stock at that depth
 
-        df <- df[c(1:(length(which(df$emax <= depth)) + 1)), ]
+      df$ocm <- cumsum(df$ocgcm2)
+      model <- stats::lm(ocm ~ emax, data = df)
+      stock <- stats::predict(model, newdata = data.frame(emax = depth))
+      stock_se <- stats::predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
 
-          stock <- (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])) +
-            ((df[nrow(df), "ocgcm2"] / (max(df$emax) - df[(nrow(df) - 1), "emax"]))
-             * (depth - df[(nrow(df) - 1), "emax"]))
-          stock_se <- NA
-
-
-      } else { #if core shorter than than the standardization depth we model the OC acumulated mass with depth and predict the stock at that depth
-
-        df$ocm <- cumsum(df$ocgcm2)
-        model <- stats::lm(ocm ~ emax, data = df)
-        stock <- stats::predict(model, newdata = data.frame(emax = depth))
-        stock_se <- stats::predict(model, newdata = data.frame(emax = depth), se.fit = TRUE)$se.fit
-
-      }}
+    }}
 
   BCS <- data.frame(core = core, stockwc = stockwc, maxd = maxd, stock = stock, stock_se = stock_se)
 

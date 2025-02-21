@@ -83,7 +83,7 @@ estimate_height <- function(df) {
 
   if (is.unsorted(df$mind_r)) {unsorted_cores<-data[1,"core_r"]}
 
-    data<-data[order(data$mind_r),]
+  data<-data[order(data$mind_r),]
 
   data <- estimate_depth(df = data, j = 1:(nrow(data) - 1))
   data$h <- data$emax - data$emin

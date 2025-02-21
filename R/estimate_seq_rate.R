@@ -14,24 +14,25 @@
 #' @param oc Character Name of the column reporting organic carbon concentrations.
 #' @param age Character Name of the column reporting the age of each sample.
 #'
-#' @return data.frame with columns Core.id, F.WC (organic carbon sequestration rates at the whole core),
-#' A.Max (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)
+#' @return data.frame with columns 'core', seq_rate_wc (organic carbon sequestration rates at the whole core),
+#' maxage (maximum age of the core), and seq_rate (average organic carbon sequestration rate at the indicated time frame)
 #' @export
 #'
 #' @examples
 #' bluecarbon_decompact <- decompact(bluecarbon_data)
 #' oc <- estimate_oc(bluecarbon_decompact)
 #' out <- estimate_seq_rate(oc[[1]])
+#' head(out)
 
 
 estimate_seq_rate <- function(df=NULL,
-                         timeframe = 100,
-                         core = "core",
-                         mind = "mind_corrected",
-                         maxd = "maxd_corrected",
-                         dbd = "dbd",
-                         oc = "eoc",
-                         age = "age") {
+                              timeframe = 100,
+                              core = "core",
+                              mind = "mind_corrected",
+                              maxd = "maxd_corrected",
+                              dbd = "dbd",
+                              oc = "eoc",
+                              age = "age") {
 
   # class of the dataframe or tibble
   if (!inherits(df, "data.frame")) {
@@ -69,9 +70,9 @@ estimate_seq_rate <- function(df=NULL,
   df_r <- df_r[!is.na(df_r$oc_r),]
 
   df_h <- estimate_h(df = df_r,
-                    core = "core_r",
-                    mind = "mind_r",
-                    maxd = "maxd_r")
+                     core = "core_r",
+                     mind = "mind_r",
+                     maxd = "maxd_r")
 
 
   # estimate sequestration rates
@@ -114,20 +115,20 @@ estimate_core_f <- function (df, timeframe) {
         message (paste("Core", core, "resolution is to low estimate the sequestration rate in the last", timeframe))
         seq_rate <- NA } else {
 
-      #estimation of the average carbon sequestration rate for the selected TimeFrame (OC stock / TimeFrame)
+          #estimation of the average carbon sequestration rate for the selected TimeFrame (OC stock / TimeFrame)
 
-      if (max(df$age_r)==timeframe) {
+          if (max(df$age_r)==timeframe) {
 
-        seq_rate<-sum(df$ocgcm2)/max(df$age_r)
+            seq_rate<-sum(df$ocgcm2)/max(df$age_r)
 
-      } else {
-        df<-df[c(1:(length(which(df$age_r <=timeframe))+1)),]
+          } else {
+            df<-df[c(1:(length(which(df$age_r <=timeframe))+1)),]
 
-        seq_rate<-(
-          (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])+
-             ((df[nrow(df),"ocgcm2"]/((max(df$age_r)-df[(nrow(df)-1),"age_r"])))
-              *(timeframe-df[(nrow(df)-1),"age_r"])))/timeframe)
-  }}}
+            seq_rate<-(
+              (sum(df[c(1:(nrow(df) - 1)), "ocgcm2"])+
+                 ((df[nrow(df),"ocgcm2"]/((max(df$age_r)-df[(nrow(df)-1),"age_r"])))
+                  *(timeframe-df[(nrow(df)-1),"age_r"])))/timeframe)
+          }}}
 
   BCF <- data.frame(core = core, seq_rate_wc = seq_rate_wc, maxage = maxage, seq_rate = seq_rate)
 

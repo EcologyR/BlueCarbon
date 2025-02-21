@@ -12,6 +12,7 @@
 .Rprofile
 Codigo/
 other/
-^vignettes/articles$
+^vignettes$
 ^cran-comments\.md$
 ^CITATION\.cff$
+^CODE_OF_CONDUCT\.md$
