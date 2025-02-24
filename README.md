@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![](https://www.r-pkg.org/badges/version/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
@@ -12,6 +13,7 @@
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 
 <!-- badges: end -->
 
@@ -136,17 +138,24 @@ concentration and the age of the samples.
 
 ## Installation
 
-BlueCarbon can be installed directly from GitHub:
+BlueCarbon can be installed directly from
+[CRAN](https://cran.r-project.org/package=BlueCarbon):
+
+``` r
+install.packages("BlueCarbon")
+```
+
+or from [R-universe](https://ecologyr.r-universe.dev/BlueCarbon):
+
+``` r
+install.packages("BlueCarbon", repos = c("https://ecologyr.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+Or from [GitHub](https://github.com/EcologyR/BlueCarbon):
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("EcologyR/BlueCarbon")
-```
-
-or from R-universe:
-
-``` r
-install.packages("BlueCarbon", repos = c("https://pakillo.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 ## Citation
