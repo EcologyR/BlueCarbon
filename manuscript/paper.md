@@ -78,7 +78,7 @@ Coastal blue carbon ecosystems have earned significant attention for their role 
 
 Sampling soil cores by manual percussion often results in the compaction of the material retrieved. This function estimates the percentage of compaction using measurements taken before and after inserting the corer tube (Fig. 2).
 
-![Soil compaction from field sampling](images/compaction-02.png){width="337"}
+![Soil compaction from field sampling](images/compaction-02.png)
 
 #### ***decompact*** **- Calculate sediment properties after decompaction**
 
@@ -92,13 +92,13 @@ There is a linear correlation between organic carbon and organic matter content.
 
 For cores where only selected samples were measured, it is necessary to assign a carbon density to the unmeasured sections before estimating the total stock. This function identifies gaps between samples and, if any are present, divides the space between the previous and next sample, ensuring continuous samples without gaps in the core (Fig. 3). The midpoint between two consecutive samples is estimated from the bottom of the previous sample to the top of the next sample, preventing the uneven distribution of gaps between samples with different thickness. The stock and sequestration rate estimation functions (estimate_oc_stock and estimate_seq_rate) already incorporate this function, so there is no need to run it separately.
 
-![Gap distribution between samples to estimate accumulated organic carbon mass.](images/estimate_h-01.png){width="268"}
+![Gap distribution between samples to estimate accumulated organic carbon mass.](images/estimate_h-01.png)
 
 #### ***estimate_oc_stock*** **- Organic carbon stock estimation**
 
 Estimates carbon stocks from soil core data down to a specified depth, with 100 as the default. If the core does not reach the desired depth, the function extrapolates the stock using a linear model based on the relationship between accumulated organic carbon mass and depth. In this model, accumulated organic carbon mass (stock) is the target variable and depth the explanatory variable (lm(accumulated organic carbon mass \~ depth)).
 
-![OC stock estimation diagram](images/estimate_stock-01.png){width="312"}
+![OC stock estimation diagram](images/estimate_stock-01.png)
 
 #### ***test_extrapolation*** **- Visualize the error of stock extrapolation**
 
