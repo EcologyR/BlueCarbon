@@ -21,14 +21,15 @@ The goal of BlueCarbon is to facilitate the estimation of organic carbon
 stocks and sequestration rates from soil/sediment cores from blue carbon
 ecosystems.
 
-It includes seven main functions to (1) estimate core compaction, (2)
-correct core compaction, (3) estimate sample thickness, (4) estimate
-organic carbon content from organic matter content, (5) estimate organic
-carbon stocks and (6) sequestration rates, and (7) visualize the error
-in stock extrapolation.
+It includes seven main
+[functions](https://ecologyr.github.io/BlueCarbon/reference/index.html)
+to (1) estimate core compaction, (2) correct core compaction, (3)
+estimate sample thickness, (4) estimate organic carbon content from
+organic matter content, (5) estimate organic carbon stocks and (6)
+sequestration rates, and (7) visualize the error in stock extrapolation.
 
 <figure>
-<img src="images/BC_workflow.png" width="569"
+<img src="man/figures/BC_workflow.png" width="569"
 alt="Blue Carbon package workflow" />
 <figcaption aria-hidden="true">Blue Carbon package workflow</figcaption>
 </figure>
@@ -36,15 +37,16 @@ alt="Blue Carbon package workflow" />
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
 Sampling soil cores by manual percussion often results in the compaction
-of the material retrieved. This function estimates the percentage of
-compaction using measurements taken before and after inserting the corer
-tube (Fig. 2). The length of the corer tube (sampler_length), distance
-between the surface of the soil and the top of the tube in the outside
-(external_distance) and distance between the surface of the soil and the
-top of the tube in the inside of the tube (internal_distance).
+of the material retrieved. This function (`estimate_compaction()`)
+estimates the percentage of compaction using measurements taken before
+and after inserting the corer tube (Fig. 2): the length of the corer
+tube (sampler_length), distance between the surface of the soil and the
+top of the tube in the outside (external_distance) and distance between
+the surface of the soil and the top of the tube in the inside of the
+tube (internal_distance).
 
 <figure>
-<img src="images/compaction.png" width="364"
+<img src="man/figures/compaction.png" width="364"
 alt="Soil compaction from field sampling" />
 <figcaption aria-hidden="true">Soil compaction from field
 sampling</figcaption>
@@ -54,51 +56,53 @@ sampling</figcaption>
 
 Core compaction derived from field extraction can be mathematically
 corrected to estimate the original depth of the samples. This function
-applies a linear correction (assuming uniform compaction of the core
-material) to adjust the sample depth accurately. If dry bulk density
-data is provided, the function also corrects it accordingly.
+(`decompact()`) applies a linear correction (assuming uniform compaction
+of the core material) to adjust the sample depth accurately. If dry bulk
+density data is provided, the function also corrects it accordingly.
 
 #### ***estimate_oc*** **- Organic carbon content estimation from organic carbon data**
 
 There is a linear correlation between organic carbon and organic matter
 content. This correlation can vary across ecosystems and sampling sites.
-This function fits a linear regression model between organic matter and
-organic carbon content of the samples and predicts organic carbon values
-for samples where the latter information is missing. Estimation of
-organic carbon is performed using a linear regression between the
-logarithm of the organic carbon content and the logarithm of the organic
-matter content (log(organic carbon) \\ log(organic matter)), providing
-an organic carbon value for each organic matter value. It fits a model
-for each sampling station, dominant species, and ecosystem. If an
-organic carbon value is already available for a sample, the function
-returns it. Otherwise, it applies the model for the corresponding
-sampling station. If a model cannot be fitted for that station
-(e.g. because of limited sample size) or if the model fit is poor, the
-function instead applies the model for the dominant species. If no
-suitable species-level model exists, it then applies the ecosystem-level
-model. If no models are available at any of these levels, the function
-defaults to published models: Fourqurean et al (2012) for seagrasses,
-Maxwell et al (2023) for salt marshes, and Piñeiro-Juncal et al. for
-mangroves. It is unlikely, but possible, that the model predicts higher
-organic carbon than organic matter content. If this occurs, the function
-issues a warning, and it is recommended to discard that model.
+This function (`estimate_oc()`) fits a linear regression model between
+organic matter and organic carbon content of the samples and predicts
+organic carbon values for samples where the latter information is
+missing. Estimation of organic carbon is performed using a linear
+regression between the logarithm of the organic carbon content and the
+logarithm of the organic matter content (log(organic carbon) \\
+log(organic matter)), providing an organic carbon value for each organic
+matter value. It fits a model for each sampling station, dominant
+species, and ecosystem. If an organic carbon value is already available
+for a sample, the function returns it. Otherwise, it applies the model
+for the corresponding sampling station. If a model cannot be fitted for
+that station (e.g. because of limited sample size) or if the model fit
+is poor, the function instead applies the model for the dominant
+species. If no suitable species-level model exists, it then applies the
+ecosystem-level model. If no models are available at any of these
+levels, the function defaults to published models: [Fourqurean et
+al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell
+et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt
+marshes, and Piñeiro-Juncal et al. for mangroves. It is unlikely, but
+possible, that the model predicts higher organic carbon than organic
+matter content. If this occurs, the function issues a warning, and it is
+recommended to discard that model.
 
 #### ***estimate_h*** **- Sample thickness estimation**
 
 For cores where only selected samples were measured, it is necessary to
 assign a carbon density to the unmeasured sections before estimating the
-total stock. This function identifies gaps between samples and, if any
-are present, divides the space between the previous and next sample,
-ensuring continuous samples without gaps in the core (Fig. 3). The
-midpoint between two consecutive samples is estimated from the bottom of
-the previous sample to the top of the next sample, preventing the uneven
-distribution of gaps between samples with different thickness. The stock
-and sequestration rate estimation functions (estimate_oc_stock and
-estimate_seq_rate) already incorporate this function, so there is no
-need to run it separately.
+total stock. This function (`estimate_h()`) identifies gaps between
+samples and, if any are present, divides the space between the previous
+and next sample, ensuring continuous samples without gaps in the core
+(Fig. 3). The midpoint between two consecutive samples is estimated from
+the bottom of the previous sample to the top of the next sample,
+preventing the uneven distribution of gaps between samples with
+different thickness. The stock and sequestration rate estimation
+functions (`estimate_oc_stock()` and `estimate_seq_rate()`) already
+incorporate this function, so there is no need to run it separately.
 
 <figure>
-<img src="images/estimate_h().png" width="365"
+<img src="man/figures/estimate_h.png" width="365"
 alt="Gap distribution between samples to estimate accumulated organic carbon mass" />
 <figcaption aria-hidden="true">Gap distribution between samples to
 estimate accumulated organic carbon mass</figcaption>
@@ -115,7 +119,7 @@ and depth the explanatory variable (lm(accumulated organic carbon mass ~
 depth)).
 
 <figure>
-<img src="images/estimate_stock.png" width="380"
+<img src="man/figures/estimate_stock.png" width="380"
 alt="Organic carbon stock estimation diagram" />
 <figcaption aria-hidden="true">Organic carbon stock estimation
 diagram</figcaption>
@@ -169,9 +173,9 @@ citation("BlueCarbon")
 To cite package 'BlueCarbon' in publications use:
 
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
-  Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
+  Rodriguez-Sanchez F (2025). _BlueCarbon: Estimation of Organic Carbon
   Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
+  version 0.1.0, https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
@@ -179,9 +183,9 @@ A BibTeX entry for LaTeX users is
   @Manual{,
     title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
-    year = {2024},
+    year = {2025},
     url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.0.1, https://EcologyR.github.io/BlueCarbon/},
+    note = {R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/},
   }
 ```
 
