@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# BlueCarbon
+# BlueCarbon <a href="https://ecologyr.github.io/BlueCarbon/"><img src="man/figures/logo.png" align="right" height="126" alt="BlueCarbon website" /></a>
 
 <!-- badges: start -->
 
