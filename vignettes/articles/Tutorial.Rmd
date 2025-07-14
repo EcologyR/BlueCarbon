@@ -59,9 +59,14 @@ head(compaction, n = 10)
 
 ## Decompact cores
 
-Core compaction does not affect the final stock of the core. However, it does affect the depth of the core samples. As stocks are given until a known soil depth (e.g. the first meter) to be able to compare among areas, the depth of the samples is needed to properly estimate the final stock.
+Core compaction does not affect the final stock of the core.
+However, it does affect the depth of the core samples.
+As stocks are given until a known soil depth (e.g. the first meter) to be able to compare among areas, the depth of the samples is needed to properly estimate the final stock.
 
-We use function `decompact()` to estimate the decompacted minimum and maximum depth of each sample before stock estimation. Furthermore, as compaction reduces the volume of the samples, dry bulk density has to be corrected. This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function `decompact()` will correct it. To provide compacted dry bulk density the name of the column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
+We use function `decompact()` to estimate the decompacted minimum and maximum depth of each sample before stock estimation.
+Furthermore, as compaction reduces the volume of the samples, dry bulk density has to be corrected.
+This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function `decompact()` will correct it.
+To provide compacted dry bulk density the name of the column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
 
 `decompact()` has 6 parameters:
 
@@ -77,13 +82,15 @@ We use function `decompact()` to estimate the decompacted minimum and maximum de
 
 -   "dbd": (character) Name of the column with dry bulk density
 
-Here we don't need to specify the name of the columns as in the example data the names are the same as the default names in the function. But we DO need to specify the dry bulk density column name as by default this argument is NULL.
+Here we don't need to specify the name of the columns as in the example data the names are the same as the default names in the function.
+But we DO need to specify the dry bulk density column name as by default this argument is NULL.
 
 ```{r}
 bluecarbon_decompact <- decompact(bluecarbon_data, dbd = "dbd")
 ```
 
-The warning has given a list of cores that have no compaction percentage data. The function assumes that these cores were not compacted in the field and sets compaction to zero.
+The warning has given a list of cores that have no compaction percentage data.
+The function assumes that these cores were not compacted in the field and sets compaction to zero.
 
 Here are the first 10 rows of the final dataframe, with corrected minimum and maximum sample depth and dry bulk density.
 
@@ -92,17 +99,25 @@ head(bluecarbon_decompact, n = 10) |>
   kable()
 ```
 
-
-
 ## Estimation of organic carbon from organic matter
 
-There is a well-known linear relation between organic matter content and organic carbon in soils. This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors. Therefore, it is recommended to estimate this correlation for each batch of samples.
+There is a well-known linear relation between organic matter content and organic carbon in soils.
+This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors.
+Therefore, it is recommended to estimate this correlation for each batch of samples.
 
-The `estimate_oc()` estimates the content of organic carbon for those samples where there are no organic carbon values (but there may be organic matter values). Estimation of organic carbon is done by means of linear regressions on log(organic carbon) \~ log(organic matter). The function returns an organic carbon value for each organic matter value provided. If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem. If there are too few samples to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
+The `estimate_oc()` estimates the content of organic carbon for those samples where there are no organic carbon values (but there may be organic matter values).
+Estimation of organic carbon is done by means of linear regressions on log(organic carbon) \~ log(organic matter).
+The function returns an organic carbon value for each organic matter value provided.
+If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem.
+If there are too few samples to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
 
-It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content. As this is not possible in nature, the function will give a warning and it is recommended to discard that model.
+It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content.
+As this is not possible in nature, the function will give a warning and it is recommended to discard that model.
 
-Fourqureanet al. (2012) Seagrass ecosystems as a globally significant carbon stock. Nat. Geosci.5, 505–509. <https://doi.org/10.1038/ngeo1477>
+Fourqureanet al. (2012) Seagrass ecosystems as a globally significant carbon stock.
+Nat.
+Geosci.5, 505–509.
+<https://doi.org/10.1038/ngeo1477>
 
 Maxwell et al. (2023) Global dataset of soil organic carbon in tidal marshes.Sci.Data 10, 1–14.<https://doi.org/10.1038/s41597-023-02633-x>
 
@@ -110,13 +125,15 @@ Piñeiro-Juncal et al. (in prep) Soil organic carbon preservation and decay tren
 
 The function `estimate_oc()` has 7 parameters:
 
--   "df": A tibble or data.frame containing all the data. Must have at least five columns (see arguments below).
+-   "df": A tibble or data.frame containing all the data.
+    Must have at least five columns (see arguments below).
 
 -   "core": (character) Name of the column with the id of the core to which the sample belongs
 
 -   "site": (character) Name of the column reporting sample site.
 
--   "ecosystem": (character) Name of the column reporting ecosystem type. To apply published equations for OC estimation, ecosystem names should be either "Salt Marsh", "Seagrass" or "Mangrove".
+-   "ecosystem": (character) Name of the column reporting ecosystem type.
+    To apply published equations for OC estimation, ecosystem names should be either "Salt Marsh", "Seagrass" or "Mangrove".
 
 -   "species": (character) Name of the column reporting the main species in the site.
 
@@ -130,7 +147,7 @@ Here we don't need to specify the name of the columns as in the example data the
 oc_out <- estimate_oc(bluecarbon_decompact)
 ```
 
-The `estimate_oc()` function produces a plot showing the relationship between organic matter and organic carbon content, and will provide warnings if any of the samples had organic matter contents outside the percentage of organic carbon in the samples used to estimate the models. 
+The `estimate_oc()` function produces a plot showing the relationship between organic matter and organic carbon content, and will provide warnings if any of the samples had organic matter contents outside the percentage of organic carbon in the samples used to estimate the models.
 
 The function returns a list with two elements: [1] the original dataframe with three new columns on the estimated organic carbon, the standard error of the estimate, and the type of model used to estimate the organic carbon value in that sample; and [2] a list of the models estimated, for further inspection.
 
@@ -143,11 +160,12 @@ head(oc_out[[1]]) |>
 head(oc_out[[2]], n = 2)
 ```
 
-
-
 ## Estimation of organic carbon stocks at 1m and 75 cm depth
 
-The organic carbon stock is the accumulated organic carbon mass until a provided depth per unit area. The default depth of function `estimate_oc_stock()` is 100. If the depth of the samples is provided in cm (as in the example data) this will correspond with 1 meter. If the core does not reach the desired depth (standardization depth), it extrapolates the stock to that depth from a linear model between accumulated mass of organic carbon and depth.
+The organic carbon stock is the accumulated organic carbon mass until a provided depth per unit area.
+The default depth of function `estimate_oc_stock()` is 100.
+If the depth of the samples is provided in cm (as in the example data) this will correspond with 1 meter.
+If the core does not reach the desired depth (standardization depth), it extrapolates the stock to that depth from a linear model between accumulated mass of organic carbon and depth.
 
 The organic carbon mass of each sample is estimated as:
 
@@ -155,7 +173,11 @@ OC=DBD\*(OCp/100)\*h (Equation 1)
 
 where DBD is the dry bulk density, OCp the organic carbon content in percentage and h the thickness of the sample (maximum depth of the sample - minimum depth of the sample).
 
-It is common to analyze only selected samples of a core to reduce workload and analytic costs. Therefore, it is necessary to estimate the organic carbon mass in the spaces between samples to estimate the accumulated organic carbon mass. The function `estimate_h()` distributes these empty spaces between the adjacent samples. This allows to account for both different sample thickness and different spacing between samples. Then, the organic carbon mass of that sample will be estimated following equation 1 with the corrected sample thickness.
+It is common to analyze only selected samples of a core to reduce workload and analytic costs.
+Therefore, it is necessary to estimate the organic carbon mass in the spaces between samples to estimate the accumulated organic carbon mass.
+The function `estimate_h()` distributes these empty spaces between the adjacent samples.
+This allows to account for both different sample thickness and different spacing between samples.
+Then, the organic carbon mass of that sample will be estimated following equation 1 with the corrected sample thickness.
 
 ![Distribution of empty spaces between samples by estimate_h() function](images/estimate_h().png){width="401"}
 
@@ -177,22 +199,32 @@ function `estimate_oc_stock()` has 7 parameters:
 
 -   "oc": Character Name of the column reporting organic carbon concentrations.
 
-We used the output from `estimate_oc()` to estimate the organic carbon stock per cm^2^ up to 1m depth. As the column names from the `estimate_oc()` output are the same as the default names in `estimate_oc_stock()` we don't need to specify them. Furthermore, the default depth is 100, and our data is in cm so we don't need to specify the depth (i.e. will estimate carbon stock down to 1m depth).
+We used the output from `estimate_oc()` to estimate the organic carbon stock per cm^2^ up to 1m depth.
+As the column names from the `estimate_oc()` output are the same as the default names in `estimate_oc_stock()` we don't need to specify them.
+Furthermore, the default depth is 100, and our data is in cm so we don't need to specify the depth (i.e. will estimate carbon stock down to 1m depth).
 
 ```{r}
 stocks <- estimate_oc_stock(oc_out[[1]])
 ```
 
-The output of this function is a dataframe with 5 columns. The first column is the core ID. The second column (`stockwc`) is the carbon stock in the whole core. The third column is the maximum depth of that core. The fourth column is the stock down to the standardization depth. Finally, if the core didn't reach the standardization depth, we will get a value in the fifth column with the standard error of the accumulated mass-depth model used to estimate the stock.
+The output of this function is a dataframe with 5 columns.
+The first column is the core ID.
+The second column (`stockwc`) is the carbon stock in the whole core.
+The third column is the maximum depth of that core.
+The fourth column is the stock down to the standardization depth.
+Finally, if the core didn't reach the standardization depth, we will get a value in the fifth column with the standard error of the accumulated mass-depth model used to estimate the stock.
 
 ```{r}
 head(stocks, n=10)
 ```
 
-The stock units are mass/area to a depth (length). The actual units will depend on those provided in the original dataframe.
-In the example data (`bluecarbon_data`), the carbon mass will be in g and the area cm^-2^ (as the dry bulk density was in g/cm^-3^) and the depth will be 100 cm, as the minimum and maximum depth of the samples was in cm. So the units for the estimated carbon stock in this case are **g/cm^-2^ in the top 100 cm**.
+The stock units are mass/area to a depth (length).
+The actual units will depend on those provided in the original dataframe.
+In the example data (`bluecarbon_data`), the carbon mass will be in g and the area cm^-2^ (as the dry bulk density was in g/cm^-3^) and the depth will be 100 cm, as the minimum and maximum depth of the samples was in cm.
+So the units for the estimated carbon stock in this case are **g/cm^-2^ in the top 100 cm**.
 
-To estimate the stock to a depth different than 100 cm, we have to specify it in the parameter "depth". For example, to estimate the carbon stock down to 75 cm:
+To estimate the stock to a depth different than 100 cm, we have to specify it in the parameter "depth".
+For example, to estimate the carbon stock down to 75 cm:
 
 ```{r}
 stocks75 <- estimate_oc_stock(oc_out[[1]], depth = 75)
@@ -202,11 +234,13 @@ stocks75 <- estimate_oc_stock(oc_out[[1]], depth = 75)
 head(stocks75, n = 10)
 ```
 
-
-
 ## Test stock extrapolation
 
-With this function (`test_extrapolation()`) we can visualize the amount of error that may be introduced by extrapolating carbon stocks of short cores to a deeper standardization depth. This function uses those cores that do reach the desired depth and test what would be the error in the estimated carbon stock if we modeled it from the 90, 75, 50 and 25% of that depth. IT DOES NOT provide the error for those cores modeled by the function `estimate_oc_stock()` as that function models those cores that do not reach the desired length. This function subsets the cores that reach the desired depth, estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% length of the indicated desired depth, and compares the observed stock with the estimated stocks by extrapolation. This function requires that some of your cores do reach the desired depth.
+With this function (`test_extrapolation()`) we can visualize the amount of error that may be introduced by extrapolating carbon stocks of short cores to a deeper standardization depth.
+This function uses those cores that do reach the desired depth and test what would be the error in the estimated carbon stock if we modeled it from the 90, 75, 50 and 25% of that depth.
+IT DOES NOT provide the error for those cores modeled by the function `estimate_oc_stock()` as that function models those cores that do not reach the desired length.
+This function subsets the cores that reach the desired depth, estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% length of the indicated desired depth, and compares the observed stock with the estimated stocks by extrapolation.
+This function requires that some of your cores do reach the desired depth.
 
 function `test_extrapolation()` has 7 parameters:
 
@@ -224,29 +258,40 @@ function `test_extrapolation()` has 7 parameters:
 
 -   "oc": Character Name of the column reporting organic carbon concentrations.
 
-As in the `estimate_oc_stock()` example, we used the output from `estimate_oc()` to estimate the organic carbon stock per cm^2^ up to 1m depth. As the column names from the `estimate_oc()` output are the same as the default names in `estimate_oc_stock()` we don't need to specify them. Furthermore, the default depth is 100, and our data is in cm so we don't need to specify the depth.
+As in the `estimate_oc_stock()` example, we used the output from `estimate_oc()` to estimate the organic carbon stock per cm^2^ up to 1m depth.
+As the column names from the `estimate_oc()` output are the same as the default names in `estimate_oc_stock()` we don't need to specify them.
+Furthermore, the default depth is 100, and our data is in cm so we don't need to specify the depth.
 
 ```{r}
 stocks_test <- test_extrapolation(oc_out[[1]])
 ```
 
-This function returns a dataframe with observed and extrapolated stocks, and two plots. The first plot (left) shows the deviation of the extrapolated stock from the observed stock, in percentage of the observed stock. The second plot (right) shows the distribution of the extrapolated and observed stocks. The diagonal line indicate that both stocks are equal. Above that line, the extrapolated stock was overestimated; below the line, the extrapolated stock was underestimated.
+This function returns a dataframe with observed and extrapolated stocks, and two plots.
+The first plot (left) shows the deviation of the extrapolated stock from the observed stock, in percentage of the observed stock.
+The second plot (right) shows the distribution of the extrapolated and observed stocks.
+The diagonal line indicate that both stocks are equal.
+Above that line, the extrapolated stock was overestimated; below the line, the extrapolated stock was underestimated.
 
-The same can be done for a different depth. Like in the example of `estimate_oc_stock()` we use 75 by modifying the parameter "depth".
+The same can be done for a different depth.
+Like in the example of `estimate_oc_stock()` we use 75 by modifying the parameter "depth".
 
 ```{r}
 stocks_test <- test_extrapolation(oc_out[[1]], depth = 75)
 ```
 
-
-
 ## Estimate soil organic carbon sequestration rates
 
-In depositional environments, like seagrass meadows, salt marshes and mangroves forests, it is possible to estimate the sediment accretion rate of the cores, as long as the sedimentary record has not been mixed. `estimate_seq_rate()` estimates the organic carbon sequestration rates of those cores that have a coherent age-depth model. The information of the model is included as the age of the sample in a column of the dataframe (column "age" in the example dataframe). The function will select those samples that have age data and delete those without.
+In depositional environments, like seagrass meadows, salt marshes and mangroves forests, it is possible to estimate the sediment accretion rate of the cores, as long as the sedimentary record has not been mixed.
+`estimate_seq_rate()` estimates the organic carbon sequestration rates of those cores that have a coherent age-depth model.
+The information of the model is included as the age of the sample in a column of the dataframe (column "age" in the example dataframe).
+The function will select those samples that have age data and delete those without.
 
-Estimations of organic carbon sequestration rates depend on the balance between organic matter burial and degradation. Therefore, the longer the time frame used to estimate the average sequestration rate, the lower the estimated sequestration rate. To be able to compare among cores, all sequestration rates must be standardized to the same time frame.
+Estimations of organic carbon sequestration rates depend on the balance between organic matter burial and degradation.
+Therefore, the longer the time frame used to estimate the average sequestration rate, the lower the estimated sequestration rate.
+To be able to compare among cores, all sequestration rates must be standardized to the same time frame.
 
-The function `estimate_seq_rate()` estimates the average carbon sequestration rates for a known time frame (100 by default) by summing the carbon stocks down to that age-depth and dividing by the time frame. The timeframe always refers to the last period of time (the last 100, the last 1000, etc...)
+The function `estimate_seq_rate()` estimates the average carbon sequestration rates for a known time frame (100 by default) by summing the carbon stocks down to that age-depth and dividing by the time frame.
+The timeframe always refers to the last period of time (the last 100, the last 1000, etc...)
 
 `estimate_seq_rate()` has 8 parameters:
 
@@ -266,20 +311,28 @@ The function `estimate_seq_rate()` estimates the average carbon sequestration ra
 
 -   "age": Character Name of the column reporting the age of each sample.
 
-We use the output from `estimate_oc()` to estimate the organic carbon sequestration rate per cm^2^ in the last 100 years. As the column names from the `estimate_oc()` output are the same as the default names in `estimate_seq_rate()` we don't need to specify them. Furthermore, the default time frame is 100.
+We use the output from `estimate_oc()` to estimate the organic carbon sequestration rate per cm^2^ in the last 100 years.
+As the column names from the `estimate_oc()` output are the same as the default names in `estimate_seq_rate()` we don't need to specify them.
+Furthermore, the default time frame is 100.
 
 ```{r}
 seq_rate <- estimate_seq_rate(oc_out[[1]])
 ```
 
-The output of this function is a dataframe with 4 columns. The first column is the core ID. The second column is the average sequestration rate in the whole core. The third column is the maximum age of that core. The fourth column is the sequestration rate in the provided time frame.
+The output of this function is a dataframe with 4 columns.
+The first column is the core ID.
+The second column is the average sequestration rate in the whole core.
+The third column is the maximum age of that core.
+The fourth column is the sequestration rate in the provided time frame.
 
 ```{r}
 head(seq_rate, n=10)
 ```
 
-The sequestration rates units are mass/area by time (in the last xxx units of time). The units will be those provided in the dataframe.
-In the example data, mass will be g and the area cm^-2^ (as the dry bulk density was in g/cm^-3^) and both times will be in years, as the age of the samples was in years. So, the sequestration rates units in this example are **g/cm^-2^ yr^-1^ in the last 100 years**.
+The sequestration rates units are mass/area by time (in the last xxx units of time).
+The units will be those provided in the dataframe.
+In the example data, mass will be g and the area cm^-2^ (as the dry bulk density was in g/cm^-3^) and both times will be in years, as the age of the samples was in years.
+So, the sequestration rates units in this example are **g/cm^-2^ yr^-1^ in the last 100 years**.
 
 To estimate the organic carbon sequestration rate in a different timeframe than 100, we have to specify it in the parameter "timeframe".
 

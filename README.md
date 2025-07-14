@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# BlueCarbon <a href="https://ecologyr.github.io/BlueCarbon/"><img src="man/figures/logo.png" align="right" height="126" alt="BlueCarbon website" /></a>
+# BlueCarbon <a href="https://ecologyr.github.io/BlueCarbon/"><img src="man/figures/logo.png" alt="BlueCarbon website" align="right" height="126"/></a>
 
 <!-- badges: start -->
 
@@ -29,7 +29,7 @@ organic matter content, (5) estimate organic carbon stocks and (6)
 sequestration rates, and (7) visualize the error in stock extrapolation.
 
 <figure>
-<img src="man/figures/BC_workflow.png" width="569"
+<img src="images/BC_workflow-01.png" width="527"
 alt="Blue Carbon package workflow" />
 <figcaption aria-hidden="true">Blue Carbon package workflow</figcaption>
 </figure>
@@ -173,9 +173,9 @@ citation("BlueCarbon")
 To cite package 'BlueCarbon' in publications use:
 
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
-  Rodriguez-Sanchez F (2025). _BlueCarbon: Estimation of Organic Carbon
+  Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
   Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.1.0, https://EcologyR.github.io/BlueCarbon/,
+  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
@@ -183,9 +183,9 @@ A BibTeX entry for LaTeX users is
   @Manual{,
     title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
-    year = {2025},
+    year = {2024},
     url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/},
+    note = {R package version 0.0.1, https://EcologyR.github.io/BlueCarbon/},
   }
 ```
 

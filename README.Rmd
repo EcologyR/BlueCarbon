@@ -16,14 +16,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-# BlueCarbon <a href="https://ecologyr.github.io/BlueCarbon/"><img src="man/figures/logo.png" align="right" height="126" alt="BlueCarbon website" /></a>
+# BlueCarbon <a href="https://ecologyr.github.io/BlueCarbon/"><img src="man/figures/logo.png" alt="BlueCarbon website" align="right" height="126"/></a>
 
 <!-- badges: start -->
 
-`r badger::badge_cran_release()` ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon) [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) 
-`r badger::badge_lifecycle("stable")` 
-`r badger::badge_repostatus("Active")` 
-[![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
+`r badger::badge_cran_release()` ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon) [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) `r badger::badge_lifecycle("stable")` `r badger::badge_repostatus("Active")` [![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 
 <!-- badges: end -->
 
@@ -31,7 +28,7 @@ The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks 
 
 It includes seven main [functions](https://ecologyr.github.io/BlueCarbon/reference/index.html) to (1) estimate core compaction, (2) correct core compaction, (3) estimate sample thickness, (4) estimate organic carbon content from organic matter content, (5) estimate organic carbon stocks and (6) sequestration rates, and (7) visualize the error in stock extrapolation.
 
-![Blue Carbon package workflow](man/figures/BC_workflow.png){width="569"}
+![Blue Carbon package workflow](images/BC_workflow-01.png){width="527"}
 
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
@@ -130,6 +127,6 @@ The development of this software has been funded by Fondo Europeo de Desarrollo 
 NPJ was supported by a Juan de la Cierva fellowship (JDC2022-048342-I, MCIN/AEI/10.13039/501100011033, European Union “NextGenerationEU”/PRTR”).
 JA acknowledges funding from the CLIMB-FOREST Horizon Europe Project (No 101059888) funded by the European Union.
 FRS was supported by VI PPIT-US from Universidad de Sevilla.
-MM was supported by a FCT PhD grant (https://doi.org/10.54499/2020.06996.BD).
+MM was supported by a FCT PhD grant (<https://doi.org/10.54499/2020.06996.BD>).
 
 ![](https://ecologyr.github.io/workshop/images/logos.png)
