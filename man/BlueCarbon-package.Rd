@@ -6,8 +6,6 @@
 \alias{BlueCarbon-package}
 \title{BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from Soil Core Data}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
 Tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. 'BlueCarbon' contains functions to estimate and correct for core compaction, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates, and visualize the error of carbon stock extrapolation.
 }
 \seealso{

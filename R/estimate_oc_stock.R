@@ -8,7 +8,7 @@
 #' @param df A data.frame with core (core id), mind (minimum depth of the
 #' sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
 #' (organic carbon %)
-#' @param depth max depth to estimate the stock, by default 100.
+#' @param depth mas depth to estimate the stock, by default 100.
 #' @param core Character Name of the column reporting core ID.
 #' @param mind Character Name of the column reporting the minimum depth of each sample.
 #' @param maxd Character Name of the column reporting the maximum depth of each sample.
