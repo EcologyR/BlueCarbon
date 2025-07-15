@@ -72,7 +72,7 @@ Coastal blue carbon ecosystems have earned significant attention for their role 
 
 *`BlueCarbon`* contains seven main functions (Fig. 1) to deal with core compaction (to estimate and mathematically correct core compaction), transform laboratory data (to estimate sample thickness and to estimate organic carbon content from organic matter content) and estimate organic carbon stocks and sequestration rates (estimate organic carbon stocks, sequestration rates, and visualizing the error in stock extrapolation).
 
-![Blue Carbon package workflow](images/BC_workflow-02.png)
+![Blue Carbon package workflow](images/BC_workflow.png)
 
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
