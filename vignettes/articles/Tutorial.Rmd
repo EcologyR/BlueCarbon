@@ -33,7 +33,7 @@ Many field methods to extract soil cores can lead to the compaction of the mater
 
 ![](images/compaction-01.png){width="497"}
 
-The compaction percentage can be estimated knowing the difference between the original surface level of the soil and the surface level of the soil withing the sampler after core insertion and before retrieval.
+The compaction percentage can be estimated knowing the difference between the original surface level of the soil and the surface level of the soil within the sampler after core insertion and before retrieval.
 
 ```{r}
 compaction <- estimate_compaction(core_comp,
@@ -66,7 +66,7 @@ As stocks are given until a known soil depth (e.g. the first meter) to be able t
 We use function `decompact()` to estimate the decompacted minimum and maximum depth of each sample before stock estimation.
 Furthermore, as compaction reduces the volume of the samples, dry bulk density has to be corrected.
 This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function `decompact()` will correct it.
-To provide compacted dry bulk density the name of the column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
+To provide compacted dry bulk density, the name of that column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
 
 `decompact()` has 6 parameters:
 
@@ -109,7 +109,7 @@ The `estimate_oc()` estimates the content of organic carbon for those samples wh
 Estimation of organic carbon is done by means of linear regressions on log(organic carbon) \~ log(organic matter).
 The function returns an organic carbon value for each organic matter value provided.
 If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem.
-If there are too few samples to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
+If there are too few samples with values of organic matter content to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
 
 It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content.
 As this is not possible in nature, the function will give a warning and it is recommended to discard that model.
@@ -237,9 +237,9 @@ head(stocks75, n = 10)
 ## Test stock extrapolation
 
 With this function (`test_extrapolation()`) we can visualize the amount of error that may be introduced by extrapolating carbon stocks of short cores to a deeper standardization depth.
-This function uses those cores that do reach the desired depth and test what would be the error in the estimated carbon stock if we modeled it from the 90, 75, 50 and 25% of that depth.
-IT DOES NOT provide the error for those cores modeled by the function `estimate_oc_stock()` as that function models those cores that do not reach the desired length.
-This function subsets the cores that reach the desired depth, estimates the stock (observed stock), estimate the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% length of the indicated desired depth, and compares the observed stock with the estimated stocks by extrapolation.
+This function uses those cores that reach the desired depth and tests what would be the error in the estimated carbon stock if we were to model it from the 90, 75, 50 and 25% of that depth.
+This function subsets the cores that reach the desired depth, estimates the complete stock (observed stock) to indicated desired depth, estimates the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% length of the indicated desired depth, and compares the observed stock with the stocks estimated by extrapolation.
+IT DOES NOT provide the error for those cores modeled by the function `estimate_oc_stock()` as that function models those cores that do not reach the desired depth.
 This function requires that some of your cores do reach the desired depth.
 
 function `test_extrapolation()` has 7 parameters:
