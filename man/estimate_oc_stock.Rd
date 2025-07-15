@@ -19,7 +19,7 @@ estimate_oc_stock(
 sample), maxd (maximum depth of the sample), dbd (dry bulk density), oc
 (organic carbon \%)}
 
-\item{depth}{mas depth to estimate the stock, by default 100.}
+\item{depth}{max depth to estimate the stock, by default 100.}
 
 \item{core}{Character Name of the column reporting core ID.}
 
