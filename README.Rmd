@@ -25,6 +25,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and sequestration rates from soil/sediment cores from blue carbon ecosystems.
+Following the protocols published by the Blue Carbon initiative [Howard et al. (2014)](https://www.cifor-icraf.org/knowledge/publication/5095/).
 
 It includes seven main [functions](https://ecologyr.github.io/BlueCarbon/reference/index.html) to (1) estimate core compaction, (2) correct core compaction, (3) estimate sample thickness, (4) estimate organic carbon content from organic matter content, (5) estimate organic carbon stocks and (6) sequestration rates, and (7) visualize the error in stock extrapolation.
 
