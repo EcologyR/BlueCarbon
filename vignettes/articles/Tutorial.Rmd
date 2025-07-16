@@ -291,7 +291,7 @@ stocks_test <- test_extrapolation(oc_out[[1]], depth = 75)
 
 In depositional environments, like seagrass meadows, salt marshes and mangroves forests, it is possible to estimate the sediment accretion rate of the cores, as long as the sedimentary record has not been mixed.
 `estimate_seq_rate()` estimates the organic carbon sequestration rates of those cores that have a coherent age-depth model.
-The information of the model is included as the age of the sample in a column of the dataframe (column "age" in the example dataframe).
+The age of each sample is included in a column of the input dataframe (column "age" in the example dataframe).
 The function will select those samples that have age data and delete those without.
 
 Estimations of organic carbon sequestration rates depend on the balance between organic matter burial and degradation.
