@@ -60,7 +60,7 @@ corrected to estimate the original depth of the samples. This function
 of the core material) to adjust the sample depth accurately. If dry bulk
 density data is provided, the function also corrects it accordingly.
 
-#### ***estimate_oc*** **- Organic carbon content estimation from organic carbon data**
+#### ***estimate_oc*** **- Organic carbon % estimation from organic matter %**
 
 There is a linear correlation between organic carbon and organic matter
 content. This correlation can vary across ecosystems and sampling sites.
@@ -82,10 +82,11 @@ ecosystem-level model. If no models are available at any of these
 levels, the function defaults to published models: [Fourqurean et
 al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell
 et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt
-marshes, and Piñeiro-Juncal et al. for mangroves. It is unlikely, but
-possible, that the model predicts higher organic carbon than organic
-matter content. If this occurs, the function issues a warning, and it is
-recommended to discard that model.
+marshes, and [Piñeiro-Juncal et
+al. (2025)](https://doi.org/10.1038/s43247-025-02390-2) for mangroves.
+It is unlikely, but possible, that the model predicts higher organic
+carbon than organic matter content. If this occurs, the function issues
+a warning, and it is recommended to discard that model.
 
 #### ***estimate_h*** **- Sample thickness estimation**
 

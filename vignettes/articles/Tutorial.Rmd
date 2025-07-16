@@ -108,11 +108,11 @@ There is a well-known linear relation between organic matter content and organic
 This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors.
 Therefore, it is recommended to estimate this correlation for each batch of samples.
 
-The `estimate_oc()` estimates the content of organic carbon for those samples where there are no organic carbon values (but there may be organic matter values).
+The `estimate_oc()` estimates the content of organic carbon (in percentage) for those samples where there are no organic carbon values (but there may be organic matter values).
 Estimation of organic carbon is done by means of linear regressions on log(organic carbon) \~ log(organic matter).
 The function returns an organic carbon value for each organic matter value provided.
 If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem.
-If there are too few samples with values of organic matter content to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and Piñeiro-Juncal (in prep.) for mangroves to estimate the organic carbon.
+If there are too few samples with values of organic matter content to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and [Piñeiro-Juncal et al. (2025)](https://doi.org/10.1038/s43247-025-02390-2) for mangroves to estimate the organic carbon.
 
 It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content.
 As this is not possible in nature, the function will give a warning and it is recommended to discard that model.
@@ -124,7 +124,9 @@ Geosci.5, 505–509.
 
 Maxwell et al. (2023) Global dataset of soil organic carbon in tidal marshes.Sci.Data 10, 1–14.<https://doi.org/10.1038/s41597-023-02633-x>
 
-Piñeiro-Juncal et al. (in prep) Soil organic carbon preservation and decay trends in tidal marsh, mangrove and seagrass blue carbon ecosystems.
+Piñeiro-Juncal et al. (2025) Soil organic carbon depth profiles and centennial and millennial decay rates in tidal marsh, mangrove and seagrass blue carbon ecosystems.
+Commun Earth Environ.
+<https://doi.org/10.1038/s43247-025-02390-2>
 
 The function `estimate_oc()` has 7 parameters:
 
@@ -154,6 +156,9 @@ The `estimate_oc()` function produces a plot showing the relationship between or
 
 The function returns a list with two elements: [1] the original dataframe with three new columns on the estimated organic carbon, the standard error of the estimate, and the type of model used to estimate the organic carbon value in that sample; and [2] a list of the models estimated, for further inspection.
 
+The OC values provided will have the same units as those provided initially for the OC and OM columns.
+We recommend to work in percentage, as the estimate_oc_stock() require OC values in percentage.
+
 ```{r}
 head(oc_out[[1]]) |> 
   kable()
@@ -172,9 +177,9 @@ If the core does not reach the desired depth (standardization depth), it extrapo
 
 The organic carbon mass of each sample is estimated as:
 
-OC=DBD\*(OCp/100)\*h (Equation 1)
+OC=DBD\*(OC%/100)\*h (Equation 1)
 
-where DBD is the dry bulk density, OCp the organic carbon content in percentage and h the thickness of the sample (maximum depth of the sample - minimum depth of the sample).
+where DBD is the dry bulk density, OC% the organic carbon content in percentage (as calculated with function estimate_oc() or provided by the user) and h the thickness of the sample (maximum depth of the sample - minimum depth of the sample).
 
 It is common to analyze only selected samples of a core to reduce workload and analytic costs.
 Therefore, it is necessary to estimate the organic carbon mass in the spaces between samples to estimate the accumulated organic carbon mass.

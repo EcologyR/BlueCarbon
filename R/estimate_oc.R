@@ -403,14 +403,14 @@ predict_oc <- function(df_row = NULL, model_list = all_models) {
         if (df_row$ecosystem_r == "Mangrove" && df_row$om_r < 20) {
           eoc <- 0.37 * df_row$om_r - 0.2
           eoc_se <- NA
-          origin <- "Pineiro-Juncal et al. in prep"
+          origin <- "Pineiro-Juncal et al. 2025"
 
         }
 
         if (df_row$ecosystem_r == "Mangrove" && df_row$om_r > 20) {
           eoc <- 0.52 * df_row$om_r - 2
           eoc_se <- NA
-          origin <- "Pineiro-Juncal et al. in prep"
+          origin <- "Pineiro-Juncal et al. 2025"
 
         }
       }
