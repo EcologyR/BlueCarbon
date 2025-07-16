@@ -62,7 +62,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and sequestration rates from soil/sediment cores from blue carbon ecosystems.</p>
+<p>The goal of BlueCarbon is to facilitate the estimation of organic carbon stocks and sequestration rates from soil/sediment cores from blue carbon ecosystems. Following the protocols published by the Blue Carbon initiative <a href="https://www.cifor-icraf.org/knowledge/publication/5095/" class="external-link">Howard et al. (2014)</a>.</p>
 <p>It includes seven main <a href="https://ecologyr.github.io/BlueCarbon/reference/index.html">functions</a> to (1) estimate core compaction, (2) correct core compaction, (3) estimate sample thickness, (4) estimate organic carbon content from organic matter content, (5) estimate organic carbon stocks and (6) sequestration rates, and (7) visualize the error in stock extrapolation.</p>
 <figure><img src="images/BC_workflow-01.png" width="527" alt="Blue Carbon package workflow"><figcaption aria-hidden="true">
 Blue Carbon package workflow
@@ -105,7 +105,7 @@ Gap distribution between samples to estimate accumulated organic carbon mass
 <strong><em>estimate_oc_stock</em></strong> <strong>- Organic carbon stock estimation</strong>
 <a class="anchor" aria-label="anchor" href="#estimate_oc_stock---organic-carbon-stock-estimation"></a>
 </h4>
-<p>Estimates carbon stocks from soil core data down to a specified depth, with 100 as the default. If the core does not reach the desired depth, the function extrapolates the stock using a linear model based on the relationship between accumulated organic carbon mass and depth. In this model, accumulated organic carbon mass (stock) is the target variable and depth the explanatory variable (lm(accumulated organic carbon mass ~ depth)).</p>
+<p>Estimates carbon stocks from soil core data down to a specified depth, with 100 as the default. If the core does not reach the desired depth, the function extrapolates the stock using a linear model based on the relationship between accumulated organic carbon mass and depth. In this model, accumulated organic carbon mass (stock) is the target variable and depth the explanatory variable (lm(accumulated organic carbon mass ~ depth)). Therefore, this function will always provide either a estimated stock (if the core reaches the desired depth) or a predicted stock (if not). However, if the max depth of the core and the desired depth differ greatly, this predicted depth could differ greatly from the real stock. We recommend that, if possible, the users use the function <code><a href="reference/test_extrapolation.html">test_extrapolation()</a></code> to assess the error of this extrapolation, and that they clearly indicate the maximum depth of the cores in the methods section of the resulting research outputs.</p>
 <figure><img src="reference/figures/estimate_stock.png" width="380" alt="Organic carbon stock estimation diagram"><figcaption aria-hidden="true">
 Organic carbon stock estimation diagram
 </figcaption></figure>
