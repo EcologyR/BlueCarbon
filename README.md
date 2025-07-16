@@ -19,7 +19,9 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 The goal of BlueCarbon is to facilitate the estimation of organic carbon
 stocks and sequestration rates from soil/sediment cores from blue carbon
-ecosystems.
+ecosystems. Following the protocols published by the Blue Carbon
+initiative [Howard et
+al. (2014)](https://www.cifor-icraf.org/knowledge/publication/5095/).
 
 It includes seven main
 [functions](https://ecologyr.github.io/BlueCarbon/reference/index.html)
@@ -117,7 +119,14 @@ the function extrapolates the stock using a linear model based on the
 relationship between accumulated organic carbon mass and depth. In this
 model, accumulated organic carbon mass (stock) is the target variable
 and depth the explanatory variable (lm(accumulated organic carbon mass ~
-depth)).
+depth)). Therefore, this function will always provide either a estimated
+stock (if the core reaches the desired depth) or a predicted stock (if
+not). However, if the max depth of the core and the desired depth differ
+greatly, this predicted depth could differ greatly from the real stock.
+We recommend that, if possible, the users use the function
+`test_extrapolation()` to assess the error of this extrapolation, and
+that they clearly indicate the maximum depth of the cores in the methods
+section of the resulting research outputs.
 
 <figure>
 <img src="man/figures/estimate_stock.png" width="380"

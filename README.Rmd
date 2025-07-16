@@ -73,6 +73,9 @@ The stock and sequestration rate estimation functions (`estimate_oc_stock()` and
 Estimates carbon stocks from soil core data down to a specified depth, with 100 as the default.
 If the core does not reach the desired depth, the function extrapolates the stock using a linear model based on the relationship between accumulated organic carbon mass and depth.
 In this model, accumulated organic carbon mass (stock) is the target variable and depth the explanatory variable (lm(accumulated organic carbon mass \~ depth)).
+Therefore, this function will always provide either a estimated stock (if the core reaches the desired depth) or a predicted stock (if not).
+However, if the max depth of the core and the desired depth differ greatly, this predicted depth could differ greatly from the real stock.
+We recommend that, if possible, the users use the function `test_extrapolation()` to assess the error of this extrapolation, and that they clearly indicate the maximum depth of the cores in the methods section of the resulting research outputs.
 
 ![Organic carbon stock estimation diagram](man/figures/estimate_stock.png){width="380"}
 
