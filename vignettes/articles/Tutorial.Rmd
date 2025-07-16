@@ -18,7 +18,7 @@ library(BlueCarbon)
 ```
 
 The BlueCarbon library had 7 functions to estimate stock and sequestrations rate from raw laboratory data.
-Each function is a different step in the analysis workflow and can be used either individually, by users interested in specific calculations, or together as part of a complete workflow.
+Each function is a different step in the analysis workflow and can be used either individually, by users interested in specific calculations, or together, as part of a complete workflow.
 
 In this vignette we will use the example data from the BlueCarbon library to estimate the organic carbon stocks in the first 75 cm and 1 meter of the soil and the average organic carbon sequestration rates of these soils in the last 100 and 200 years.
 
@@ -28,7 +28,7 @@ The first dataframe ([`core_comp`](https://ecologyr.github.io/BlueCarbon/referen
 
 The second dataframe ([`bluecarbon_data`](https://ecologyr.github.io/BlueCarbon/reference/bluecarbon_data.html)) has core field information and laboratory data that we will use to correct core compaction, estimate organic carbon content in each sample from organic matter content, and to estimate the organic carbon stocks and sequestration rates.
 
-The core field information and laboratory data includes: sampling site, core ID, blue carbon ecosystem, dominant species, core compaction percentage, sample minimum depth, sample maximum depth, dry bulk density, organic matter content and (if available) organic carbon content and sample age.
+The core field information and laboratory data includes: sampling site, core ID, type of blue carbon ecosystem, dominant species, core compaction percentage, sample minimum depth, sample maximum depth, dry bulk density, organic matter content and (if available) organic carbon content and sample age.
 
 ## Core compaction estimation
 
@@ -104,15 +104,15 @@ head(bluecarbon_decompact, n = 10) |>
 
 ## Estimation of organic carbon % from organic matter %
 
-There is a well-known linear relation between organic matter content and organic carbon in soils.
+There is a well-known linear relation between organic matter and organic carbon content in soils.
 This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors.
 Therefore, it is recommended to estimate this correlation for each batch of samples.
 
-The `estimate_oc()` estimates the content of organic carbon (in percentage) for those samples where there are no organic carbon values (but there may be organic matter values).
+The `estimate_oc()` estimates the content of organic carbon for those samples where there are no organic carbon values but there is organic matter values.
 Estimation of organic carbon is done by means of linear regressions on log(organic carbon) \~ log(organic matter).
 The function returns an organic carbon value for each organic matter value provided.
 If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem.
-If there are too few samples with values of organic matter content to build a reliable model or the model fit is too poor,`estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and [Piñeiro-Juncal et al. (2025)](https://doi.org/10.1038/s43247-025-02390-2) for mangroves to estimate the organic carbon.
+If there are too few samples with values of organic matter content to build a reliable model or the model fit is too poor, `estimate_oc()` uses the equations in [Fourqurean et al. (2012)](https://doi.org/10.1038/ngeo1477) for seagrasses, [Maxwell et al. (2023)](https://doi.org/10.1038/s41597-023-02633-x) for salt marshes and [Piñeiro-Juncal et al. (2025)](https://doi.org/10.1038/s43247-025-02390-2) for mangroves to estimate the organic carbon.
 
 It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content.
 As this is not possible in nature, the function will give a warning and it is recommended to discard that model.
@@ -157,7 +157,7 @@ The `estimate_oc()` function produces a plot showing the relationship between or
 The function returns a list with two elements: [1] the original dataframe with three new columns on the estimated organic carbon, the standard error of the estimate, and the type of model used to estimate the organic carbon value in that sample; and [2] a list of the models estimated, for further inspection.
 
 The OC values provided will have the same units as those provided initially for the OC and OM columns.
-We recommend to work in percentage, as the estimate_oc_stock() require OC values in percentage.
+We recommend to work in percentage, as the estimate_oc_stock() require OC values in percentages.
 
 ```{r}
 head(oc_out[[1]]) |> 
@@ -179,7 +179,7 @@ The organic carbon mass of each sample is estimated as:
 
 OC=DBD\*(OC%/100)\*h (Equation 1)
 
-where DBD is the dry bulk density, OC% the organic carbon content in percentage (as calculated with function estimate_oc() or provided by the user) and h the thickness of the sample (maximum depth of the sample - minimum depth of the sample).
+where DBD is the dry bulk density, OC% the organic carbon content in percentage (as calculated with function `estimate_oc()` or provided by the user) and h the thickness of the sample (maximum depth of the sample - minimum depth of the sample).
 
 It is common to analyze only selected samples of a core to reduce workload and analytic costs.
 Therefore, it is necessary to estimate the organic carbon mass in the spaces between samples to estimate the accumulated organic carbon mass.
