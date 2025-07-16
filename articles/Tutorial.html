@@ -66,6 +66,11 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/EcologyR/BlueCarbon" class="external-link">BlueCarbon</a></span><span class="op">)</span></span></code></pre></div>
+<p>The BlueCarbon library had 7 functions to estimate stock and
+sequestrations rate from raw laboratory data. Each function is a
+different step in the analysis workflow and can be used either
+individually, by users interested in specific calculations, or together,
+as part of a complete workflow.</p>
 <p>In this vignette we will use the example data from the BlueCarbon
 library to estimate the organic carbon stocks in the first 75 cm and 1
 meter of the soil and the average organic carbon sequestration rates of
@@ -82,9 +87,9 @@ correct core compaction, estimate organic carbon content in each sample
 from organic matter content, and to estimate the organic carbon stocks
 and sequestration rates.</p>
 <p>The core field information and laboratory data includes: sampling
-site, core ID, blue carbon ecosystem, dominant species, core compaction
-percentage, sample minimum depth, sample maximum depth, dry bulk
-density, organic matter content and (if available) organic carbon
+site, core ID, type of blue carbon ecosystem, dominant species, core
+compaction percentage, sample minimum depth, sample maximum depth, dry
+bulk density, organic matter content and (if available) organic carbon
 content and sample age.</p>
 </div>
 <div class="section level2">
@@ -377,27 +382,27 @@ minimum and maximum sample depth and dry bulk density.</p>
 </table>
 </div>
 <div class="section level2">
-<h2 id="estimation-of-organic-carbon-from-organic-matter">Estimation of organic carbon from organic matter<a class="anchor" aria-label="anchor" href="#estimation-of-organic-carbon-from-organic-matter"></a>
+<h2 id="estimation-of-organic-carbon-from-organic-matter">Estimation of organic carbon % from organic matter %<a class="anchor" aria-label="anchor" href="#estimation-of-organic-carbon-from-organic-matter"></a>
 </h2>
-<p>There is a well-known linear relation between organic matter content
-and organic carbon in soils. This correlation can change between
+<p>There is a well-known linear relation between organic matter and
+organic carbon content in soils. This correlation can change between
 ecosystems and sampling sites due to changes in organic matter
 composition among other factors. Therefore, it is recommended to
 estimate this correlation for each batch of samples.</p>
 <p>The <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> estimates the content of organic
-carbon for those samples where there are no organic carbon values (but
-there may be organic matter values). Estimation of organic carbon is
-done by means of linear regressions on log(organic carbon) ~ log(organic
+carbon for those samples where there are no organic carbon values but
+there is organic matter values. Estimation of organic carbon is done by
+means of linear regressions on log(organic carbon) ~ log(organic
 matter). The function returns an organic carbon value for each organic
 matter value provided. If there is a value for organic carbon for that
 sample it returns the same value; otherwise, it estimates organic carbon
 from a model fitted to that site, or a model fitted to that species, or
 else a model fitted to that ecosystem. If there are too few samples with
 values of organic matter content to build a reliable model or the model
-fit is too poor,<code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> uses the equations in <a href="https://doi.org/10.1038/ngeo1477" class="external-link">Fourqurean et al. (2012)</a> for
+fit is too poor, <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> uses the equations in <a href="https://doi.org/10.1038/ngeo1477" class="external-link">Fourqurean et al. (2012)</a> for
 seagrasses, <a href="https://doi.org/10.1038/s41597-023-02633-x" class="external-link">Maxwell
-et al. (2023)</a> for salt marshes and Piñeiro-Juncal (in prep.) for
-mangroves to estimate the organic carbon.</p>
+et al. (2023)</a> for salt marshes and <a href="https://doi.org/10.1038/s43247-025-02390-2" class="external-link">Piñeiro-Juncal et
+al. (2025)</a> for mangroves to estimate the organic carbon.</p>
 <p>It is unlikely, but possible, that a model predicts higher organic
 carbon than organic matter content. As this is not possible in nature,
 the function will give a warning and it is recommended to discard that
@@ -406,9 +411,9 @@ model.</p>
 carbon stock. Nat. Geosci.5, 505–509. <a href="https://doi.org/10.1038/ngeo1477" class="external-link uri">https://doi.org/10.1038/ngeo1477</a></p>
 <p>Maxwell et al. (2023) Global dataset of soil organic carbon in tidal
 marshes.Sci.Data 10, 1–14.<a href="https://doi.org/10.1038/s41597-023-02633-x" class="external-link uri">https://doi.org/10.1038/s41597-023-02633-x</a></p>
-<p>Piñeiro-Juncal et al. (in prep) Soil organic carbon preservation and
-decay trends in tidal marsh, mangrove and seagrass blue carbon
-ecosystems.</p>
+<p>Piñeiro-Juncal et al. (2025) Soil organic carbon depth profiles and
+centennial and millennial decay rates in tidal marsh, mangrove and
+seagrass blue carbon ecosystems. Commun Earth Environ. <a href="https://doi.org/10.1038/s43247-025-02390-2" class="external-link uri">https://doi.org/10.1038/s43247-025-02390-2</a></p>
 <p>The function <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> has 7 parameters:</p>
 <ul>
 <li><p>“df”: A tibble or data.frame containing all the data. Must have
@@ -448,6 +453,9 @@ dataframe with three new columns on the estimated organic carbon, the
 standard error of the estimate, and the type of model used to estimate
 the organic carbon value in that sample; and [2] a list of the models
 estimated, for further inspection.</p>
+<p>The OC values provided will have the same units as those provided
+initially for the OC and OM columns. We recommend to work in percentage,
+as the estimate_oc_stock() require OC values in percentages.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -684,10 +692,11 @@ meter. If the core does not reach the desired depth (standardization
 depth), it extrapolates the stock to that depth from a linear model
 between accumulated mass of organic carbon and depth.</p>
 <p>The organic carbon mass of each sample is estimated as:</p>
-<p>OC=DBD*(OCp/100)*h (Equation 1)</p>
-<p>where DBD is the dry bulk density, OCp the organic carbon content in
-percentage and h the thickness of the sample (maximum depth of the
-sample - minimum depth of the sample).</p>
+<p>OC=DBD*(OC%/100)*h (Equation 1)</p>
+<p>where DBD is the dry bulk density, OC% the organic carbon content in
+percentage (as calculated with function <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> or
+provided by the user) and h the thickness of the sample (maximum depth
+of the sample - minimum depth of the sample).</p>
 <p>It is common to analyze only selected samples of a core to reduce
 workload and analytic costs. Therefore, it is necessary to estimate the
 organic carbon mass in the spaces between samples to estimate the
@@ -861,10 +870,9 @@ mangroves forests, it is possible to estimate the sediment accretion
 rate of the cores, as long as the sedimentary record has not been mixed.
 <code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code> estimates the organic carbon
 sequestration rates of those cores that have a coherent age-depth model.
-The information of the model is included as the age of the sample in a
-column of the dataframe (column “age” in the example dataframe). The
-function will select those samples that have age data and delete those
-without.</p>
+The age of each sample is included in a column of the input dataframe
+(column “age” in the example dataframe). The function will select those
+samples that have age data and delete those without.</p>
 <p>Estimations of organic carbon sequestration rates depend on the
 balance between organic matter burial and degradation. Therefore, the
 longer the time frame used to estimate the average sequestration rate,
