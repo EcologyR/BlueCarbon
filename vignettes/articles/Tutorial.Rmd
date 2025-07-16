@@ -17,6 +17,9 @@ knitr::opts_chunk$set(
 library(BlueCarbon)
 ```
 
+The BlueCarbon library had 7 functions to estimate stock and sequestrations rate from raw laboratory data.
+Each function is a different step in the analysis workflow and can be used either individually, by users interested in specific calculations, or together as part of a complete workflow.
+
 In this vignette we will use the example data from the BlueCarbon library to estimate the organic carbon stocks in the first 75 cm and 1 meter of the soil and the average organic carbon sequestration rates of these soils in the last 100 and 200 years.
 
 ## Load example data
@@ -99,7 +102,7 @@ head(bluecarbon_decompact, n = 10) |>
   kable()
 ```
 
-## Estimation of organic carbon from organic matter
+## Estimation of organic carbon % from organic matter %
 
 There is a well-known linear relation between organic matter content and organic carbon in soils.
 This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors.
