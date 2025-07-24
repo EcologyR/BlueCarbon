@@ -1,6 +1,6 @@
 Package: BlueCarbon
 Title: Estimation of Organic Carbon Stocks and Sequestration Rates from Soil Core Data
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
   c(person("Nerea", "Piñeiro-Juncal", email = "nerea.pineiro.juncal@uvigo.gal", 
         role = c("aut", "cre", "cph"),

@@ -110,7 +110,7 @@ estimate_oc <- function(df = NULL,
 
   #predict
 
-  df_rows <- split(df_r, 1:nrow(df_r))
+  df_rows <- split(df_r, seq_len(nrow(df_r)))
   df_pred <- lapply(df_rows, predict_oc, model_list = all_models)
   df_pred <- do.call(rbind.data.frame, df_pred)
 
