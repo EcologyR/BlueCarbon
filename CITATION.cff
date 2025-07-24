@@ -9,7 +9,10 @@ type: software
 license: GPL-3.0-or-later
 title: 'BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from
   Soil Core Data'
-version: 0.1.0
+version: 0.1.1
+identifiers:
+- type: doi
+  value: 10.32614/CRAN.package.BlueCarbon
 abstract: Tools to estimate soil organic carbon stocks and sequestration rates in
   blue carbon ecosystems. 'BlueCarbon' contains functions to estimate and correct
   for core compaction, estimate sample thickness, estimate organic carbon content
@@ -56,6 +59,7 @@ preferred-citation:
   year: '2025'
   url: https://github.com/EcologyR/BlueCarbon
   notes: R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/
+repository: https://CRAN.R-project.org/package=BlueCarbon
 repository-code: https://github.com/EcologyR/BlueCarbon
 url: https://ecologyr.github.io/BlueCarbon/
 contact:
@@ -63,6 +67,12 @@ contact:
   given-names: Nerea
   email: nerea.pineiro.juncal@uvigo.gal
   orcid: https://orcid.org/0000-0003-3767-1812
+keywords:
+- blue-carbon
+- bluecarbon
+- carbon
+- ecology
+- r-package
 references:
 - type: software
   title: 'R: A Language and Environment for Statistical Computing'
