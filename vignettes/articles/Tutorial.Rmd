@@ -56,7 +56,7 @@ core_comp[core_comp$core=="Sm_03_04",]
 ```
 
 In this case, core Sm_03_04 didn't have data about any of the three variables needed.
-This are the first 10 rows of the resulting dataframe, including a column with the core compaction percentages.
+Below are the first 10 rows of the resulting dataframe, including a column with the core compaction percentages.
 
 ```{r}
 head(compaction, n = 10)
@@ -68,7 +68,7 @@ Core compaction does not affect the final stock of the core.
 However, it does affect the depth of the core samples.
 As stocks are given until a known soil depth (e.g. the first meter) to be able to compare among areas, the depth of the samples is needed to properly estimate the final stock.
 
-We use function `decompact()` to estimate the decompacted minimum and maximum depth of each sample before stock estimation.
+We use the function `decompact()` to estimate the decompacted minimum and maximum depth of each sample before stock estimation.
 Furthermore, as compaction reduces the volume of the samples, dry bulk density has to be corrected.
 This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function `decompact()` will correct it.
 To provide compacted dry bulk density, the name of that column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
@@ -112,7 +112,7 @@ There is a well-known linear relation between organic matter and organic carbon 
 This correlation can change between ecosystems and sampling sites due to changes in organic matter composition among other factors.
 Therefore, it is recommended to estimate this correlation for each batch of samples.
 
-The `estimate_oc()` estimates the content of organic carbon for those samples where there are no organic carbon values but there is organic matter values.
+The `estimate_oc()` function estimates the content of organic carbon for those samples where there are no organic carbon values but there is organic matter values.
 Estimation of organic carbon is done by means of linear regressions on log(organic carbon) \~ log(organic matter).
 The function returns an organic carbon value for each organic matter value provided.
 If there is a value for organic carbon for that sample it returns the same value; otherwise, it estimates organic carbon from a model fitted to that site, or a model fitted to that species, or else a model fitted to that ecosystem.
@@ -251,7 +251,8 @@ head(stocks75, n = 10)
 
 With this function (`test_extrapolation()`) we can visualize the amount of error that may be introduced by extrapolating carbon stocks of short cores to a deeper standardization depth.
 This function uses those cores that reach the desired depth and tests what would be the error in the estimated carbon stock if we were to model it from the 90, 75, 50 and 25% of that depth.
-This function subsets the cores that reach the desired depth, estimates the complete stock (observed stock) to indicated desired depth, estimates the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% length of the indicated desired depth, and compares the observed stock with the stocks estimated by extrapolation.
+This function subsets the cores that reach the desired depth, estimates the complete stock (observed stock) to indicated desired depth, model the stock using observed data within 90, 75, 50 and 25% of the total observed depth
+estimates the stock from the linear relation of organic carbon accumulated mass and depth using the 90, 75, 50 and 25% length of the indicated desired depth, and compares the observed stock with the stocks estimated by extrapolation.
 IT DOES NOT provide the error for those cores modeled by the function `estimate_oc_stock()` as that function models those cores that do not reach the desired depth.
 This function requires that some of your cores do reach the desired depth.
 
