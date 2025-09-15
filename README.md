@@ -60,7 +60,8 @@ Core compaction derived from field extraction can be mathematically
 corrected to estimate the original depth of the samples. This function
 (`decompact()`) applies a linear correction (assuming uniform compaction
 of the core material) to adjust the sample depth accurately. If dry bulk
-density data is provided, the function also corrects it accordingly.
+density was estimated before compaction correction, it can be provided
+as a variable and the function will correct it accordingly.
 
 #### ***estimate_oc*** **- Organic carbon % estimation from organic matter %**
 
