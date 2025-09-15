@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
 library(BlueCarbon)
 ```
 
-The BlueCarbon library has seven functions to estimate carbon stocks and sequestration rates from raw laboratory data. Each function covers a different step in the analysis workflow and can be used either individually, by users interested in specific calculations, or together as part of a complete workflow.
+The BlueCarbon library has seven functions to estimate carbon stocks and sequestration rates from raw laboratory data.
+Each function covers a different step in the analysis workflow and can be used either individually, by users interested in specific calculations, or together as part of a complete workflow.
 
 In this vignette we will use the example data from the BlueCarbon library to estimate the organic carbon stocks in the first 75 cm and 1 meter of the soil and the average organic carbon sequestration rates of these soils in the last 100 and 200 years.
 
@@ -36,6 +37,8 @@ Many field methods to extract soil cores can lead to the compaction of the mater
 ![](images/compaction-01.png){width="497"}
 
 The compaction percentage can be estimated knowing the difference between the original surface level of the soil and the surface level of the soil within the sampler after core insertion and before retrieval.
+All distances in the example data are provided in cm.
+Distances can be provided in any units, as long as they are the same for all of them.
 
 ```{r}
 compaction <- estimate_compaction(core_comp,
@@ -69,6 +72,8 @@ We use function `decompact()` to estimate the decompacted minimum and maximum de
 Furthermore, as compaction reduces the volume of the samples, dry bulk density has to be corrected.
 This can be done by estimating the corrected volume by: multiplying the corrected thickness of the sample (corrected maximum depth - corrected minimum depth) by the area of the core; or, if compacted dry bulk density is provided, function `decompact()` will correct it.
 To provide compacted dry bulk density, the name of that column has to be specified in the function parameter "dbd" as, by default, this parameter is NULL and the function assumes that it was not provided.
+Sample depths and dry bulk density are provided in cm and g cm^-3^.
+Depths and dry bulk density can be provided in any units, as long as they are the same for all of them.
 
 `decompact()` has 6 parameters:
 
@@ -189,6 +194,7 @@ Then, the organic carbon mass of that sample will be estimated following equatio
 ![Distribution of empty spaces between samples by estimate_h() function](images/estimate_h().png){width="401"}
 
 The function `estimate_h()` is already incorporated within functions `estimate_oc_stock()`, `test_extrapolation()` and `estimate_seq_rate()`, and there is no need to run it beforehand.
+Sample depths in the example dataset is provided in cm.
 
 function `estimate_oc_stock()` has 7 parameters:
 
@@ -227,7 +233,7 @@ head(stocks, n=10)
 
 The stock units are mass/area to a depth (length).
 The actual units will depend on those provided in the original dataframe.
-In the example data (`bluecarbon_data`), the carbon mass will be in g and the area cm^-2^ (as the dry bulk density was in g/cm^-3^) and the depth will be 100 cm, as the minimum and maximum depth of the samples was in cm.
+In the example data (`bluecarbon_data`), the carbon mass will be in g and the area cm^-2^ (as the dry bulk density was in g cm^-3^) and the depth will be 100 cm, as the minimum and maximum depth of the samples was in cm.
 So the units for the estimated carbon stock in this case are **g/cm^-2^ in the top 100 cm**.
 
 To estimate the stock to a depth different than 100 cm, we have to specify it in the parameter "depth".
