@@ -108,7 +108,9 @@ test_extrapolation <- function(df = NULL,
 
   df90 <- lapply(X = cores_c, extract_cores, position = 1)
 
-  if (!any(sapply(df90, nrow)>2)) {stop("None of the cores provide had enough samples to model the stock at 90% of Depth provided")}
+  if (!any(lapply(df90, nrow) > 2)) {
+    stop("None of the cores provided had enough samples to model the stock at 90% of Depth provided")
+  }
 
   df75 <- lapply(X = cores_c, extract_cores, position = 2)
   df50 <- lapply(X = cores_c, extract_cores, position = 3)
