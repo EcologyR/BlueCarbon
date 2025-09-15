@@ -100,8 +100,9 @@ of the material retrieved (e.g. manual percussion).</p>
 <p><img src="images/compaction-01.png" width="497"></p>
 <p>The compaction percentage can be estimated knowing the difference
 between the original surface level of the soil and the surface level of
-the soil within the sampler after core insertion and before
-retrieval.</p>
+the soil within the sampler after core insertion and before retrieval.
+All distances in the example data are provided in cm. Distances can be
+provided in any units, as long as they are the same for all of them.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">compaction</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_compaction.html">estimate_compaction</a></span><span class="op">(</span><span class="va">core_comp</span>,</span>
 <span>                                  core <span class="op">=</span> <span class="st">"core"</span>,</span>
@@ -118,8 +119,8 @@ core in the example data to see which data was missing.</p>
 <span><span class="co">#&gt;        core sampler_length internal_distance external_distance</span></span>
 <span><span class="co">#&gt; 30 Sm_03_04             NA                NA                NA</span></span></code></pre></div>
 <p>In this case, core Sm_03_04 didn’t have data about any of the three
-variables needed. This are the first 10 rows of the resulting dataframe,
-including a column with the core compaction percentages.</p>
+variables needed. Below are the first 10 rows of the resulting
+dataframe, including a column with the core compaction percentages.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">compaction</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        core sampler_length internal_distance external_distance compaction</span></span>
@@ -142,17 +143,20 @@ it does affect the depth of the core samples. As stocks are given until
 a known soil depth (e.g. the first meter) to be able to compare among
 areas, the depth of the samples is needed to properly estimate the final
 stock.</p>
-<p>We use function <code><a href="../reference/decompact.html">decompact()</a></code> to estimate the decompacted
-minimum and maximum depth of each sample before stock estimation.
-Furthermore, as compaction reduces the volume of the samples, dry bulk
-density has to be corrected. This can be done by estimating the
-corrected volume by: multiplying the corrected thickness of the sample
-(corrected maximum depth - corrected minimum depth) by the area of the
-core; or, if compacted dry bulk density is provided, function
-<code><a href="../reference/decompact.html">decompact()</a></code> will correct it. To provide compacted dry bulk
-density, the name of that column has to be specified in the function
-parameter “dbd” as, by default, this parameter is NULL and the function
-assumes that it was not provided.</p>
+<p>We use the function <code><a href="../reference/decompact.html">decompact()</a></code> to estimate the
+decompacted minimum and maximum depth of each sample before stock
+estimation. Furthermore, as compaction reduces the volume of the
+samples, dry bulk density has to be corrected. This can be done by
+estimating the corrected volume by: multiplying the corrected thickness
+of the sample (corrected maximum depth - corrected minimum depth) by the
+area of the core; or, if compacted dry bulk density is provided,
+function <code><a href="../reference/decompact.html">decompact()</a></code> will correct it. To provide compacted
+dry bulk density, the name of that column has to be specified in the
+function parameter “dbd” as, by default, this parameter is NULL and the
+function assumes that it was not provided. Sample depths and dry bulk
+density are provided in cm and g cm<sup>-3</sup>. Depths and dry bulk
+density can be provided in any units, as long as they are the same for
+all of them.</p>
 <p><code><a href="../reference/decompact.html">decompact()</a></code> has 6 parameters:</p>
 <ul>
 <li><p>“df”: data.frame with core properties</p></li>
@@ -389,17 +393,18 @@ organic carbon content in soils. This correlation can change between
 ecosystems and sampling sites due to changes in organic matter
 composition among other factors. Therefore, it is recommended to
 estimate this correlation for each batch of samples.</p>
-<p>The <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> estimates the content of organic
-carbon for those samples where there are no organic carbon values but
-there is organic matter values. Estimation of organic carbon is done by
-means of linear regressions on log(organic carbon) ~ log(organic
-matter). The function returns an organic carbon value for each organic
-matter value provided. If there is a value for organic carbon for that
-sample it returns the same value; otherwise, it estimates organic carbon
-from a model fitted to that site, or a model fitted to that species, or
-else a model fitted to that ecosystem. If there are too few samples with
-values of organic matter content to build a reliable model or the model
-fit is too poor, <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> uses the equations in <a href="https://doi.org/10.1038/ngeo1477" class="external-link">Fourqurean et al. (2012)</a> for
+<p>The <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> function estimates the content of
+organic carbon for those samples where there are no organic carbon
+values but there is organic matter values. Estimation of organic carbon
+is done by means of linear regressions on log(organic carbon) ~
+log(organic matter). The function returns an organic carbon value for
+each organic matter value provided. If there is a value for organic
+carbon for that sample it returns the same value; otherwise, it
+estimates organic carbon from a model fitted to that site, or a model
+fitted to that species, or else a model fitted to that ecosystem. If
+there are too few samples with values of organic matter content to build
+a reliable model or the model fit is too poor,
+<code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> uses the equations in <a href="https://doi.org/10.1038/ngeo1477" class="external-link">Fourqurean et al. (2012)</a> for
 seagrasses, <a href="https://doi.org/10.1038/s41597-023-02633-x" class="external-link">Maxwell
 et al. (2023)</a> for salt marshes and <a href="https://doi.org/10.1038/s43247-025-02390-2" class="external-link">Piñeiro-Juncal et
 al. (2025)</a> for mangroves to estimate the organic carbon.</p>
@@ -712,7 +717,8 @@ estimate_h() function</div>
 <p>The function <code><a href="../reference/estimate_h.html">estimate_h()</a></code> is already incorporated within
 functions <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code>,
 <code><a href="../reference/test_extrapolation.html">test_extrapolation()</a></code> and <code><a href="../reference/estimate_seq_rate.html">estimate_seq_rate()</a></code>,
-and there is no need to run it beforehand.</p>
+and there is no need to run it beforehand. Sample depths in the example
+dataset is provided in cm.</p>
 <p>function <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> has 7 parameters:</p>
 <ul>
 <li><p>“df”: A data.frame with core (core id), mind (minimum depth of
@@ -762,8 +768,8 @@ accumulated mass-depth model used to estimate the stock.</p>
 <p>The stock units are mass/area to a depth (length). The actual units
 will depend on those provided in the original dataframe. In the example
 data (<code>bluecarbon_data</code>), the carbon mass will be in g and
-the area cm<sup>-2</sup> (as the dry bulk density was in
-g/cm<sup>-3</sup>) and the depth will be 100 cm, as the minimum and
+the area cm<sup>-2</sup> (as the dry bulk density was in g
+cm<sup>-3</sup>) and the depth will be 100 cm, as the minimum and
 maximum depth of the samples was in cm. So the units for the estimated
 carbon stock in this case are <strong>g/cm<sup>-2</sup> in the top 100
 cm</strong>.</p>
@@ -796,14 +802,16 @@ function uses those cores that reach the desired depth and tests what
 would be the error in the estimated carbon stock if we were to model it
 from the 90, 75, 50 and 25% of that depth. This function subsets the
 cores that reach the desired depth, estimates the complete stock
-(observed stock) to indicated desired depth, estimates the stock from
-the linear relation of organic carbon accumulated mass and depth using
-the 90, 75, 50 and 25% length of the indicated desired depth, and
-compares the observed stock with the stocks estimated by extrapolation.
-IT DOES NOT provide the error for those cores modeled by the function
-<code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> as that function models those cores
-that do not reach the desired depth. This function requires that some of
-your cores do reach the desired depth.</p>
+(observed stock) to indicated desired depth, model the stock using
+observed data within 90, 75, 50 and 25% of the total observed depth
+estimates the stock from the linear relation of organic carbon
+accumulated mass and depth using the 90, 75, 50 and 25% length of the
+indicated desired depth, and compares the observed stock with the stocks
+estimated by extrapolation. IT DOES NOT provide the error for those
+cores modeled by the function <code><a href="../reference/estimate_oc_stock.html">estimate_oc_stock()</a></code> as that
+function models those cores that do not reach the desired depth. This
+function requires that some of your cores do reach the desired
+depth.</p>
 <p>function <code><a href="../reference/test_extrapolation.html">test_extrapolation()</a></code> has 7 parameters:</p>
 <ul>
 <li><p>“df”: A data.frame with core (core id), mind (minimum depth of
