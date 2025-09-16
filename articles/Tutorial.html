@@ -97,7 +97,7 @@ content and sample age.</p>
 </h2>
 <p>Many field methods to extract soil cores can lead to the compaction
 of the material retrieved (e.g. manual percussion).</p>
-<p><img src="images/compaction-01.png" width="497"></p>
+<p><img src="images/compaction-02.png" width="462"></p>
 <p>The compaction percentage can be estimated knowing the difference
 between the original surface level of the soil and the surface level of
 the soil within the sampler after core insertion and before retrieval.
@@ -187,203 +187,8 @@ compacted in the field and sets compaction to zero.</p>
 minimum and maximum sample depth and dry bulk density.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bluecarbon_decompact</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<colgroup>
-<col width="4%">
-<col width="6%">
-<col width="7%">
-<col width="14%">
-<col width="8%">
-<col width="3%">
-<col width="3%">
-<col width="7%">
-<col width="6%">
-<col width="2%">
-<col width="2%">
-<col width="11%">
-<col width="11%">
-<col width="10%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">site</th>
-<th align="left">core</th>
-<th align="left">ecosystem</th>
-<th align="left">species</th>
-<th align="right">compaction</th>
-<th align="right">mind</th>
-<th align="right">maxd</th>
-<th align="right">dbd</th>
-<th align="right">om</th>
-<th align="right">oc</th>
-<th align="right">age</th>
-<th align="right">mind_corrected</th>
-<th align="right">maxd_corrected</th>
-<th align="right">dbd_corrected</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.7352912</td>
-<td align="right">6.554328</td>
-<td align="right">NA</td>
-<td align="right">8</td>
-<td align="right">0.000000</td>
-<td align="right">1.060606</td>
-<td align="right">0.6932745</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0.9754336</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">13</td>
-<td align="right">1.060606</td>
-<td align="right">2.121212</td>
-<td align="right">0.9196945</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">2</td>
-<td align="right">3</td>
-<td align="right">0.8698411</td>
-<td align="right">7.382634</td>
-<td align="right">NA</td>
-<td align="right">15</td>
-<td align="right">2.121212</td>
-<td align="right">3.181818</td>
-<td align="right">0.8201359</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">3</td>
-<td align="right">4</td>
-<td align="right">1.0272564</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">22</td>
-<td align="right">3.181818</td>
-<td align="right">4.242424</td>
-<td align="right">0.9685560</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">4</td>
-<td align="right">5</td>
-<td align="right">0.9307887</td>
-<td align="right">8.026647</td>
-<td align="right">NA</td>
-<td align="right">29</td>
-<td align="right">4.242424</td>
-<td align="right">5.303030</td>
-<td align="right">0.8776007</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">5</td>
-<td align="right">6</td>
-<td align="right">1.4696196</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">35</td>
-<td align="right">5.303030</td>
-<td align="right">6.363636</td>
-<td align="right">1.3856413</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">6</td>
-<td align="right">7</td>
-<td align="right">1.0500201</td>
-<td align="right">7.349944</td>
-<td align="right">NA</td>
-<td align="right">38</td>
-<td align="right">6.363636</td>
-<td align="right">7.424242</td>
-<td align="right">0.9900190</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">7</td>
-<td align="right">8</td>
-<td align="right">0.7396556</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">44</td>
-<td align="right">7.424242</td>
-<td align="right">8.484849</td>
-<td align="right">0.6973896</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">8</td>
-<td align="right">9</td>
-<td align="right">0.7380564</td>
-<td align="right">9.431279</td>
-<td align="right">NA</td>
-<td align="right">46</td>
-<td align="right">8.484849</td>
-<td align="right">9.545454</td>
-<td align="right">0.6958817</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">9</td>
-<td align="right">10</td>
-<td align="right">0.6777988</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">51</td>
-<td align="right">9.545454</td>
-<td align="right">10.606061</td>
-<td align="right">0.6390675</td>
-</tr>
-</tbody>
-</table>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt; table of extent 1 x 1 x 1 x 1 x 1 x 10 x 10 x 10 x 5 x 0 x 10 x 10 x 10 x 10 &gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="estimation-of-organic-carbon-from-organic-matter">Estimation of organic carbon % from organic matter %<a class="anchor" aria-label="anchor" href="#estimation-of-organic-carbon-from-organic-matter"></a>
@@ -711,7 +516,7 @@ to account for both different sample thickness and different spacing
 between samples. Then, the organic carbon mass of that sample will be
 estimated following equation 1 with the corrected sample thickness.</p>
 <div class="float">
-<img src="images/estimate_h().png" width="401" alt="Distribution of empty spaces between samples by estimate_h() function"><div class="figcaption">Distribution of empty spaces between samples by
+<img src="images/estimate_h()-01.png" width="431" alt="Distribution of empty spaces between samples by estimate_h() function"><div class="figcaption">Distribution of empty spaces between samples by
 estimate_h() function</div>
 </div>
 <p>The function <code><a href="../reference/estimate_h.html">estimate_h()</a></code> is already incorporated within
