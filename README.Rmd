@@ -36,7 +36,7 @@ It includes seven main [functions](https://ecologyr.github.io/BlueCarbon/referen
 Sampling soil cores by manual percussion often results in the compaction of the material retrieved.
 This function (`estimate_compaction()`) estimates the percentage of compaction using measurements taken before and after inserting the corer tube (Fig. 2): the length of the corer tube (sampler_length), distance between the surface of the soil and the top of the tube in the outside (external_distance) and distance between the surface of the soil and the top of the tube in the inside of the tube (internal_distance).
 
-![Soil compaction from field sampling](man/figures/compaction.png){width="364"}
+![Soil compaction from field sampling](images/compaction.png){width="429"}
 
 #### ***decompact*** **- Calculate sediment properties after decompaction**
 
@@ -66,7 +66,7 @@ This function (`estimate_h()`) identifies gaps between samples and, if any are p
 The midpoint between two consecutive samples is estimated from the bottom of the previous sample to the top of the next sample, preventing the uneven distribution of gaps between samples with different thickness.
 The stock and sequestration rate estimation functions (`estimate_oc_stock()` and `estimate_seq_rate()`) already incorporate this function, so there is no need to run it separately.
 
-![Gap distribution between samples to estimate accumulated organic carbon mass](man/figures/estimate_h.png){width="365"}
+![Gap distribution between samples to estimate accumulated organic carbon mass](images/estimate_h().png){width="486"}
 
 #### ***estimate_oc_stock*** **- Organic carbon stock estimation**
 
@@ -77,7 +77,7 @@ Therefore, this function will always provide either a estimated stock (if the co
 However, if the max depth of the core and the desired depth differ greatly, this predicted depth could differ greatly from the real stock.
 We recommend that, if possible, the users use the function `test_extrapolation()` to assess the error of this extrapolation, and that they clearly indicate the maximum depth of the cores in the methods section of the resulting research outputs.
 
-![Organic carbon stock estimation diagram](man/figures/estimate_stock.png){width="380"}
+![Organic carbon stock estimation diagram](images/estimate_stock.png){width="408"}
 
 #### ***test_extrapolation*** **- Visualize the error of stock extrapolation**
 
