@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Tutorial • BlueCarbon</title>
+<title>BlueCarbon Tutorial • BlueCarbon</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Tutorial">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="BlueCarbon Tutorial">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Tutorial.html">Tutorial</a></li>
+<li><a class="dropdown-item" href="../articles/Tutorial.html">BlueCarbon Tutorial</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -55,17 +55,15 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Tutorial</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>BlueCarbon Tutorial</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/EcologyR/BlueCarbon/blob/master/vignettes/articles/Tutorial.Rmd" class="external-link"><code>vignettes/articles/Tutorial.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/EcologyR/BlueCarbon/blob/master/vignettes/Tutorial.Rmd" class="external-link"><code>vignettes/Tutorial.Rmd</code></a></small>
       <div class="d-none name"><code>Tutorial.Rmd</code></div>
     </div>
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/EcologyR/BlueCarbon" class="external-link">BlueCarbon</a></span><span class="op">)</span></span></code></pre></div>
 <p>The BlueCarbon library has seven functions to estimate carbon stocks
 and sequestration rates from raw laboratory data. Each function covers a
 different step in the analysis workflow and can be used either
@@ -78,6 +76,8 @@ these soils in the last 100 and 200 years.</p>
 <div class="section level2">
 <h2 id="load-example-data">Load example data<a class="anchor" aria-label="anchor" href="#load-example-data"></a>
 </h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/EcologyR/BlueCarbon" class="external-link">BlueCarbon</a></span><span class="op">)</span></span></code></pre></div>
 <p>The first dataframe (<a href="https://ecologyr.github.io/BlueCarbon/reference/core_comp.html"><code>core_comp</code></a>)
 has field measurement data that we will use to estimate soil compaction
 at core collection.</p>
@@ -115,7 +115,7 @@ provided in any units, as long as they are the same for all of them.</p>
 from the final dataframe, as there was missing data. We can look at this
 core in the example data to see which data was missing.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">core_comp</span><span class="op">[</span><span class="va">core_comp</span><span class="op">$</span><span class="va">core</span><span class="op">==</span><span class="st">"Sm_03_04"</span>,<span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">core_comp</span><span class="op">[</span><span class="va">core_comp</span><span class="op">$</span><span class="va">core</span> <span class="op">==</span> <span class="st">"Sm_03_04"</span>,<span class="op">]</span></span>
 <span><span class="co">#&gt;        core sampler_length internal_distance external_distance</span></span>
 <span><span class="co">#&gt; 30 Sm_03_04             NA                NA                NA</span></span></code></pre></div>
 <p>In this case, core Sm_03_04 didn’t have data about any of the three
@@ -217,13 +217,6 @@ al. (2025)</a> for mangroves to estimate the organic carbon.</p>
 carbon than organic matter content. As this is not possible in nature,
 the function will give a warning and it is recommended to discard that
 model.</p>
-<p>Fourqureanet al. (2012) Seagrass ecosystems as a globally significant
-carbon stock. Nat. Geosci.5, 505–509. <a href="https://doi.org/10.1038/ngeo1477" class="external-link uri">https://doi.org/10.1038/ngeo1477</a></p>
-<p>Maxwell et al. (2023) Global dataset of soil organic carbon in tidal
-marshes.Sci.Data 10, 1–14.<a href="https://doi.org/10.1038/s41597-023-02633-x" class="external-link uri">https://doi.org/10.1038/s41597-023-02633-x</a></p>
-<p>Piñeiro-Juncal et al. (2025) Soil organic carbon depth profiles and
-centennial and millennial decay rates in tidal marsh, mangrove and
-seagrass blue carbon ecosystems. Commun Earth Environ. <a href="https://doi.org/10.1038/s43247-025-02390-2" class="external-link uri">https://doi.org/10.1038/s43247-025-02390-2</a></p>
 <p>The function <code><a href="../reference/estimate_oc.html">estimate_oc()</a></code> has 7 parameters:</p>
 <ul>
 <li><p>“df”: A tibble or data.frame containing all the data. Must have
@@ -246,7 +239,7 @@ values.</p></li>
 example data the names are the same as the default names.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">oc_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_oc.html">estimate_oc</a></span><span class="op">(</span><span class="va">bluecarbon_decompact</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Tutorial_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="Tutorial_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <pre><code><span><span class="co">#&gt; Warning in estimate_oc(bluecarbon_decompact): The following cores had samples</span></span>
 <span><span class="co">#&gt; with organic carbon values below the organic carbon range used to built the</span></span>
 <span><span class="co">#&gt; model: Sg_04_01, Sm_04_03, Sm_04_04, Sm_05_01</span></span>
@@ -267,164 +260,28 @@ estimated, for further inspection.</p>
 initially for the OC and OM columns. We recommend to work in percentage,
 as the estimate_oc_stock() require OC values in percentages.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="3%">
-<col width="5%">
-<col width="5%">
-<col width="11%">
-<col width="6%">
-<col width="2%">
-<col width="2%">
-<col width="5%">
-<col width="5%">
-<col width="1%">
-<col width="2%">
-<col width="8%">
-<col width="8%">
-<col width="8%">
-<col width="5%">
-<col width="5%">
-<col width="9%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">site</th>
-<th align="left">core</th>
-<th align="left">ecosystem</th>
-<th align="left">species</th>
-<th align="right">compaction</th>
-<th align="right">mind</th>
-<th align="right">maxd</th>
-<th align="right">dbd</th>
-<th align="right">om</th>
-<th align="right">oc</th>
-<th align="right">age</th>
-<th align="right">mind_corrected</th>
-<th align="right">maxd_corrected</th>
-<th align="right">dbd_corrected</th>
-<th align="right">eoc</th>
-<th align="right">eoc_se</th>
-<th align="left">origin</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0.7352912</td>
-<td align="right">6.554328</td>
-<td align="right">NA</td>
-<td align="right">8</td>
-<td align="right">0.000000</td>
-<td align="right">1.060606</td>
-<td align="right">0.6932745</td>
-<td align="right">2.296034</td>
-<td align="right">0.0458514</td>
-<td align="left">Model by species</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">1</td>
-<td align="right">2</td>
-<td align="right">0.9754336</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">13</td>
-<td align="right">1.060606</td>
-<td align="right">2.121212</td>
-<td align="right">0.9196945</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">2</td>
-<td align="right">3</td>
-<td align="right">0.8698411</td>
-<td align="right">7.382634</td>
-<td align="right">NA</td>
-<td align="right">15</td>
-<td align="right">2.121212</td>
-<td align="right">3.181818</td>
-<td align="right">0.8201359</td>
-<td align="right">2.566545</td>
-<td align="right">0.0516612</td>
-<td align="left">Model by species</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">3</td>
-<td align="right">4</td>
-<td align="right">1.0272564</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">22</td>
-<td align="right">3.181818</td>
-<td align="right">4.242424</td>
-<td align="right">0.9685560</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">4</td>
-<td align="right">5</td>
-<td align="right">0.9307887</td>
-<td align="right">8.026647</td>
-<td align="right">NA</td>
-<td align="right">29</td>
-<td align="right">4.242424</td>
-<td align="right">5.303030</td>
-<td align="right">0.8776007</td>
-<td align="right">2.775515</td>
-<td align="right">0.0559117</td>
-<td align="left">Model by species</td>
-</tr>
-<tr class="even">
-<td align="left">Sg_01</td>
-<td align="left">Sg_01_01</td>
-<td align="left">Seagrass</td>
-<td align="left">Posidonia oceanica</td>
-<td align="right">5.714286</td>
-<td align="right">5</td>
-<td align="right">6</td>
-<td align="right">1.4696196</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">35</td>
-<td align="right">5.303030</td>
-<td align="right">6.363636</td>
-<td align="right">1.3856413</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-</tr>
-</tbody>
-</table>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>  </span>
+<span><span class="co">#&gt;    site     core ecosystem            species compaction mind maxd       dbd</span></span>
+<span><span class="co">#&gt; 1 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    0    1 0.7352912</span></span>
+<span><span class="co">#&gt; 2 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    1    2 0.9754336</span></span>
+<span><span class="co">#&gt; 3 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    2    3 0.8698411</span></span>
+<span><span class="co">#&gt; 4 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    3    4 1.0272564</span></span>
+<span><span class="co">#&gt; 5 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    4    5 0.9307887</span></span>
+<span><span class="co">#&gt; 6 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    5    6 1.4696196</span></span>
+<span><span class="co">#&gt;         om oc age mind_corrected maxd_corrected dbd_corrected      eoc</span></span>
+<span><span class="co">#&gt; 1 6.554329 NA   8       0.000000       1.060606     0.6932745 2.296034</span></span>
+<span><span class="co">#&gt; 2       NA NA  13       1.060606       2.121212     0.9196945       NA</span></span>
+<span><span class="co">#&gt; 3 7.382634 NA  15       2.121212       3.181818     0.8201359 2.566545</span></span>
+<span><span class="co">#&gt; 4       NA NA  22       3.181818       4.242424     0.9685560       NA</span></span>
+<span><span class="co">#&gt; 5 8.026646 NA  29       4.242424       5.303030     0.8776007 2.775515</span></span>
+<span><span class="co">#&gt; 6       NA NA  35       5.303030       6.363636     1.3856413       NA</span></span>
+<span><span class="co">#&gt;       eoc_se           origin</span></span>
+<span><span class="co">#&gt; 1 0.04585142 Model by species</span></span>
+<span><span class="co">#&gt; 2         NA             &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 3 0.05166124 Model by species</span></span>
+<span><span class="co">#&gt; 4         NA             &lt;NA&gt;</span></span>
+<span><span class="co">#&gt; 5 0.05591166 Model by species</span></span>
+<span><span class="co">#&gt; 6         NA             &lt;NA&gt;</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">oc_out</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $Mangrove</span></span>
@@ -651,7 +508,7 @@ need to specify the depth.</p>
 <span><span class="co">#&gt; (`geom_point()`).</span></span>
 <span><span class="co">#&gt; Warning: Removed 3 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
-<p><img src="Tutorial_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="Tutorial_files/figure-html/unnamed-chunk-15-1.png" width="100%"></p>
 <p>This function returns a dataframe with observed and extrapolated
 stocks, and two plots. The first plot (left) shows the deviation of the
 extrapolated stock from the observed stock, in percentage of the
@@ -673,7 +530,7 @@ underestimated.</p>
 <span><span class="co">#&gt; (`geom_point()`).</span></span>
 <span><span class="co">#&gt; Warning: Removed 4 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_point()`).</span></span></code></pre></div>
-<p><img src="Tutorial_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p><img src="Tutorial_files/figure-html/unnamed-chunk-16-1.png" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="estimate-soil-organic-carbon-sequestration-rates">Estimate soil organic carbon sequestration rates<a class="anchor" aria-label="anchor" href="#estimate-soil-organic-carbon-sequestration-rates"></a>
