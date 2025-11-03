@@ -4,5 +4,5 @@ bibentry(
   author   = c("Nerea Piñeiro-Juncal", "Julen Astigarraga", "Valentina Costa", "Marcio Martins", "Francisco Rodriguez-Sanchez"),
   year     = 2025,
   url      = "https://github.com/EcologyR/BlueCarbon",
-  note     = "R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/"
+  note     = "R package version 0.1.1, https://EcologyR.github.io/BlueCarbon/"
 )

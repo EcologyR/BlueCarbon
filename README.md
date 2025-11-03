@@ -190,7 +190,7 @@ To cite package 'BlueCarbon' in publications use:
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
   Rodriguez-Sanchez F (2025). _BlueCarbon: Estimation of Organic Carbon
   Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.1.0, https://EcologyR.github.io/BlueCarbon/,
+  version 0.1.1, https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
@@ -200,7 +200,7 @@ A BibTeX entry for LaTeX users is
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
     year = {2025},
     url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/},
+    note = {R package version 0.1.1, https://EcologyR.github.io/BlueCarbon/},
   }
 ```
 
