@@ -21,7 +21,7 @@ abstract: Tools to estimate soil organic carbon stocks and sequestration rates i
 authors:
 - family-names: Piñeiro-Juncal
   given-names: Nerea
-  email: nerea.pineiro.juncal@uvigo.gal
+  email: np.juncal@gmail.com
   orcid: https://orcid.org/0000-0003-3767-1812
 - family-names: Astigarraga
   given-names: Julen
@@ -42,7 +42,7 @@ preferred-citation:
   authors:
   - family-names: Piñeiro-Juncal
     given-names: Nerea
-    email: nerea.pineiro.juncal@uvigo.gal
+    email: np.juncal@gmail.com
     orcid: https://orcid.org/0000-0003-3767-1812
   - family-names: Astigarraga
     given-names: Julen
@@ -65,7 +65,7 @@ url: https://ecologyr.github.io/BlueCarbon/
 contact:
 - family-names: Piñeiro-Juncal
   given-names: Nerea
-  email: nerea.pineiro.juncal@uvigo.gal
+  email: np.juncal@gmail.com
   orcid: https://orcid.org/0000-0003-3767-1812
 keywords:
 - blue-carbon
