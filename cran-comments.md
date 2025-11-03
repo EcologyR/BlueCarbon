@@ -1,11 +1,13 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 1 note
 
-❯ checking CRAN incoming feasibility ... [4s/14s] NOTE
-  Maintainer: ‘Nerea Piñeiro-Juncal <nerea.pineiro.juncal@uvigo.gal>’
+❯ checking CRAN incoming feasibility ... [8s/27s] NOTE
+  Maintainer: ‘Nerea Piñeiro-Juncal <np.juncal@gmail.com>’
   
-  New submission
+  New maintainer:
+    Nerea Piñeiro-Juncal <np.juncal@gmail.com>
+  Old maintainer(s):
+    Nerea Piñeiro-Juncal <nerea.pineiro.juncal@uvigo.gal>
 
-❯ checking for future file timestamps ... NOTE
-  unable to verify current time
+Please note the maintainer's email has changed, since the 'uvigo.gal' email address will likely be closed soon.
