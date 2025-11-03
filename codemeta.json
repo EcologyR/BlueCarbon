@@ -1,0 +1,224 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "identifier": "BlueCarbon",
+  "description": "Tools to estimate soil organic carbon stocks and sequestration rates in blue carbon ecosystems. 'BlueCarbon' contains functions to estimate and correct for core compaction, estimate sample thickness, estimate organic carbon content from organic matter content, estimate organic carbon stocks and sequestration rates, and visualize the error of carbon stock extrapolation. ",
+  "name": "BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates from Soil Core Data",
+  "relatedLink": "https://ecologyr.github.io/BlueCarbon/",
+  "codeRepository": "https://github.com/EcologyR/BlueCarbon",
+  "issueTracker": "https://github.com/EcologyR/BlueCarbon/issues",
+  "license": "https://spdx.org/licenses/GPL-3.0",
+  "version": "0.1.1",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 4.5.1 (2025-06-13)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Nerea",
+      "familyName": "Piñeiro-Juncal",
+      "email": "nerea.pineiro.juncal@uvigo.gal",
+      "@id": "https://orcid.org/0000-0003-3767-1812"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Julen",
+      "familyName": "Astigarraga",
+      "@id": "https://orcid.org/0000-0001-9520-3713"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Valentina",
+      "familyName": "Costa",
+      "@id": "https://orcid.org/0000-0002-1513-0284"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Marcio",
+      "familyName": "Martins",
+      "@id": "https://orcid.org/0000-0002-6969-2215"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Francisco",
+      "familyName": "Rodriguez-Sanchez",
+      "@id": "https://orcid.org/0000-0002-7981-1599"
+    }
+  ],
+  "copyrightHolder": [
+    {
+      "@type": "Person",
+      "givenName": "Nerea",
+      "familyName": "Piñeiro-Juncal",
+      "email": "nerea.pineiro.juncal@uvigo.gal",
+      "@id": "https://orcid.org/0000-0003-3767-1812"
+    }
+  ],
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Nerea",
+      "familyName": "Piñeiro-Juncal",
+      "email": "nerea.pineiro.juncal@uvigo.gal",
+      "@id": "https://orcid.org/0000-0003-3767-1812"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "covr",
+      "name": "covr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=covr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "version": ">= 3.0.0",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    }
+  ],
+  "softwareRequirements": {
+    "1": {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 4.1"
+    },
+    "2": {
+      "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "ggplot2",
+      "name": "ggplot2",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=ggplot2"
+    },
+    "4": {
+      "@type": "SoftwareApplication",
+      "identifier": "gridExtra",
+      "name": "gridExtra",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=gridExtra"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "reshape",
+      "name": "reshape",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=reshape"
+    },
+    "SystemRequirements": null
+  },
+  "fileSize": "428.696KB",
+  "citation": [
+    {
+      "@type": "SoftwareSourceCode",
+      "datePublished": "2025",
+      "author": [
+        {
+          "@type": "Person",
+          "givenName": "Nerea",
+          "familyName": "Piñeiro-Juncal"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Julen",
+          "familyName": "Astigarraga"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Valentina",
+          "familyName": "Costa"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Marcio",
+          "familyName": "Martins"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Francisco",
+          "familyName": "Rodriguez-Sanchez"
+        }
+      ],
+      "name": "BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data",
+      "url": "https://github.com/EcologyR/BlueCarbon",
+      "description": "R package version 0.1.1, https://EcologyR.github.io/BlueCarbon/"
+    }
+  ],
+  "releaseNotes": "https://github.com/EcologyR/BlueCarbon/blob/main/NEWS.md",
+  "readme": "https://github.com/EcologyR/BlueCarbon/blob/master/README.md",
+  "contIntegration": ["https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/EcologyR/BlueCarbon"],
+  "keywords": ["blue-carbon", "bluecarbon", "carbon", "ecology", "r-package"]
+}
