@@ -7,6 +7,10 @@
 
 [![](https://www.r-pkg.org/badges/version/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
+[![r-universe
+version](https://ecologyr.r-universe.dev/BlueCarbon/badges/version)](https://ecologyr.r-universe.dev/BlueCarbon)
+[![r-universe
+status](https://ecologyr.r-universe.dev/BlueCarbon/badges/checks)](https://ecologyr.r-universe.dev/BlueCarbon)
 [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
@@ -31,7 +35,7 @@ organic matter content, (5) estimate organic carbon stocks and (6)
 sequestration rates, and (7) visualize the error in stock extrapolation.
 
 <figure>
-<img src="images/BC_workflow-01.png" width="527"
+<img src="man/figures/BC_workflow.png" width="527"
 alt="Blue Carbon package workflow" />
 <figcaption aria-hidden="true">Blue Carbon package workflow</figcaption>
 </figure>
@@ -48,7 +52,7 @@ the surface of the soil and the top of the tube in the inside of the
 tube (internal_distance).
 
 <figure>
-<img src="images/compaction.png" width="429"
+<img src="man/figures/compaction.png" width="429"
 alt="Soil compaction from field sampling" />
 <figcaption aria-hidden="true">Soil compaction from field
 sampling</figcaption>
@@ -106,7 +110,7 @@ functions (`estimate_oc_stock()` and `estimate_seq_rate()`) already
 incorporate this function, so there is no need to run it separately.
 
 <figure>
-<img src="images/estimate_h().png" width="486"
+<img src="man/figures/estimate_h.png" width="486"
 alt="Gap distribution between samples to estimate accumulated organic carbon mass" />
 <figcaption aria-hidden="true">Gap distribution between samples to
 estimate accumulated organic carbon mass</figcaption>
@@ -130,7 +134,7 @@ that they clearly indicate the maximum depth of the cores in the methods
 section of the resulting research outputs.
 
 <figure>
-<img src="images/estimate_stock.png" width="408"
+<img src="man/figures/estimate_stock.png" width="408"
 alt="Organic carbon stock estimation diagram" />
 <figcaption aria-hidden="true">Organic carbon stock estimation
 diagram</figcaption>
@@ -184,9 +188,9 @@ citation("BlueCarbon")
 To cite package 'BlueCarbon' in publications use:
 
   Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
-  Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
+  Rodriguez-Sanchez F (2025). _BlueCarbon: Estimation of Organic Carbon
   Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
+  version 0.1.0, https://EcologyR.github.io/BlueCarbon/,
   <https://github.com/EcologyR/BlueCarbon>.
 
 A BibTeX entry for LaTeX users is
@@ -194,9 +198,9 @@ A BibTeX entry for LaTeX users is
   @Manual{,
     title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
     author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
-    year = {2024},
+    year = {2025},
     url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.0.1, https://EcologyR.github.io/BlueCarbon/},
+    note = {R package version 0.1.0, https://EcologyR.github.io/BlueCarbon/},
   }
 ```
 
@@ -220,4 +224,4 @@ Horizon Europe Project (No 101059888) funded by the European Union. FRS
 was supported by VI PPIT-US from Universidad de Sevilla. MM was
 supported by a FCT PhD grant (<https://doi.org/10.54499/2020.06996.BD>).
 
-![](https://ecologyr.github.io/workshop/images/logos.png)
+![](https://ecologyr.github.io/workshop/man/figures/logos.png)

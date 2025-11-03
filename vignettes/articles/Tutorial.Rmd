@@ -34,7 +34,7 @@ The core field information and laboratory data includes: sampling site, core ID,
 
 Many field methods to extract soil cores can lead to the compaction of the material retrieved (e.g. manual percussion).
 
-![](images/compaction-02.png){width="462"}
+![](images/compaction.png){width="462"}
 
 The compaction percentage can be estimated knowing the difference between the original surface level of the soil and the surface level of the soil within the sampler after core insertion and before retrieval.
 All distances in the example data are provided in cm.
@@ -191,7 +191,7 @@ The function `estimate_h()` distributes these empty spaces between the adjacent 
 This allows to account for both different sample thickness and different spacing between samples.
 Then, the organic carbon mass of that sample will be estimated following equation 1 with the corrected sample thickness.
 
-![Distribution of empty spaces between samples by estimate_h() function](images/estimate_h()-01.png){width="431"}
+![Distribution of empty spaces between samples by estimate_h() function](images/estimate_h.png){width="431"}
 
 The function `estimate_h()` is already incorporated within functions `estimate_oc_stock()`, `test_extrapolation()` and `estimate_seq_rate()`, and there is no need to run it beforehand.
 Sample depths in the example dataset is provided in cm.

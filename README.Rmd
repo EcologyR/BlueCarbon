@@ -24,7 +24,10 @@ knitr::opts_chunk$set(
 ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
 [![r-universe version](https://ecologyr.r-universe.dev/BlueCarbon/badges/version)](https://ecologyr.r-universe.dev/BlueCarbon)
 [![r-universe status](https://ecologyr.r-universe.dev/BlueCarbon/badges/checks)](https://ecologyr.r-universe.dev/BlueCarbon)
-[![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) `r badger::badge_lifecycle("stable")` `r badger::badge_repostatus("Active")` [![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
+[![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
+`r badger::badge_lifecycle("stable")`
+`r badger::badge_repostatus("Active")`
+[![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 
 <!-- badges: end -->
 
@@ -33,14 +36,14 @@ Following the protocols published by the Blue Carbon initiative [Howard et al. (
 
 It includes seven main [functions](https://ecologyr.github.io/BlueCarbon/reference/index.html) to (1) estimate core compaction, (2) correct core compaction, (3) estimate sample thickness, (4) estimate organic carbon content from organic matter content, (5) estimate organic carbon stocks and (6) sequestration rates, and (7) visualize the error in stock extrapolation.
 
-![Blue Carbon package workflow](images/BC_workflow-01.png){width="527"}
+![Blue Carbon package workflow](man/figures/BC_workflow.png){width="527"}
 
 #### ***estimate_compaction*** **- Estimate Core Compaction**
 
 Sampling soil cores by manual percussion often results in the compaction of the material retrieved.
 This function (`estimate_compaction()`) estimates the percentage of compaction using measurements taken before and after inserting the corer tube (Fig. 2): the length of the corer tube (sampler_length), distance between the surface of the soil and the top of the tube in the outside (external_distance) and distance between the surface of the soil and the top of the tube in the inside of the tube (internal_distance).
 
-![Soil compaction from field sampling](images/compaction.png){width="429"}
+![Soil compaction from field sampling](man/figures/compaction.png){width="429"}
 
 #### ***decompact*** **- Calculate sediment properties after decompaction**
 
@@ -70,7 +73,7 @@ This function (`estimate_h()`) identifies gaps between samples and, if any are p
 The midpoint between two consecutive samples is estimated from the bottom of the previous sample to the top of the next sample, preventing the uneven distribution of gaps between samples with different thickness.
 The stock and sequestration rate estimation functions (`estimate_oc_stock()` and `estimate_seq_rate()`) already incorporate this function, so there is no need to run it separately.
 
-![Gap distribution between samples to estimate accumulated organic carbon mass](images/estimate_h().png){width="486"}
+![Gap distribution between samples to estimate accumulated organic carbon mass](man/figures/estimate_h.png){width="486"}
 
 #### ***estimate_oc_stock*** **- Organic carbon stock estimation**
 
@@ -81,7 +84,7 @@ Therefore, this function will always provide either a estimated stock (if the co
 However, if the max depth of the core and the desired depth differ greatly, this predicted depth could differ greatly from the real stock.
 We recommend that, if possible, the users use the function `test_extrapolation()` to assess the error of this extrapolation, and that they clearly indicate the maximum depth of the cores in the methods section of the resulting research outputs.
 
-![Organic carbon stock estimation diagram](images/estimate_stock.png){width="408"}
+![Organic carbon stock estimation diagram](man/figures/estimate_stock.png){width="408"}
 
 #### ***test_extrapolation*** **- Visualize the error of stock extrapolation**
 
@@ -137,4 +140,4 @@ JA acknowledges funding from the CLIMB-FOREST Horizon Europe Project (No 1010598
 FRS was supported by VI PPIT-US from Universidad de Sevilla.
 MM was supported by a FCT PhD grant (<https://doi.org/10.54499/2020.06996.BD>).
 
-![](https://ecologyr.github.io/workshop/images/logos.png)
+![](https://ecologyr.github.io/workshop/man/figures/logos.png)
