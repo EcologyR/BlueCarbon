@@ -20,7 +20,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Nerea Piñeiro-Juncal \email{nerea.pineiro.juncal@uvigo.gal} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID}) [copyright holder]
+\strong{Maintainer}: Nerea Piñeiro-Juncal \email{np.juncal@gmail.com} (\href{https://orcid.org/0000-0003-3767-1812}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
