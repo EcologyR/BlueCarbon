@@ -1,21 +1,20 @@
 ---
-title: "Tutorial"
-editor_options: 
-  markdown: 
-    wrap: sentence
+title: "BlueCarbon Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BlueCarbon Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
-library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width=7
 )
 ```
 
-```{r setup}
-library(BlueCarbon)
-```
 
 The BlueCarbon library has seven functions to estimate carbon stocks and sequestration rates from raw laboratory data.
 Each function covers a different step in the analysis workflow and can be used either individually, by users interested in specific calculations, or together as part of a complete workflow.
@@ -23,6 +22,10 @@ Each function covers a different step in the analysis workflow and can be used e
 In this vignette we will use the example data from the BlueCarbon library to estimate the organic carbon stocks in the first 75 cm and 1 meter of the soil and the average organic carbon sequestration rates of these soils in the last 100 and 200 years.
 
 ## Load example data
+
+```{r }
+library(BlueCarbon)
+```
 
 The first dataframe ([`core_comp`](https://ecologyr.github.io/BlueCarbon/reference/core_comp.html)) has field measurement data that we will use to estimate soil compaction at core collection.
 
@@ -52,7 +55,7 @@ We got a warning about one core, core Sm_03_04, that has been removed from the f
 We can look at this core in the example data to see which data was missing.
 
 ```{r}
-core_comp[core_comp$core=="Sm_03_04",]
+core_comp[core_comp$core == "Sm_03_04",]
 ```
 
 In this case, core Sm_03_04 didn't have data about any of the three variables needed.
@@ -121,16 +124,6 @@ If there are too few samples with values of organic matter content to build a re
 It is unlikely, but possible, that a model predicts higher organic carbon than organic matter content.
 As this is not possible in nature, the function will give a warning and it is recommended to discard that model.
 
-Fourqureanet al. (2012) Seagrass ecosystems as a globally significant carbon stock.
-Nat.
-Geosci.5, 505–509.
-<https://doi.org/10.1038/ngeo1477>
-
-Maxwell et al. (2023) Global dataset of soil organic carbon in tidal marshes.Sci.Data 10, 1–14.<https://doi.org/10.1038/s41597-023-02633-x>
-
-Piñeiro-Juncal et al. (2025) Soil organic carbon depth profiles and centennial and millennial decay rates in tidal marsh, mangrove and seagrass blue carbon ecosystems.
-Commun Earth Environ.
-<https://doi.org/10.1038/s43247-025-02390-2>
 
 The function `estimate_oc()` has 7 parameters:
 
@@ -152,7 +145,7 @@ The function `estimate_oc()` has 7 parameters:
 
 Here we don't need to specify the name of the columns as in the example data the names are the same as the default names.
 
-```{r}
+```{r }
 oc_out <- estimate_oc(bluecarbon_decompact)
 ```
 
@@ -164,8 +157,7 @@ The OC values provided will have the same units as those provided initially for 
 We recommend to work in percentage, as the estimate_oc_stock() require OC values in percentages.
 
 ```{r}
-head(oc_out[[1]]) |> 
-  kable()
+head(oc_out[[1]])  
 ```
 
 ```{r}
@@ -275,7 +267,7 @@ As in the `estimate_oc_stock()` example, we used the output from `estimate_oc()`
 As the column names from the `estimate_oc()` output are the same as the default names in `estimate_oc_stock()` we don't need to specify them.
 Furthermore, the default depth is 100, and our data is in cm so we don't need to specify the depth.
 
-```{r}
+```{r out.width='100%'}
 stocks_test <- test_extrapolation(oc_out[[1]])
 ```
 
@@ -288,7 +280,7 @@ Above that line, the extrapolated stock was overestimated; below the line, the e
 The same can be done for a different depth.
 Like in the example of `estimate_oc_stock()` we use 75 by modifying the parameter "depth".
 
-```{r}
+```{r out.width='100%'}
 stocks_test <- test_extrapolation(oc_out[[1]], depth = 75)
 ```
 
@@ -356,3 +348,5 @@ seq_rate_200 <- estimate_seq_rate(oc_out[[1]], timeframe = 200)
 ```{r}
 head(seq_rate_200, n=10)
 ```
+
+

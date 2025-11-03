@@ -26,6 +26,8 @@ Depends:
 LazyData: true
 Suggests: 
     covr,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
@@ -34,3 +36,4 @@ Imports:
     gridExtra,
     reshape
 Config/Needs/website: rmarkdown
+VignetteBuilder: knitr
