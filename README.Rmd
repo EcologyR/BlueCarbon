@@ -20,7 +20,11 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-`r badger::badge_cran_release()` ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon) [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) `r badger::badge_lifecycle("stable")` `r badger::badge_repostatus("Active")` [![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
+`r badger::badge_cran_release()`
+![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
+[![r-universe version](https://ecologyr.r-universe.dev/BlueCarbon/badges/version)](https://ecologyr.r-universe.dev/BlueCarbon)
+[![r-universe status](https://ecologyr.r-universe.dev/BlueCarbon/badges/checks)](https://ecologyr.r-universe.dev/BlueCarbon)
+[![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) `r badger::badge_lifecycle("stable")` `r badger::badge_repostatus("Active")` [![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 
 <!-- badges: end -->
 
