@@ -15,10 +15,10 @@ authors:
     affiliation: 1
   - name: Julen Astigarraga
     orcid: 0000-0001-9520-3713
-    affiliation: 2,3
+    affiliation: "2,3"
   - name: Valentina Costa
     orcid: 0000-0002-1513-0284
-    affiliation: 4,5,6
+    affiliation: "4,5,6"
   - name: Márcio Martins
     orcid: 0000-0002-6969-2215
     affiliation: 7
