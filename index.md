@@ -13,7 +13,7 @@ estimate sample thickness, (4) estimate organic carbon content from
 organic matter content, (5) estimate organic carbon stocks and (6)
 sequestration rates, and (7) visualize the error in stock extrapolation.
 
-![Blue Carbon package workflow](reference/figures/BC_workflow.png)
+![Blue Carbon package workflow](images/BC_workflow-01.png)
 
 Blue Carbon package workflow
 
@@ -29,7 +29,7 @@ top of the tube in the outside (external_distance) and distance between
 the surface of the soil and the top of the tube in the inside of the
 tube (internal_distance).
 
-![Soil compaction from field sampling](reference/figures/compaction.png)
+![Soil compaction from field sampling](images/compaction.png)
 
 Soil compaction from field sampling
 
@@ -93,7 +93,7 @@ already incorporate this function, so there is no need to run it
 separately.
 
 ![Gap distribution between samples to estimate accumulated organic
-carbon mass](reference/figures/estimate_h.png)
+carbon mass](images/estimate_h().png)
 
 Gap distribution between samples to estimate accumulated organic carbon
 mass
@@ -116,8 +116,7 @@ to assess the error of this extrapolation, and that they clearly
 indicate the maximum depth of the cores in the methods section of the
 resulting research outputs.
 
-![Organic carbon stock estimation
-diagram](reference/figures/estimate_stock.png)
+![Organic carbon stock estimation diagram](images/estimate_stock.png)
 
 Organic carbon stock estimation diagram
 
@@ -168,21 +167,20 @@ If using this package, please cite it:
 citation("BlueCarbon")
 To cite package 'BlueCarbon' in publications use:
 
-  Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
-  Rodriguez-Sanchez F (2025). _BlueCarbon: Estimation of Organic Carbon
-  Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.1.1, https://EcologyR.github.io/BlueCarbon/,
-  <https://github.com/EcologyR/BlueCarbon>.
+  Piñeiro-Juncal et al., (2025). BlueCarbon R package: Estimation of Organic Carbon 
+  Stocks and Sequestration Rates From Soil Core Data. Journal of Open Source Software, 
+  10(115), 8333, https://doi.org/10.21105/joss.08333
 
 A BibTeX entry for LaTeX users is
 
-  @Manual{,
-    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
-    author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
-    year = {2025},
-    url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.1.1, https://EcologyR.github.io/BlueCarbon/},
-  }
+ @article{Piñeiro-Juncal2025, 
+ doi = {10.21105/joss.08333}, 
+ url = {https://doi.org/10.21105/joss.08333}, 
+ year = {2025}, publisher = {The Open Journal}, 
+ volume = {10}, number = {115}, pages = {8333}, 
+ author = {Piñeiro-Juncal, Nerea and Astigarraga, Julen and Costa, Valentina and Martins, Márcio and Rodríguez-Sánchez, Francisco}, 
+ title = {BlueCarbon R package: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data}, 
+ journal = {Journal of Open Source Software} }
 ```
 
 ## Code of Conduct
@@ -205,4 +203,4 @@ Horizon Europe Project (No 101059888) funded by the European Union. FRS
 was supported by VI PPIT-US from Universidad de Sevilla. MM was
 supported by a FCT PhD grant (<https://doi.org/10.54499/2020.06996.BD>).
 
-![](https://ecologyr.github.io/workshop/man/figures/logos.png)
+![](https://ecologyr.github.io/workshop/images/logos.png)
