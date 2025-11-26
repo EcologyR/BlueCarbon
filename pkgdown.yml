@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   Tutorial: Tutorial.html
-last_built: 2025-11-26T07:36Z
+last_built: 2025-11-26T11:19Z
 urls:
   reference: https://ecologyr.github.io/BlueCarbon/reference
   article: https://ecologyr.github.io/BlueCarbon/articles
