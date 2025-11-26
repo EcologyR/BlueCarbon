@@ -20,14 +20,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-`r badger::badge_cran_release()`
-![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon)
-[![r-universe version](https://ecologyr.r-universe.dev/BlueCarbon/badges/version)](https://ecologyr.r-universe.dev/BlueCarbon)
-[![r-universe status](https://ecologyr.r-universe.dev/BlueCarbon/badges/checks)](https://ecologyr.r-universe.dev/BlueCarbon)
-[![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon)
-`r badger::badge_lifecycle("stable")`
-`r badger::badge_repostatus("Active")`
-[![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
+`r badger::badge_cran_release()` ![](https://img.shields.io/github/r-package/v/EcologyR/BlueCarbon) [![r-universe version](https://ecologyr.r-universe.dev/BlueCarbon/badges/version)](https://ecologyr.r-universe.dev/BlueCarbon) [![r-universe status](https://ecologyr.r-universe.dev/BlueCarbon/badges/checks)](https://ecologyr.r-universe.dev/BlueCarbon) [![R-CMD-check](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/EcologyR/BlueCarbon/actions/workflows/R-CMD-check.yaml) [![codecov](https://codecov.io/gh/EcologyR/BlueCarbon/graph/badge.svg)](https://app.codecov.io/gh/EcologyR/BlueCarbon) `r badger::badge_lifecycle("stable")` `r badger::badge_repostatus("Active")` [![DOI](https://joss.theoj.org/papers/10.21105/joss.08333/status.svg)](https://doi.org/10.21105/joss.08333) [![](https://cranlogs.r-pkg.org/badges/grand-total/BlueCarbon)](https://cran.r-project.org/package=BlueCarbon)
 
 <!-- badges: end -->
 
@@ -123,9 +116,15 @@ remotes::install_github("EcologyR/BlueCarbon")
 
 If using this package, please cite it:
 
-```{r comment=NA}
-citation("BlueCarbon")
-```
+To cite package 'BlueCarbon' in publications use:
+
+Piñeiro-Juncal et al., (2025).
+BlueCarbon R package: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data.
+Journal of Open Source Software, 10(115), 8333, <https://doi.org/10.21105/joss.08333>
+
+A BibTeX entry for LaTeX users is
+
+@article{Piñeiro-Juncal2025, doi = {10.21105/joss.08333}, url = {<https://doi.org/10.21105/joss.08333>}, year = {2025}, publisher = {The Open Journal}, volume = {10}, number = {115}, pages = {8333}, author = {Piñeiro-Juncal, Nerea and Astigarraga, Julen and Costa, Valentina and Martins, Márcio and Rodríguez-Sánchez, Francisco}, title = {BlueCarbon R package: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data}, journal = {Journal of Open Source Software} }
 
 ## Code of Conduct
 
