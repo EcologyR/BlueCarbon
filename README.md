@@ -117,21 +117,20 @@ If using this package, please cite it:
 citation("BlueCarbon")
 To cite package 'BlueCarbon' in publications use:
 
-  Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M,
-  Rodriguez-Sanchez F (2024). _BlueCarbon: Estimation of Organic Carbon
-  Stocks and Sequestration Rates From Soil Core Data_. R package
-  version 0.0.1, https://EcologyR.github.io/BlueCarbon/,
-  <https://github.com/EcologyR/BlueCarbon>.
+  Piñeiro-Juncal et al., (2025). BlueCarbon R package: Estimation of Organic Carbon 
+  Stocks and Sequestration Rates From Soil Core Data. Journal of Open Source Software, 
+  10(115), 8333, https://doi.org/10.21105/joss.08333
 
 A BibTeX entry for LaTeX users is
 
-  @Manual{,
-    title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
-    author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
-    year = {2024},
-    url = {https://github.com/EcologyR/BlueCarbon},
-    note = {R package version 0.0.1, https://EcologyR.github.io/BlueCarbon/},
-  }
+ @article{Piñeiro-Juncal2025, 
+ doi = {10.21105/joss.08333}, 
+ url = {https://doi.org/10.21105/joss.08333}, 
+ year = {2025}, publisher = {The Open Journal}, 
+ volume = {10}, number = {115}, pages = {8333}, 
+ author = {Piñeiro-Juncal, Nerea and Astigarraga, Julen and Costa, Valentina and Martins, Márcio and Rodríguez-Sánchez, Francisco}, 
+ title = {BlueCarbon R package: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data}, 
+ journal = {Journal of Open Source Software} }
 ```
 
 ## Code of Conduct
