@@ -1,8 +1,20 @@
-bibentry(
-  bibtype  = "Manual",
-  title    = "BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data",
-  author   = c("Nerea Piñeiro-Juncal", "Julen Astigarraga", "Valentina Costa", "Marcio Martins", "Francisco Rodriguez-Sanchez"),
-  year     = 2025,
-  url      = "https://github.com/EcologyR/BlueCarbon",
-  note     = "R package version 0.1.1, https://EcologyR.github.io/BlueCarbon/"
-)
+bibentry(bibtype = "Article",
+         author = c(person(given = "Nerea",
+                           family = "Piñeiro-Juncal"),
+                    person(given = "Julen",
+                           family = "Astigarraga"),
+                    person(given = "Valentina",
+                           family = "Costa"),
+                    person(given = "Márcio",
+                           family = "Martins"),
+                    person(given = "Francisco",
+                           family = "Rodríguez-Sánchez")),
+         title = "BlueCarbon R package: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data",
+         publisher = "The Open Journal",
+         volume = "10",
+         number = "115",
+         doi = "10.21105/joss.08333",
+         url = "https://doi.org/10.21105/joss.08333",
+         year = "2025",
+         pages = "8333",
+         journal = "Journal of Open Source Software")
