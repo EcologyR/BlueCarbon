@@ -20,16 +20,22 @@
 Source:
 [`inst/CITATION`](https://github.com/EcologyR/BlueCarbon/blob/master/inst/CITATION)
 
-Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M, Rodriguez-Sanchez F
-(2025). *BlueCarbon: Estimation of Organic Carbon Stocks and
-Sequestration Rates From Soil Core Data*. R package version 0.1.1,
-https://EcologyR.github.io/BlueCarbon/,
-<https://github.com/EcologyR/BlueCarbon>.
+Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M, Rodríguez-Sánchez F
+(2025). “BlueCarbon R package: Estimation of Organic Carbon Stocks and
+Sequestration Rates From Soil Core Data.” *Journal of Open Source
+Software*, **10**(115), 8333.
+[doi:10.21105/joss.08333](https://doi.org/10.21105/joss.08333),
+<https://doi.org/10.21105/joss.08333>.
 
-    @Manual{,
-      title = {BlueCarbon: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
-      author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Marcio Martins and Francisco Rodriguez-Sanchez},
+    @Article{,
+      author = {Nerea Piñeiro-Juncal and Julen Astigarraga and Valentina Costa and Márcio Martins and Francisco Rodríguez-Sánchez},
+      title = {BlueCarbon R package: Estimation of Organic Carbon Stocks and Sequestration Rates From Soil Core Data},
+      publisher = {The Open Journal},
+      volume = {10},
+      number = {115},
+      doi = {10.21105/joss.08333},
+      url = {https://doi.org/10.21105/joss.08333},
       year = {2025},
-      url = {https://github.com/EcologyR/BlueCarbon},
-      note = {R package version 0.1.1, https://EcologyR.github.io/BlueCarbon/},
+      pages = {8333},
+      journal = {Journal of Open Source Software},
     }

@@ -1,5 +1,10 @@
 # Changelog
 
+## BlueCarbon 0.1.2
+
+- Update citation info, after publication in the Journal of Open Source
+  Software.
+
 ## BlueCarbon 0.1.1
 
 CRAN release: 2025-11-04
