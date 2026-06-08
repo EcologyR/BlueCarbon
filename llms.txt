@@ -144,18 +144,21 @@ BlueCarbon can be installed directly from
 [CRAN](https://cran.r-project.org/package=BlueCarbon):
 
 ``` r
+
 install.packages("BlueCarbon")
 ```
 
 or from [R-universe](https://ecologyr.r-universe.dev/BlueCarbon):
 
 ``` r
+
 install.packages("BlueCarbon", repos = c("https://ecologyr.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 Or from [GitHub](https://github.com/EcologyR/BlueCarbon):
 
 ``` r
+
 # install.packages("remotes")
 remotes::install_github("EcologyR/BlueCarbon")
 ```

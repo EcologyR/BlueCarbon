@@ -14,6 +14,7 @@ these soils in the last 100 and 200 years.
 ## Load example data
 
 ``` r
+
 library(BlueCarbon)
 ```
 
@@ -49,6 +50,7 @@ All distances in the example data are provided in cm. Distances can be
 provided in any units, as long as they are the same for all of them.
 
 ``` r
+
 compaction <- estimate_compaction(core_comp,
                                   core = "core",
                                   sampler_length = "sampler_length",
@@ -63,6 +65,7 @@ from the final dataframe, as there was missing data. We can look at this
 core in the example data to see which data was missing.
 
 ``` r
+
 core_comp[core_comp$core == "Sm_03_04",]
 #>        core sampler_length internal_distance external_distance
 #> 30 Sm_03_04             NA                NA                NA
@@ -73,6 +76,7 @@ variables needed. Below are the first 10 rows of the resulting
 dataframe, including a column with the core compaction percentages.
 
 ``` r
+
 head(compaction, n = 10)
 #>        core sampler_length internal_distance external_distance compaction
 #> 1  Sg_01_01            200                35                25   5.714286
@@ -138,6 +142,7 @@ DO need to specify the dry bulk density column name as by default this
 argument is NULL.
 
 ``` r
+
 bluecarbon_decompact <- decompact(bluecarbon_data, dbd = "dbd")
 #> Warning in decompact(bluecarbon_data, dbd = "dbd"): Setting compaction = 0 for
 #> these cores: Sm_03_04, Sg_10_02, Sg_11_03, Sm_05_01, Sm_06_01
@@ -151,6 +156,7 @@ Here are the first 10 rows of the final dataframe, with corrected
 minimum and maximum sample depth and dry bulk density.
 
 ``` r
+
 head(bluecarbon_decompact, n = 10) |> 
   table()
 #> < table of extent 1 x 1 x 1 x 1 x 1 x 10 x 10 x 10 x 5 x 0 x 10 x 10 x 10 x 10 >
@@ -216,6 +222,7 @@ Here we don’t need to specify the name of the columns as in the example
 data the names are the same as the default names.
 
 ``` r
+
 oc_out <- estimate_oc(bluecarbon_decompact)
 ```
 
@@ -246,6 +253,7 @@ initially for the OC and OM columns. We recommend to work in percentage,
 as the estimate_oc_stock() require OC values in percentages.
 
 ``` r
+
 head(oc_out[[1]])  
 #>    site     core ecosystem            species compaction mind maxd       dbd
 #> 1 Sg_01 Sg_01_01  Seagrass Posidonia oceanica   5.714286    0    1 0.7352912
@@ -271,6 +279,7 @@ head(oc_out[[1]])
 ```
 
 ``` r
+
 head(oc_out[[2]], n = 2)
 #> $Mangrove
 #> $Mangrove$ecosystem_model
@@ -418,6 +427,7 @@ and our data is in cm so we don’t need to specify the depth (i.e. will
 estimate carbon stock down to 1m depth).
 
 ``` r
+
 stocks <- estimate_oc_stock(oc_out[[1]])
 ```
 
@@ -430,6 +440,7 @@ a value in the fifth column with the standard error of the accumulated
 mass-depth model used to estimate the stock.
 
 ``` r
+
 head(stocks, n=10)
 #>        core    stockwc      maxd     stock    stock_se
 #> 1  Sg_01_01 2.62947377 156.96970 1.8551331          NA
@@ -456,10 +467,12 @@ specify it in the parameter “depth”. For example, to estimate the carbon
 stock down to 75 cm:
 
 ``` r
+
 stocks75 <- estimate_oc_stock(oc_out[[1]], depth = 75)
 ```
 
 ``` r
+
 head(stocks75, n = 10)
 #>        core    stockwc      maxd     stock    stock_se
 #> 1  Sg_01_01 2.62947377 156.96970 1.5957092          NA
@@ -532,6 +545,7 @@ we don’t need to specify them. Furthermore, the default depth is 100,
 and our data is in cm so we don’t need to specify the depth.
 
 ``` r
+
 stocks_test <- test_extrapolation(oc_out[[1]])
 #> Warning: Removed 4 rows containing non-finite outside the scale range
 #> (`stat_boxplot()`).
@@ -559,6 +573,7 @@ The same can be done for a different depth. Like in the example of
 we use 75 by modifying the parameter “depth”.
 
 ``` r
+
 stocks_test <- test_extrapolation(oc_out[[1]], depth = 75)
 #> Warning: Removed 5 rows containing non-finite outside the scale range
 #> (`stat_boxplot()`).
@@ -633,6 +648,7 @@ we don’t need to specify them. Furthermore, the default time frame is
 100.
 
 ``` r
+
 seq_rate <- estimate_seq_rate(oc_out[[1]])
 ```
 
@@ -643,6 +659,7 @@ core. The fourth column is the sequestration rate in the provided time
 frame.
 
 ``` r
+
 head(seq_rate, n=10)
 #>        core  seq_rate_wc  maxage     seq_rate
 #> 1  Sg_01_01 0.0020180152 1303.00 0.0043626875
@@ -668,6 +685,7 @@ To estimate the organic carbon sequestration rate in a different
 timeframe than 100, we have to specify it in the parameter “timeframe”.
 
 ``` r
+
 seq_rate_200 <- estimate_seq_rate(oc_out[[1]], timeframe = 200)
 #> Core Sg_06_01 is younger than the time frame provided
 #> Core Sm_07_01 is younger than the time frame provided
@@ -675,6 +693,7 @@ seq_rate_200 <- estimate_seq_rate(oc_out[[1]], timeframe = 200)
 ```
 
 ``` r
+
 head(seq_rate_200, n=10)
 #>        core  seq_rate_wc  maxage     seq_rate
 #> 1  Sg_01_01 0.0020180152 1303.00 0.0036333524

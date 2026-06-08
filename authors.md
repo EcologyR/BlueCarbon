@@ -24,7 +24,7 @@ Piñeiro-Juncal N, Astigarraga J, Costa V, Martins M, Rodríguez-Sánchez F
 (2025). “BlueCarbon R package: Estimation of Organic Carbon Stocks and
 Sequestration Rates From Soil Core Data.” *Journal of Open Source
 Software*, **10**(115), 8333.
-[doi:10.21105/joss.08333](https://doi.org/10.21105/joss.08333),
+[doi:10.21105/joss.08333](https://doi.org/10.21105/joss.08333).
 <https://doi.org/10.21105/joss.08333>.
 
     @Article{,
